@@ -10,7 +10,7 @@ Innleveringsplanen gir oppgaver, frister og ressurser i forbindelse med obligato
 
 - [Kursplan](forelesningsplan.html){:target="blank"}
 
-- [Timeplan](https://tp.educloud.no/uit/timeplan/timeplan.php?id%5B%5D=SOK-3022%2C1&type=course&sem=25v&campus=&hide_old=1){:target="blank"} på timeplan.uit.no
+- [Timeplan](https://tp.educloud.no/uit/app/schedule?semester=26v&scheduleType=course&filterOpen=true&summary=true&pastWeeks=false&tab=calendar&course=SOK-3022%C2%A41){:target="blank"} på timeplan.uit.no
 
 
 ## Kursbeskrivelse 
@@ -32,7 +32,7 @@ For henvendelser av administrative art send e-post til: <hhcampus@hjelp.uit.no>.
 ## Pensum  
 
 
-[Leganto](https://bibsys-c.alma.exlibrisgroup.com/leganto/nui/lists/12992096220002205){:target="blank"}  
+[Leganto](https://bibsys-c.alma.exlibrisgroup.com/leganto/nui/lists/14453672470002205){:target="blank"}  
 
 
 

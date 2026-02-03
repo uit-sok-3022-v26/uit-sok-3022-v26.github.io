@@ -78,7 +78,7 @@ def estimate(df):
 	return pr.iloc[-1]['Predicted KPI']
 
 def get_data():
-	if os.path.exists(DATAFILE) and False:
+	if os.path.exists(DATAFILE):
 		data = pd.read_pickle(DATAFILE)
 		return data
 	bnp = get_bnp()

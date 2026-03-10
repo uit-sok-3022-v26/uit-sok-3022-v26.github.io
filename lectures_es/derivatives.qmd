@@ -29,11 +29,9 @@ This note provides an introduction to derivative pricing. In finance, a derivati
 
 One of the most common types of derivatives is options. We will begin by exploring how options are priced and later demonstrate how the principles of option pricing extend to a wide range of other derivatives.
 
-
-
 # Options
-An option is a right but not an obligation to buy or sell an asset for a certain price. Options can be used for both hedging as well as speculation.
 
+An option is a right but not an obligation to buy or sell an asset for a certain price. Options can be used for both hedging as well as speculation.
 
 ![Option Value](img/optionvalue.png)
 
@@ -43,19 +41,15 @@ There are mainly two types of options - put and call options. A call option give
 
 However, if the market price is 95, it would be pointless to buy the stock for 105. Since you do not have any obligation to buy it, you would not exercise your right since that would lead to a certain loss. Therefore, the option price can never be negative, since the right to buy will never be exercised if it leads to a loss. Hence, if C is the value of the call, S the value of the stock, and X the strike price at the terminal date, we have
 
-
 $$
 C = \max(S - X, 0)
-$${#eq-C}
+$$ {#eq-C}
 
-The share price is 115 option holder is thus left with
-$$
+The share price is 115 option holder is thus left with $$
 = \max(115-105, 0) = 10
-$${#eq-C_gain}
-But if the price falls to 95, the option loses its entire value
-$$
+$$ {#eq-C_gain} But if the price falls to 95, the option loses its entire value $$
 = \max(95-105, 0) = 0
-$${#eq-C_loss}
+$$ {#eq-C_loss}
 
 Let us draw this up in a chart where X is the strike price, with a python function giving the maximum betseen the current share price and $S-X$
 
@@ -97,13 +91,11 @@ ax.plot(S, call_payoff, label="Call Option Payoff",
                                                                                     linewidth=2)
 ```
 
-
 Such drawings of the cash flow are called profit charts.
 
 We have now examined how a call option works. A put option, on the other hand, is the right but not the obligation to sell an asset at a specified price. This means the option holder benefits from a falling share price and receives the difference between the market price S and the strike price X when the market price is lower than X. If the price is higher, the option has no value, and the owner gains nothing.
 
 This is illustrated in @fig-put_option. To represent the put option, we simply modify the function from `np.maximum(S - X, 0)` to `np.maximum(X - S, 0)`, reflecting the fact that the option gains value when the stock price decreases.
-
 
 ```{python}
 #| label: fig-put_option
@@ -117,11 +109,10 @@ ax.plot(S, put_payoff, label="Put Option Payoff",
 Thus, we see that the immediate exercise value of an option is the difference between the share price and the exercise price X. In the case of a put option, there is no payment when the share price is greater than X, while for a call option, the option is worthless when the stock price is lower than X.
 
 ## Value before expiration
+
 In general, it is never advantageous to exercise an option early, before the expiration date. This is because an option always has some value beyond its immediate exercise value, as there is always a chance it will become more valuable. This is due to a principle known as "*Jensen's Inequality*" [@jensen1906]. It states that the mean of a convex function is always higher than the function of the mean.
 
 This is illustrated in @fig-jensen. Here, we see that if the stock price can take two values, 95 and 115, the option value at the mean of these two points is zero, since this corresponds to the exercise price. However, if we take the mean of the call function values, it is the average of 15 and 0, which equals 7.5. Hence, the mean of a convex function is higher than the function at the mean.
-
-
 
 ```{python}
 #| label: fig-jensen
@@ -185,21 +176,21 @@ ax.text(S_mean + 1, 0.5, "call_payoff(E[S])",
 ax.legend()
 ```
 
-
 This means that if there is a long time until the expiration date, an option will still have some value, even if the price is lower than the exercise price, because there is always a possibility that the option will become profitable before it expires. As a result, the value of an option is higher before the expiration date than at the expiration date.
 
 ## Notation
+
 The value of a call option before expiration is denoted as $C_t$, while the value of a put option is denoted as $P_t$. Sometimes, it is useful to have a general symbol for the option price, regardless of whether it is a put or a call. In such cases, the general value of an option or derivative is represented as $f_t$. The stock price is denoted as $S_t$, and the exercise price is $X$ (exercise value). The variable $t$ represents the time since the option was issued, measured in years. For example, if the option was issued three months ago, then $t = \frac{1}{4}$.
 
 The buyer has the right to exercise the option for a limited period. The time when the option expires is called the expiration date and is represented by capital $T$. If the option lasts for one year, then $T = 1$. The exercise values of the options at expiration are denoted as $C_T$ or $P_T$.
 
 ## Black and Scholes formula
+
 So, how much is an option worth? The relationship between an option’s value and the underlying stock price makes it possible to derive a formula that determines the value of the right the option represents. This formula, discovered in the early 1970s, is known as the Black-Scholes-Merton option-pricing formula [@scholes1973pricing, @merton1971theory]. However, it was later found to be closely related to earlier work by @bachelier1900.
 
-The Black-Scholes formula is one of the most significant innovations in finance and is used daily in global financial markets. The economists behind the formula were awarded the Nobel Prize in 1997 for their contribution. While we will return to the details of the Black-Scholes formula later, you might be interested in seeing how it is calculated now. 
+The Black-Scholes formula is one of the most significant innovations in finance and is used daily in global financial markets. The economists behind the formula were awarded the Nobel Prize in 1997 for their contribution. While we will return to the details of the Black-Scholes formula later, you might be interested in seeing how it is calculated now.
 
 In @fig-bs, we see the Black-Scholes price overlaid on the profit chart.
-
 
 ```{python}
 #| label: fig-bs
@@ -244,29 +235,26 @@ The "intrinsic value" here, is then the Black and Scholes fair value in excess o
 
 ***Problems:***
 
-- Change the Black and Scholes figure to show a put option. The formula for the Black and Scholes put is
-    $$
-    P(S, X, T, r, \sigma) = X e^{-rT} \Phi(-d_2) - S \Phi(-d_1)
-    $${#eq-bs_put1}
-    where
-    $$
-    d_1 = \frac{\ln(S / X) + \left(r + \frac{1}{2} \sigma^2 \right)T}{\sigma \sqrt{T}}
-    $${#eq-bs_put2}
-    and
-    $$
-    d_2 = d_1 - \sigma \sqrt{T}
-    $${#eq-bs_put3}
+-   Change the Black and Scholes figure to show a put option. The formula for the Black and Scholes put is $$
+      P(S, X, T, r, \sigma) = X e^{-rT} \Phi(-d_2) - S \Phi(-d_1)
+      $$ {#eq-bs_put1} where $$
+      d_1 = \frac{\ln(S / X) + \left(r + \frac{1}{2} \sigma^2 \right)T}{\sigma \sqrt{T}}
+      $$ {#eq-bs_put2} and $$
+      d_2 = d_1 - \sigma \sqrt{T}
+      $$ {#eq-bs_put3}
 
-    $\Phi$ is the cumulative standard normal distribution function. 
+    $\Phi$ is the cumulative standard normal distribution function.
 
-- Which of the arguments in the Black and Scholes formula are most difficult to estimate?
+-   Which of the arguments in the Black and Scholes formula are most difficult to estimate?
 
 ## European and American options
 
 Sometimes an option can be exercised at any time up to the terminal date. We therefore distinguish between two types of options:
 
-    * **American option**: The option holder can choose whether to exercise the option at any time before the terminal date.
-    * **European option**: The option can only be exercised on the terminal date.
+```         
+* **American option**: The option holder can choose whether to exercise the option at any time before the terminal date.
+* **European option**: The option can only be exercised on the terminal date.
+```
 
 In addition to buying options, investors may also sell options short in the market, a process known as issuing options. In this case, the cash flow will be the exact opposite of what the buyer receives, as illustrated below. The buyer (owner) receives the same cash flow as previously shown, while the seller has an obligation rather than a right. Therefore, the issuer's cash flow is a mirror image of the buyer's.
 
@@ -274,19 +262,17 @@ In addition to buying options, investors may also sell options short in the mark
 
 As you may have noticed, a put option always provides a payout when a call option does not (and vice versa), assuming the strike price is the same. By combining both types of options, an investor can create a cash flow proportional to the share price, regardless of how the share price changes. This relationship between a put, a call, and the share price is known as **put-call parity**:
 
-
 $$
 S_{t} - PV_{t}(X) = C_{t} - P_{t}
-$${#eq-put_call_parity}
+$$ {#eq-put_call_parity}
 
 Where $PV_{t}(X)$ is the present value at time $t$. As we see, this formula applies at any time, including before the terminal date $T$.
 
-In the figure below, we see the cash flow for a call option ($+C_t$) and an issued put ($-P_t$) plotted. The dotted line represents the combined value of these two positions, that is, the value of $C_t - P_t$, along with the stock price $S$ itself. 
+In the figure below, we see the cash flow for a call option ($+C_t$) and an issued put ($-P_t$) plotted. The dotted line represents the combined value of these two positions, that is, the value of $C_t - P_t$, along with the stock price $S$ itself.
 
 If the date is before the terminal date, we use the present value of the exercise price at that time, $PV_{t}(X)$. However, for now, we assume the terminal exercise price $X$ that has been used throughout.
 
 The call-put and $S - X$ positions in @fig-put_call_par are shifted up and down by 1 to make all lines visible.
-
 
 ```{python}
 #| label: fig-put_call_par
@@ -306,17 +292,17 @@ ax.legend()
 
 ```
 
-The minus sign before the put option means that we hold it *short*. This means that we sell it. In financial markets, we do not need to own an asset to sell it. Instead, we can *short* it, which involves borrowing the asset and later returning it. 
+The minus sign before the put option means that we hold it *short*. This means that we sell it. In financial markets, we do not need to own an asset to sell it. Instead, we can *short* it, which involves borrowing the asset and later returning it.
 
 For example, we may borrow a stock for three months, sell it in the market, and hope that its price decreases before we buy it back to return it. Shorting means that we hold a negative amount of the asset and are speculating on a price decrease.
 
 For options, short selling can also mean *issuing* the option. Most online brokers allow traders to sell options without owning them first, provided that they post some collateral. This effectively means that the trader issues the option.
 
 ## Combining options
+
 By combining a put and a call, it is possible to replicate the cash flows of buying a share and taking out a loan. Additionally, one can buy and sell puts and calls with different exercise prices to create customized cash flows at different share prices.
 
 In @fig-issue_call_put, we have plotted the net cash flow from issuing both a call option (call) and a put option (put).
-
 
 ```{python}
 #| label: fig-issue_call_put
@@ -337,19 +323,19 @@ Since we have taken the intrinsic value of the option into account, we see that 
 
 Similarly, options can be used to bet that the price will deviate from a specific target, either positively or negatively. You can draw the cash flow for this case yourself. The only limit to the cash flows that can be created with options is one’s imagination.
 
-***Problem:***  
+***Problem:***\
 Try different combinations of call and put options, including those with different exercise values, to create sophisticated cash flows.
 
 # Binomial options
 
 We will not delve deeply into the mathematics of derivatives in this course. Instead, the focus will be on developing an understanding of the fundamental principle behind derivative pricing—*risk-neutral expectation*—and how it can be used as a tool to price any derivative or contract written on an underlying asset.
 
-To illustrate this principle, it is helpful to examine how *binomial options* are priced. 
+To illustrate this principle, it is helpful to examine how *binomial options* are priced.
 
 A binomial option is an option where the underlying price can take only two possible values. While this may seem like an oversimplification, we will soon see that this basic model provides valuable insight into the pricing of options in general.
- 
 
 ## The model
+
 We will now consider a simplified scenario where the share price can take only two values in the future. We assume as previously that the Equinor share may either rise to 115 or fall to 95 from its current price of 100 kroner. The interest rate is 5%.
 
 Further, assume that we need to determine the price of a call option with an exercise price of 105. This means that the owner has the right to receive 15 if the stock price rises, but nothing otherwise. Graphically, the problem can be represented as follows:
@@ -364,48 +350,47 @@ Now, suppose we borrow money to purchase a certain number of shares per option, 
 
 $$
 100 \cdot \Delta = 50
-$${#eq-delta_example}
+$$ {#eq-delta_example}
 
 per option. After half a year ($T = \frac{1}{2}$), we must repay the loan with interest, so the total repayment amount will be:
 
 $$
 100 \cdot 1.05^{\tfrac{1}{2}} \cdot \Delta
-$${#eq-repayment_example}
+$$ {#eq-repayment_example}
 
 If the share price rises, our account balance will then show a surplus of:
 
 $$
 \Delta \cdot (115 - 100 \cdot 1.05^{\tfrac{1}{2}})
-$${#eq-cf_up}
+$$ {#eq-cf_up}
 
 Similarly, we receive 15 on the option if the stock price goes up. If we buy the option for $f_0$ today and fund it with a loan equal amount $f_0$, we will next year have:
 
 $$
 10 - f_0 \cdot 1.05^{\tfrac{1}{2}}
-$${#eq-option_up}
+$$ {#eq-option_up}
 
-We can now select an appropriate proportion of shares $\Delta$ so that these two transactions provide identical cash flows. This means that we can find a fraction of shares $\Delta$ so that the leveraged purchase of $\Delta$ shares give the same return as a similar purchase of the option by solving the following equation for $\Delta$:
-$$
+We can now select an appropriate proportion of shares $\Delta$ so that these two transactions provide identical cash flows. This means that we can find a fraction of shares $\Delta$ so that the leveraged purchase of $\Delta$ shares give the same return as a similar purchase of the option by solving the following equation for $\Delta$: $$
 \Delta \cdot (115 - 100 \cdot 1.05^{\tfrac{1}{2}}) = 10 - f_0 \cdot 1.05^{\tfrac{1}{2}}
-$${#eq-no_arbitrage_up}
+$$ {#eq-no_arbitrage_up}
 
-If the stock goes down, we can reason in exactly the same way. We get a loss of 
+If the stock goes down, we can reason in exactly the same way. We get a loss of
 
 $$
 \Delta \cdot (95 - 100 \cdot 1.05^{\frac{1}{2}})
-$${#eq-cf_down}
+$$ {#eq-cf_down}
 
-on the share and a loss of 
+on the share and a loss of
 
 $$
 0 - f_0 \cdot 1.05^{\frac{1}{2}}
-$${#eq-option_down}
+$$ {#eq-option_down}
 
 on the option. We require that the investments should provide the same return, so we can set an equality between them:
 
 $$
 \Delta \cdot (95 - 100 \cdot 1.05^{\frac{1}{2}}) = 0 - f_0 \cdot 1.05^{\frac{1}{2}}
-$${#eq-no_arbitrage_down}
+$$ {#eq-no_arbitrage_down}
 
 We now have two relatively simple equations with two unknowns, $\Delta$ and $f_0$, which we can solve using sympy:
 
@@ -433,13 +418,13 @@ display(Markdown(f"$\\Delta={sol[Delta]}$"))
 
 $$
 \Delta = \tfrac{1}{2}
-$${#eq-delta_sol}
+$$ {#eq-delta_sol}
 
-and 
+and
 
 $$
 f_0 \approx 3.645
-$${#eq-f0_sol}
+$$ {#eq-f0_sol}
 
 What we have done is find a combination of loans and equity investments that produce the same return as an equivalent position in the option. This is the fundamental principle behind all option pricing.
 
@@ -449,11 +434,11 @@ Thus, it is possible to achieve the same cash flows as the option by holding a f
 
 When the stock and option can only take two values, we call this the binomial option pricing model. While we could use the method above to calculate the option price every time, it is much easier to apply a more general formula. Let us introduce the following notation:
 
-|                        |**Today:**| **Expiration:**|   Stock up    | Stock down    |
-|------------------------|------|-----------|---------------|---------------|
-| **The share price**        | $S_0$     |               | $S_u$         | $S_d$         |
-| **Option Value**           | $f_0$     |               | $f_u$         | $f_d$         |
-| **Price Ratio** $S_T/S_0$  |           |               | $u = S_u/S_0$ | $d = S_d/S_0$ |
+|   | **Today:** | **Expiration:** | Stock up | Stock down |
+|-------------------|-------------|-------------|-------------|-------------|
+| **The share price** | $S_0$ |  | $S_u$ | $S_d$ |
+| **Option Value** | $f_0$ |  | $f_u$ | $f_d$ |
+| **Price Ratio** $S_T/S_0$ |  |  | $u = S_u/S_0$ | $d = S_d/S_0$ |
 
 Here, the subscripts *u* and *d* represent the up and down movements of the stock, respectively. We use a general variable $f$ that can stand for both a put ($P$) and a call option ($C$). Additionally, we define two variables, $u$ and $d$, which represent the relative movement of the stock price when it increases or decreases.
 
@@ -471,67 +456,60 @@ r = 0.05
 T = 0.5
 ```
 
-
 Now, instead of using specific numbers, we generalize the approach from the previous section to find $f_0$.
 
-As before, the investor buys $\Delta$ shares and borrows $\Delta \cdot S_0$ to finance the purchase. Taking interest into account, the investor must repay 
+As before, the investor buys $\Delta$ shares and borrows $\Delta \cdot S_0$ to finance the purchase. Taking interest into account, the investor must repay
 
 $$
 \Delta \cdot S_0 \cdot (1 + r)^T
-$${#eq-repay}
+$$ {#eq-repay}
 
 after one year. If the stock price rises, the investor can sell the stock for $S_u$ in the market. The resulting profit will be:
 
-
 $$
 \Delta\cdot(S_u - S_0 \cdot(1+r)^T)
-$${#eq-up_delta_profit}
+$$ {#eq-up_delta_profit}
 
 This should match the profit gained from financing the option purchase with a loan. The option provides a payoff of $f_u$ when the stock price rises. The loan that must be repaid consists of the initial purchase price plus interest, which is:
 
 $$
 f_0 \cdot (1 + r)^T
-$${#eq-up_f_profit}
+$$ {#eq-up_f_profit}
 
 Thus, the profit from the leveraged option purchase is:
 
 $$
 f_u - f_0\cdot(1+r)^T
-$${#eq-up_f}
+$$ {#eq-up_f}
 
-As before, we choose now a share of shares so that the profits of shares
-and option price match. That is, we find a $\Delta$ such that:
-$$
+As before, we choose now a share of shares so that the profits of shares and option price match. That is, we find a $\Delta$ such that: $$
 \Delta\cdot(S_u - S_0 \cdot(1+r)^T) = f_u - f_0\cdot(1+r)^T
-$${#eq-up_equation}
+$$ {#eq-up_equation}
 
-Exactly the same argument applies if the stock goes down, so in that
-case we need only replace subscript u with d:
+Exactly the same argument applies if the stock goes down, so in that case we need only replace subscript u with d:
 
 $$
 \Delta\cdot(S_d - S_0 \cdot(1+r)^T) = f_d - f_0\cdot(1+r)^T
-$${#eq-down_equation}
+$$ {#eq-down_equation}
 
 ## Risk-neutral probability
 
 As in the previous section, we have two unknowns: the proportion of $\Delta$ shares and the option price $f$, which can be easily solved. We will not go into the full derivation of the solution here. However, it turns out that the solution can be expressed in a relatively simple way using a variable $q$, known as the "risk-neutral probability." It is calculated as:
 
-
 $$
 q=\frac{(1+r)^T-d}{u-d}
-$${#eq-q_formula}
+$$ {#eq-q_formula}
 
 $q$ is really just a tool for calculating the option price and is not actually a probability. However, it shares a key property with real probabilities in that it always lies between zero and one. We use it to compute an expectation in the same way as we do with normal probabilities.
 
 It is called "risk-neutral" because if we apply it to the terminal values of the underlying stock ($S_u$ and $S_d$), the expected value equals the current stock price plus interest:
 
-
 $$
 \mathbb{E}_q[S_T] = S_u \cdot q + S_d \cdot (1-q) = S_0 \cdot (1+r)^T
-$${#eq-q_expectation}
-
+$$ {#eq-q_expectation}
 
 We can verify this with sympy:
+
 ```{python}
 # Define symbols
 Su, Sd, S0, r, T, q = sp.symbols('Su Sd S0 r T q')
@@ -548,27 +526,27 @@ sp.simplify(Su * q + Sd * (1 - q))
 
 ```
 
-Once we find $q$, the option price is simply given as the present value of the expected option value at exercise, where we use the risk-neutral probability $q$ as the probability of "up" and "down". 
+Once we find $q$, the option price is simply given as the present value of the expected option value at exercise, where we use the risk-neutral probability $q$ as the probability of "up" and "down".
 
 The option price today is therefore:
 
 $$
 f_0=\frac{q \cdot f_u + (1-q) \cdot f_d}{(1+r)^T}
-$${#eq-gen_formula}
+$$ {#eq-gen_formula}
 
 We have discounted the expected value because $f_u$ and $f_d$ are not present cash flows but represent cash flows at the terminal time $T$.
 
 The process for calculating the price of a binomial option is as follows:
 
-1. Calculate $u$ and $d$
-2. Calculate the risk-neutral probability $q$ (-@eq-q_formula)
-3. Calculate the present value of the expected option value using probability $q$ (-@eq-gen_formula)
+1.  Calculate $u$ and $d$
+2.  Calculate the risk-neutral probability $q$ ([-@eq-q_formula])
+3.  Calculate the present value of the expected option value using probability $q$ ([-@eq-gen_formula])
 
 Although we will not delve into the mathematics of more complex payoffs, this illustrates a remarkably general principle: any derivative — a financial security whose value depends on shares or other underlying assets — can be priced using a probability distribution that ensures a risk-neutral return for the stock.
 
 Thus, the price of any derivative can be determined by defining an appropriate risk-neutral probability distribution.
 
-Additionally, note how we defined the option—not by first specifying the exercise price, but simply by defining $f_u$ and $f_d$. This demonstrates that our pricing method does not rely on the specific structure of an option. Instead, all that is required is the derivative's payoff for a given payoff of the underlying asset. 
+Additionally, note how we defined the option—not by first specifying the exercise price, but simply by defining $f_u$ and $f_d$. This demonstrates that our pricing method does not rely on the specific structure of an option. Instead, all that is required is the derivative's payoff for a given payoff of the underlying asset.
 
 In essence, this provides a general framework for pricing any contract written on an asset.
 
@@ -578,7 +556,7 @@ Another important quantity is $\Delta$, which represents the number of shares ne
 
 $$
 \Delta=\frac{f_u-f_d}{S_u-S_d}
-$${#eq-gen_delta_formula}
+$$ {#eq-gen_delta_formula}
 
 The $\Delta$ is useful because it indicates how many shares you must buy to replicate the option. Since holding more shares increases risk, delta also serves as a measure of the risk inherent in the option.
 
@@ -588,10 +566,7 @@ This strategy is known as *"delta hedging"*, and it is the method banks use when
 
 ## Using the General Binomial Formula
 
-Let us apply the numbers from our example to the general binomial formula to calculate the value of the option. We will then compare the result with the solutions $\Delta = \tfrac{1}{2}$ and $f_0 \approx 3.645$ obtained from solving the equations (-@eq-no_arbitrage_up) and (-@eq-no_arbitrage_down).
-
-
-
+Let us apply the numbers from our example to the general binomial formula to calculate the value of the option. We will then compare the result with the solutions $\Delta = \tfrac{1}{2}$ and $f_0 \approx 3.645$ obtained from solving the equations ([-@eq-no_arbitrage_up]) and ([-@eq-no_arbitrage_down]).
 
 ```{python}
 from IPython.display import display, Markdown
@@ -615,10 +590,10 @@ display(Markdown(f"$\\Delta={delta}$"))
 
 ```
 
-
-Wich we see corresponds with the previous calculations. 
+Wich we see corresponds with the previous calculations.
 
 # The stock price process
+
 Before we explore how contracts on assets with continuous rather than binomial prices are valued, we must first understand how stock prices are modeled in modern finance. This modeling approach provides a practical way to describe stock price movements in mathematical terms.
 
 Let us begin by plotting some actual intraday prices. The blue line in @fig-intraday shows a snapshot of the intraday price movements for the Norwegian company Equinor on March 24, 2025.
@@ -669,17 +644,15 @@ ax = create_canvas()
 ax.plot(df['TID'], df['PRIS'])
 ```
 
-
 We observe that the price appears to move almost continuously. However, if you modify the time window in the code—for example, from 13:00 to 13:05—you will notice that the movements are not continuous at all, but rather a sequence of discrete price changes.
 
 Additionally, we see that stock prices take only certain values. For Equinor, the smallest price increment is NOK 0.05, meaning that stock prices move in discrete steps both in time and value. Despite this, assuming continuous time and continuous prices is mathematically convenient and serves as a reasonable approximation, especially over longer time intervals, such as an hour or more of trading.
 
 Therefore, stock price movements are often modeled as a continuous process, which is the approach we will take in this lecture.
 
-
 ## Modeling the stock price
-Let us now examine how financial economists model stock prices to replicate actual price movements as closely as possible. In @fig-intraday_sim, a stock price process is simulated using the standard approach in finance and presented alongside the actual stock price of Equinor.
 
+Let us now examine how financial economists model stock prices to replicate actual price movements as closely as possible. In @fig-intraday_sim, a stock price process is simulated using the standard approach in finance and presented alongside the actual stock price of Equinor.
 
 ```{python}
 #| label: fig-intraday_sim
@@ -708,14 +681,13 @@ ax.plot(df['TID'], df['PRIS_sim'])
 ax.legend(['Real', 'Simulated'], frameon=False)
 ```
 
-
 The orange line in @fig-intraday_sim represents simulated prices, meaning that each time the code is executed, the orange path will vary.
 
 You can see this from the formula in @fig-intraday_sim, but we will now take a closer look at how stock prices are typically modeled in finance. We start with a model based on the relative *geometric* change in stock prices. By relative geometric change, we mean to the log difference, defined as:
 
 $$
 \Delta \log(S_t) = \log(S_t) - \log(S_{t-1}) = \Delta s_t
-$${#eq-logdiff_def}
+$$ {#eq-logdiff_def}
 
 Alternatively, we could consider the *discrete percentage difference*:
 
@@ -733,14 +705,13 @@ x = 23.434
 np.exp(np.log(x))
 ```
 
-Thus, if we know the log change $\Delta s_t$ over a given period, it follows directly from (-@eq-logdiff_def) that the stock price at time $t$ is given by:
+Thus, if we know the log change $\Delta s_t$ over a given period, it follows directly from ([-@eq-logdiff_def]) that the stock price at time $t$ is given by:
 
 $$
 S_t = S_0 \cdot e^{s_t}
-$${#eq-price_log_diff}
+$$ {#eq-price_log_diff}
 
 The log change in stock price consists of three key components: *drift, volatility correction, and innovation*, which will now be explained in more detail:
-
 
 ## Innovation
 
@@ -750,7 +721,7 @@ This simple assumption can be expressed as
 
 $$
 z_{t} = \varepsilon_{t}\sqrt{t}
-$${#eq-wiener}
+$$ {#eq-wiener}
 
 where $\varepsilon_{t}$ is standard normally distributed, $\varepsilon_{t} \sim N(0,1)$, meaning it has a mean of zero and variance of one.
 
@@ -758,7 +729,7 @@ The standard random variable is multiplied by the square root of $t$, ensuring t
 
 $$
 Var(z_t) = t
-$${#eq-var_deltaz}
+$$ {#eq-var_deltaz}
 
 A random variable that increases in variance with time is called a Wiener Process. The further into the future, the less we know about the stock price.
 
@@ -766,25 +737,25 @@ The actual innovation also has a scale parameter $\sigma$, so that the innovatio
 
 $$
 \sigma \cdot z_t
-$${#eq-sigma_zt}
+$$ {#eq-sigma_zt}
 
 The associated variance is proportional to the time period:
 
 $$
 var(\sigma \cdot z_t) = \sigma^2 \cdot t
-$${#eq-var_sigma_zt}
+$$ {#eq-var_sigma_zt}
 
 When simulating, we want to draw each innovation in the process $z_t$, in other words, we want to draw the change in $z_t$. Change is as usual indicated by $\Delta$, so that the innovation per observation becomes
 
 $$
 \sigma \cdot \Delta z_t
-$${#eq-sigma_delta_zt}
+$$ {#eq-sigma_delta_zt}
 
 The associated variance is then:
 
 $$
 var(\sigma \cdot \Delta z_t) = \sigma^2 \cdot \Delta t
-$${#eq-var_deltaz}
+$$
 
 This means that the variance of each period in the Wiener Process $z_t$ is directly proportional to the length of the period.
 
@@ -796,15 +767,13 @@ For simplicity, in the simulation shown in @fig-intraday_sim, we assume that the
 sigma = np.log(df['PRIS']).diff().std()
 ```
 
-
-The implementation of the innovation term from (-@eq-sigma_delta_zt) in the code is then:
+The implementation of the innovation term from ([-@eq-sigma_delta_zt]) in the code is then:
 
 ```{python}
 sigma * np.random.randn(len(df));
 ```
 
 Here, `np.random.randn(len(df))` generates random draws from a standard normal distribution, representing $\varepsilon_{t}$, while multiplying by `sigma` scales the randomness according to the estimated volatility of the stock price.
-
 
 ## Drift
 
@@ -817,62 +786,62 @@ In the code for @fig-intraday, the drift term is estimated as the mean log price
 ```{python}
 mu = np.log(df['PRIS']).diff().mean()
 ```
+
 Mathematicaly the drift can be written
 
 $$
 \mu \cdot \Delta t
-$${#eq-logdiff_drift_innov}
+$$ {#eq-logdiff_drift_innov}
 
 In the calculation of @fig-intraday, $\Delta t = 1$
 
-
 ## Volatility Correction
 
-If we were to define the change in log price using only the drift and innovation terms, as in (-@eq-logdiff_drift_innov) and (-@eq-sigma_delta_zt), the cumulative log price change from time 0 to $t$ would be:
+If we were to define the change in log price using only the drift and innovation terms, as in ([-@eq-logdiff_drift_innov]) and ([-@eq-sigma_delta_zt]), the cumulative log price change from time 0 to $t$ would be:
 
 $$
 s_t = \mu \cdot t + \sigma \cdot z_t
-$${#eq-logdiff_drift_innov}
+$$
 
-Substituting this into the exponential price model from (-@eq-price_log_diff) gives:
+Substituting this into the exponential price model from ([-@eq-price_log_diff]) gives:
 
 $$
 S_t = S_0 \cdot e^{\mu \cdot t + \sigma \cdot z_t}
-$${#eq-price_log_diff}
+$$
 
 However, as we previously discussed in @fig-jensen, this expression ignores the effect of Jensen’s inequality. Because the exponential function is convex, the expected value of $S_t$ is greater than the expected value of the log price change:
 
 $$
 \mathbb{E}[S_t] > S_0 \cdot e^{\mu \cdot t}
-$${#eq-incorrect_exp}
+$$ {#eq-incorrect_exp}
 
 We do know, however, what accounts for this difference between the expectation of the function and the function of the expectation. By adding a correction term
 
 $$
 -\tfrac{1}{2} \sigma^2 t
-$${#eq-volatility_correction}
+$$ {#eq-volatility_correction}
 
 we can adjust for Jensen’s inequality exactly. That is, we know that
 
 $$
 \mathbb{E}[S_t] = S_0 \cdot e^{\mu \cdot t - \tfrac{1}{2} \sigma^2 t}
-$${#eq-correct_exp}
+$$ {#eq-correct_exp}
 
 ## Putting It All Together
 
-By combining the innovation term (-@eq-sigma_delta_zt), the volatility correction term (-@eq-volatility_correction), and the drift component from (-@eq-logdiff_drift_innov), we arrive at a realistic model for the log change in stock price:
+By combining the innovation term ([-@eq-sigma_delta_zt]), the volatility correction term ([-@eq-volatility_correction]), and the drift component from ([-@eq-logdiff_drift_innov]), we arrive at a realistic model for the log change in stock price:
 
 $$
 \Delta s_t = \mu \cdot \Delta t - \tfrac{1}{2} \sigma^2 \Delta t + \sigma \cdot \Delta z_t
-$${#eq-logdiff_model}
+$$ {#eq-logdiff_model}
 
 This leads to the full model for the stock price at any point in time:
 
 $$
 S_t = S_0 \cdot e^{\mu \cdot t - \tfrac{1}{2} \sigma^2 \cdot t + \sigma \cdot z_t}
-$${#eq-final_price_model}
+$$ {#eq-final_price_model}
 
-Using (-@eq-logdiff_model), the Python implementation therefore becomes
+Using ([-@eq-logdiff_model]), the Python implementation therefore becomes
 
 ```{python}
 dlnS = (mu - 0.5 * sigma**2 
@@ -884,52 +853,41 @@ df['PRIS_sim'] = (df['PRIS'].iloc[0]
 
 Here, `np.cumsum(dlnS)` computes the cumulative sum of log changes across all observations in the dataset, giving the full simulated price path.
 
-
 # Risk neutral pricing
 
-In the original papers, the derivation of the Black and Scholes option pricing formula, uses som pretty fancy math and sophisticated theory. However, if we know that we can price any derivative using risk neutral expectations, it becomes easier to understand how derivatives are priced. 
+In the original papers, the derivation of the Black and Scholes option pricing formula, uses som pretty fancy math and sophisticated theory. However, if we know that we can price any derivative using risk neutral expectations, it becomes easier to understand how derivatives are priced.
 
 For example the Black-Scholes-Merton option pricing fomula can be obtained by applying risk netural pricing. That involves calculating this integral
 
-
 $$
 f_0 = e^{-rt} \int_{-\infty}^{\infty} \max \left( S_0 e^{(r - \tfrac{1}{2} \sigma^2)t + \sigma \sqrt{t} \epsilon} - X, 0 \right) \phi(\epsilon) d\epsilon
-$${#eq-bs_expectation_call}
+$$ {#eq-bs_expectation_call}
 
-Here
-- $f_0$ is the valuation
-- $e^{-rT}$: Is the contnously compunded discount factor (time value of money).
-- $S_t = S_0 e^{(r - \frac{1}{2} \sigma^2)T + \sigma \sqrt{T} \epsilon}$ is the value of the option at time $t$
-- $X$ is the strike price
--  $\phi(\epsilon)$ is the standard normal density function. 
-
+Here - $f_0$ is the valuation - $e^{-rT}$: Is the contnously compunded discount factor (time value of money). - $S_t = S_0 e^{(r - \frac{1}{2} \sigma^2)T + \sigma \sqrt{T} \epsilon}$ is the value of the option at time $t$ - $X$ is the strike price - $\phi(\epsilon)$ is the standard normal density function.
 
 We will not go through the calculations in this course, but it turns out that the solution to this integral is the Black-Scholes-Merton call option formula:
 
-
 $$
 C(S, X, T, r, \sigma) = S \Phi(d_1) - X e^{-rT} \Phi(d_2)
-$${#eq-bs_call}
+$$ {#eq-bs_call}
 
 where
 
 $$
 d_1 = \frac{\ln(S / X) + \left(r + \frac{1}{2} \sigma^2 \right)T}{\sigma \sqrt{T}}
-$${#eq-bs_call_d1}
+$$ {#eq-bs_call_d1}
 
 and
 
 $$
 d_2 = d_1 - \sigma \sqrt{T}
-$${#eq-bs_call_d2}
+$$ {#eq-bs_call_d2}
 
 $\Phi$ is the cumulative standard normal distribution function.
 
-
-
 Here’s an improved version of your section for clarity, flow, and grammar, while keeping the technical content intact:
 
----
+------------------------------------------------------------------------
 
 ## Numerical Approximation
 
@@ -937,7 +895,7 @@ Knowing that we can price derivatives using risk-neutral expectations means that
 
 $$
 (1+2+3+4+5+6) \cdot \frac{1}{6} = 3.5
-$${#eq-dice}
+$$ {#eq-dice}
 
 that is, each outcome multiplied by its probability, summed over all outcomes.
 
@@ -948,8 +906,6 @@ However, solving such integrals analytically is often difficult or impossible. I
 This discretization means dividing the range of outcomes into intervals and calculating the probability mass in each interval. In other words, we approximate the continuous probability density by a histogram-like representation.
 
 This process is illustrated in @fig-nummerical_approx. Each bar represents the probability of an outcome falling within a given interval. We can then approximate the expected value by multiplying each outcome $x$ by its associated probability, $\phi(x) \cdot dx$, where $dx$ is the interval width. In this case, the range is defined as ±5 standard deviations, divided into 30 intervals.
-
-
 
 ```{python}
 #| label: fig-nummerical_approx
@@ -993,8 +949,6 @@ plt.show()
 
 ```
 
-
-
 ## A Simple Function for Valuing a Derivative
 
 To compute the expected value of a derivative, we need to evaluate the probability of each small interval on the $x$-axis and multiply it by the corresponding derivative payoff. For a simple normally distributed variable, the probability of each interval can be approximated as:
@@ -1008,19 +962,19 @@ However, as we saw when modeling the stock price process, the mean is not simply
 
 $$
 (\mu - \tfrac{1}{2} \sigma^2) \cdot T
-$${#eq-mean_stockprocess}
+$$ {#eq-mean_stockprocess}
 
 Since we are working under the risk-neutral measure, we replace the expected return $\mu$ with the risk-free rate $r$, resulting in:
 
 $$
 (r - \tfrac{1}{2} \sigma^2) \cdot T
-$${#eq-riskneutral_mean}
+$$ {#eq-riskneutral_mean}
 
 The corresponding volatility over the time horizon $T$ becomes:
 
 $$
 \sigma \cdot \sqrt{T}
-$${#eq-volatility_scaled}
+$$ {#eq-volatility_scaled}
 
 With these substitutions, the discrete risk-neutral probability distribution used to price a derivative is:
 
@@ -1054,7 +1008,6 @@ def derivative_value_risk_neutral(f, S0, sigma, r,
 
 This function allows you to numerically evaluate the fair value of any derivative written on the terminal asset price $S_T$, using risk-neutral expectations.
 
-
 ```{python}
 import scipy.stats as stats
 def derivative_value_risk_neutral(f, S0, sigma, r, T, 
@@ -1072,6 +1025,7 @@ def derivative_value_risk_neutral(f, S0, sigma, r, T,
 ```
 
 ## Testing the derivative valuation function
+
 Now, let us test if this function works. We can do that by comparing it with the known Black&Scholes formula. The following defines the terminal value of the call option, and the Black&Scholes formula:
 
 ```{python}
@@ -1093,7 +1047,6 @@ def black_scholes(S0, X, r, sigma, T):
     return 	bs
 
 ```
-
 
 ```{python}
 import numpy as np
@@ -1124,4 +1077,6 @@ assert test, "The results are not close!"
 As we can see, our discrete valuation function works very well. With this simple approach, we can accurately value any contract written on the terminal asset price $S_T$.
 
 # Literature
+
 ::: {#refs}
+:::

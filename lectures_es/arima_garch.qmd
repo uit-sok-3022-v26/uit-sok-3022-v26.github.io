@@ -31,28 +31,27 @@ The raw, non‑stationary residuals $\mathbf{u}$ are defined as:
 
 $$
 \mathbf{u} = \mathbf{y} - \mathbf{X} \boldsymbol{\beta},
-$${#eq-residuals}
+$$ {#eq-residuals}
 
 where $\mathbf{X}$ is an $T \times K$ array of $K$ covariates across $N$ groups and $T$ time periods, $\boldsymbol{\beta}$ is a $K \times 1$ coefficient vector, and $\mathbf{y}$ is the $T \times 1$ dependent variable.
 
 The reasons for handling this problems are
 
-- Serial correlation in $\mathbf u$ can understate standard errors, artificially inflating $t$–statistics.
-- Conditional heteroscedasticity violates the constant‑variance assumption.
-- Converting $\mathbf{u}$ into *i.i.d.* innovations permits valid inference.
+-   Serial correlation in $\mathbf u$ can understate standard errors, artificially inflating $t$–statistics.
+-   Conditional heteroscedasticity violates the constant‑variance assumption.
+-   Converting $\mathbf{u}$ into *i.i.d.* innovations permits valid inference.
 
 The objective is therefore to transform $\mathbf{u}$ — typically serially correlated and heteroscedastic — into uncorrelated, homoscedastic residuals $\boldsymbol{\varepsilon}/\boldsymbol{\sigma}$ by applying
 
-1. ARIMA transformation that Removes mean persistence and unit roots, producing uncorrelated residuals $\boldsymbol{\varepsilon}$.
+1.  ARIMA transformation that Removes mean persistence and unit roots, producing uncorrelated residuals $\boldsymbol{\varepsilon}$.
 
-2. GARCH transformation  that estimates time-varying conditional variance, scaling the residuals to a common variance through standardisation: $\tilde{\varepsilon}_t = \varepsilon_t / \sigma_t$.
-
+2.  GARCH transformation that estimates time-varying conditional variance, scaling the residuals to a common variance through standardisation: $\tilde{\varepsilon}_t = \varepsilon_t / \sigma_t$.
 
 Formally, the ARIMA transformation [@box2015time] is
 
 $$
 \boldsymbol{\varepsilon} = \mathbf{MA}^{-1} \cdot \mathbf{AR} \cdot \boldsymbol{\Delta}_d \mathbf{u}
-$${#eq-ARIMA}
+$$ {#eq-ARIMA}
 
 where $\mathbf{u}$ is the $T \times 1$ vector, differenced $d$ times by $\boldsymbol{\Delta}_d$. $\mathbf{MA}$ and $\mathbf{AR}$ are $T \times T$ moving‑average and autoregressive matrices.
 
@@ -61,14 +60,13 @@ Heteroscedasticity is subsequently corrected by the GARCH [@bollerslev1986genera
 $$
 \mathbf{\sigma}^{2}
 = \mathbf{GA}_{\sigma}^{-1}\,\mathbf{G} + \mathbf{GA}_{\sigma}^{-1}\,\mathbf{AR}_{\sigma}\boldsymbol{\varepsilon}^{2}
-$${#eq-GARCH}
+$$ {#eq-GARCH}
 
 where $\boldsymbol{\varepsilon}^{2}$ and $\boldsymbol{\sigma}^{2}$ are $T \times 1$ vectors. $\mathbf{GA}_\sigma$ and $\mathbf{AR}_\sigma$ embed the GARCH and ARCH lag polynomials.
 
-The matrix $\mathbf{G}$ is a column vector $T \times 1$ with zeros, except the first term is the initial variance. 
+The matrix $\mathbf{G}$ is a column vector $T \times 1$ with zeros, except the first term is the initial variance.
 
 Let us now look a bit closer on how these transformations are obtained.
-
 
 # The ARIMA process
 
@@ -76,7 +74,7 @@ As noted, $\mathbf{u}$ is the $T \times 1$ matrix of residuals. It is linked to 
 
 $$
 \boldsymbol{\Delta}_d \mathbf{u} = \sum_{j=1}^{p} \rho_{j} \mathbf{L}^{j}  \boldsymbol{\Delta}_d \mathbf{u} +  \boldsymbol{\varepsilon} + \sum_{j=1}^{q} \lambda_{j} \mathbf{L}^{j}  \boldsymbol{\varepsilon}
-$${#eq-ARIMA_sum0}
+$$ {#eq-ARIMA_sum0}
 
 where $\mathbf{L}$ is the lag operator matrix, defined as:
 
@@ -89,26 +87,25 @@ $$
 \vdots & \ddots & \ddots & \ddots &        \\
 0 & \cdots & 0 & 1 & 0
 \end{bmatrix}_{T \times T}
-$${#eq-L}
+$$ {#eq-L}
 
 You can verify yourself that premultiplying a column vector by $\mathbf{L}$ shifts its elements down by one period, inserting a zero in the first position. In this way, $\mathbf{L}$ effectively applies a one-period lag to the variable it is multiplied with.
 
-Although \eqref{eq-ARIMA_sum0} may appear complex at first glance—suggesting that “everything depends on everything”—it simplifies neatly when expressed using lag polynomials: 
-$$
+Although \eqref{eq-ARIMA_sum0} may appear complex at first glance—suggesting that “everything depends on everything”—it simplifies neatly when expressed using lag polynomials: $$
 \left( \mathbf{I} - \sum_{j=1}^{p} \rho_{j} \mathbf{L}^{j} \right) \boldsymbol{\Delta}_d \mathbf{u} = \left( \mathbf{I} + \sum_{j=1}^{q} \lambda_{j} \mathbf{L}^{j} \right) \boldsymbol{\varepsilon}
-$${#eq-ARIMA_sum}
+$$ {#eq-ARIMA_sum}
 
 By compacting the notation and defining the lag polynomials as matrices, the expression becomes even clearer and more concise. The moving-average (MA) component can then be written as:
 
 $$
 \mathbf{MA} = \mathbf{I} + \sum_{j=1}^{q} \lambda_{j} \mathbf{L}^{j},
-$${#eq-MA}
+$$ {#eq-MA}
 
 and the corresponding autoregressive (AR) term is
 
 $$
 \mathbf{AR} = \mathbf{I} - \sum_{j=1}^{p} \rho_{j} \mathbf{L}^{j}.
-$${#eq-AR}
+$$ {#eq-AR}
 
 The MA matrix typically look like this
 
@@ -122,10 +119,9 @@ $$
 \lambda_q & \cdots & \cdots & \lambda_1 & 1      &        \\
 0      & \ddots & \ddots & \ddots & \ddots & \ddots
 \end{bmatrix}
-$${#eq-MA_exp}
+$$ {#eq-MA_exp}
 
-And the AR matrix typically like this
-$$
+And the AR matrix typically like this $$
 \mathbf{AR} =
 \begin{bmatrix}
 1      &        &        &        &        &        \\
@@ -135,23 +131,21 @@ $$
 -\rho_p & \cdots & \cdots & -\rho_1 & 1      &        \\
 0      & \ddots & \ddots & \ddots & \ddots & \ddots
 \end{bmatrix}
-$${#eq-AR_exp}
-
+$$ {#eq-AR_exp}
 
 Hence, we can write \eqref{eq-ARIMA_sum} in matrix notation as:
 
 $$
 \mathbf{AR} \cdot \boldsymbol{\Delta}_d \mathbf{u} = \mathbf{MA} \cdot \boldsymbol{\varepsilon}
-$${#eq-ARIMA_matrix}
+$$ {#eq-ARIMA_matrix}
 
 Our goal is to isolate the independent random noise embedded in the differenced residuals $\boldsymbol{\Delta}_d\mathbf{u}$. Recognising that this is a simple linear algebra problem, we can solve for the white-noise sequence $\boldsymbol{\varepsilon}$ by premultiplying both sides by the inverse of the moving-average operator matrix $\mathbf{MA}^{-1}$:
 
 $$
 \boldsymbol{\varepsilon} = \mathbf{MA}^{-1} \cdot \mathbf{AR} \cdot \boldsymbol{\Delta}_d \mathbf{u}
-$${#eq-ARIMA_sol}
+$$ {#eq-ARIMA_sol}
 
 Hence, the white noise error terms $\boldsymbol{\varepsilon}$ can be obtained through standard linear algebra by inverting the moving average operator. However, in practice, explicitly computing the inverse is often computationally expensive, so a recursive filtering approach is typically preferred for efficiency.
-
 
 # The GARCH process
 
@@ -161,7 +155,7 @@ In this framework, we estimate the serially correlated conditional standard devi
 
 $$
 \tilde{\varepsilon}_t = \varepsilon_t / \sigma_t
-$${#eq-objective}
+$$ {#eq-objective}
 
 This is conceptually the inverse of the ARIMA transformation, which seeks to *remove* serial correlation from the residuals. GARCH, by contrast, models that correlation in volatility.
 
@@ -169,23 +163,23 @@ We begin with a general GARCH formulation. GARCH simply means that the current v
 
 $$
 \boldsymbol{\sigma}^{2} = \mathbf{G} + \sum_{j = 1}^{m} \psi_{j}\mathbf{L}^{j}\boldsymbol{\varepsilon}^2 + \sum_{j = 1}^{k} \gamma_{j} \mathbf{L}^{j} \boldsymbol{\sigma}^{2}
-$${#eq-GARCH_problem}
+$$ {#eq-GARCH_problem}
 
 The matrix $\mathbf{G}$ is a column vector $T \times 1$ with zeros, except the first term is the initial variance, i.e. $\mathbf{G}'=[\sigma_0^2, 0,0,\cdot \cdot \cdot, 0]$. As with ARIMA, we can rearrange the GARCH equation into an explicit solvable form:
 
 $$
 \left( \mathbf{I} - \sum_{j = 1}^{k} \gamma_{j} \mathbf{L}^{j} \right) \boldsymbol{\sigma}^{2} = \mathbf{G} + \sum_{j = 1}^{m} \psi_{j} \mathbf{L}^{j} h\left( \boldsymbol{\varepsilon}, c \right)
-$${#eq-GARCH_solvable}
+$$ {#eq-GARCH_solvable}
 
 As with the ARIMA model, the problem becomes more transparent when we express the lag polynomials as matrix operators:
 
 $$
 \mathbf{GA}_{\sigma} = \mathbf{I} - \sum_{j = 1}^{k} \gamma_{j} \mathbf{L}^{j}
-$${#eq-GAs}
+$$ {#eq-GAs}
 
 $$
 \mathbf{AR}_{\sigma} = \sum_{j = 1}^{m} \psi_{j} \mathbf{L}^{j}
-$${#eq-ARs}
+$$ {#eq-ARs}
 
 $\mathbf{GA}_{\sigma}$ and $\mathbf{AR}_{\sigma}$ have similar structures as \eqref{eq-MA_exp} and \eqref{eq-AR_exp}.
 
@@ -193,16 +187,15 @@ Then, analogous to the ARIMA formulation, we can express the \eqref{eq-GARCH_sol
 
 $$
 \mathbf{GA}_{\sigma} \cdot \boldsymbol{\sigma}^{2} =  \mathbf{G} + \mathbf{AR}_{\sigma} \cdot \boldsymbol{\varepsilon}^2
-$${#eq-GARCH_operator}
+$$ {#eq-GARCH_operator}
 
 As is standard with linear systems, we solve for $\boldsymbol{\sigma}^2$ by premultiplying both sides by the inverse of $\mathbf{GA}_{\sigma}$:
 
 $$
 \boldsymbol{\sigma}^{2} = \mathbf{GA}_{\sigma}^{-1} \left( \mathbf{G} + \mathbf{AR}_{\sigma} \cdot \boldsymbol{\varepsilon}^2 \right)
-$${#eq-GARCH_solution}
+$$ {#eq-GARCH_solution}
 
 This transformation models the conditional variance process and generates a sequence of variance estimates, which are used to standardise the heteroskedastic residuals. The resulting series, $\varepsilon_t / \sigma_t$, is homoscedastic under the model assumptions.
-
 
 ## Confusing terminology
 
@@ -210,16 +203,17 @@ Following convention, the effects from $\boldsymbol{\varepsilon}^2$ are referred
 
 This naming choice may appear counterintuitive when compared to ARIMA models, where:
 
-- **Autoregressive (AR)** components capture persistence over time.
-- **Moving average (MA)** components capture transient innovation shocks.
+-   **Autoregressive (AR)** components capture persistence over time.
+-   **Moving average (MA)** components capture transient innovation shocks.
 
 In GARCH models, however, the roles are reversed:
 
-- **ARCH terms** (lagged squared residuals) reflect immediate volatility responses — akin to MA terms in ARIMA.
-- **GARCH terms** (lagged variances) model long-run volatility persistence — functionally closer to AR components.
+-   **ARCH terms** (lagged squared residuals) reflect immediate volatility responses — akin to MA terms in ARIMA.
+-   **GARCH terms** (lagged variances) model long-run volatility persistence — functionally closer to AR components.
 
 Thus, it might have been more consistent to label the ARCH component as the moving average part. One possible justification for the current convention is that the ARCH effect is the component inverted when solving the reduced-form variance equation. However, it is crucial to recognise that the dependent variable differs: ARIMA models solve for the signal $\mathbf{y}$ (via $\boldsymbol{\varepsilon}$), while GARCH models solve directly for the conditional variance $\boldsymbol{\sigma}^{2}$.
 
-
 # Literature
+
 ::: {#refs}
+:::

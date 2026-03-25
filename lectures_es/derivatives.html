@@ -178,17 +178,12 @@ window.Quarto = {
 <section id="the-cash-flow-from-an-option" class="level2">
 <h2 class="anchored" data-anchor-id="the-cash-flow-from-an-option">The cash flow from an option</h2>
 <p>There are mainly two types of options - put and call options. A call option gives you the right to buy one share at a fixed price sometime in the future. Let us say that the price agreed upon for an Equinor share is 105. This is called the strike price or exercise price. If the share price is 115 today, you can take advantage of your right to buy it for 105 and sell it in the market for 115. The value of the option is then 15.</p>
-<p>However, if the market price is 95, it would be pointless to buy the stock for 105. Since you do not have any obligation to buy it, you would not exercise your right since that would lead to a certain loss. Therefore, the option price can never be negative, since the right to buy will never be exercised if it leads to a loss. Hence, if C is the value of the call, S the value of the stock, and X the strike price at the terminal date, we have</p>
-<p><span id="eq-C"><span class="math display">\[
+<p>However, if the market price is 95, it would be pointless to buy the stock for 105. Since you do not have any obligation to buy it, you would not exercise your right since that would lead to a certain loss. Therefore, the option price can never be negative, since the right to buy will never be exercised if it leads to a loss. Hence, if C is the value of the call, S the value of the stock, and X the strike price at the terminal date, we have <span id="eq-C"><span class="math display">\[
     C = \max(S - X, 0)
 \tag{1}\]</span></span></p>
-<p>The share price is 115 option holder is thus left with <span id="eq-C_gain"><span class="math display">\[
-    = \max(115-105, 0) = 10
+<p>But if the price falls to 95, the option loses its entire value <span id="eq-C_loss"><span class="math display">\[
+    C = \max(95-105, 0) = 0
 \tag{2}\]</span></span></p>
-<p>But if the price falls to 95, the option loses its entire value</p>
-<p><span id="eq-C_loss"><span class="math display">\[
-    = \max(95-105, 0) = 0
-\tag{3}\]</span></span></p>
 <p>Let us draw this up in a chart where X is the strike price, with a python function giving the maximum betseen the current share price and <span class="math inline">\(S-X\)</span></p>
 <div id="cell-fig-call_option" class="cell" data-execution_count="1">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
@@ -399,11 +394,11 @@ Figure&nbsp;4: Call option and Black&amp;Scholes option price
 <ul>
 <li><p>Change the Black and Scholes figure to show a put option. The formula for the Black and Scholes put is <span id="eq-bs_put1"><span class="math display">\[
   P(S, X, T, r, \sigma) = X e^{-rT} \Phi(-d_2) - S \Phi(-d_1)
-\tag{4}\]</span></span> where <span id="eq-bs_put2"><span class="math display">\[
+\tag{3}\]</span></span> where <span id="eq-bs_put2"><span class="math display">\[
   d_1 = \frac{\ln(S / X) + \left(r + \frac{1}{2} \sigma^2 \right)T}{\sigma \sqrt{T}}
-\tag{5}\]</span></span> and <span id="eq-bs_put3"><span class="math display">\[
+\tag{4}\]</span></span> and <span id="eq-bs_put3"><span class="math display">\[
   d_2 = d_1 - \sigma \sqrt{T}
-\tag{6}\]</span></span></p>
+\tag{5}\]</span></span></p>
 <p><span class="math inline">\(\Phi\)</span> is the cumulative standard normal distribution function.</p></li>
 <li><p>Which of the arguments in the Black and Scholes formula are most difficult to estimate?</p></li>
 </ul>
@@ -411,33 +406,34 @@ Figure&nbsp;4: Call option and Black&amp;Scholes option price
 <section id="european-and-american-options" class="level2">
 <h2 class="anchored" data-anchor-id="european-and-american-options">European and American options</h2>
 <p>Sometimes an option can be exercised at any time up to the terminal date. We therefore distinguish between two types of options:</p>
-<pre><code>* **American option**: The option holder can choose whether to exercise the option at any time before the terminal date.
-* **European option**: The option can only be exercised on the terminal date.</code></pre>
+<ul>
+<li><strong>American option</strong>: The option holder can choose whether to exercise the option at any time before the terminal date.</li>
+<li><strong>European option</strong>: The option can only be exercised on the terminal date.</li>
+</ul>
 <p>In addition to buying options, investors may also sell options short in the market, a process known as issuing options. In this case, the cash flow will be the exact opposite of what the buyer receives, as illustrated below. The buyer (owner) receives the same cash flow as previously shown, while the seller has an obligation rather than a right. Therefore, the issuer’s cash flow is a mirror image of the buyer’s.</p>
 </section>
 <section id="put-call-parity" class="level2">
 <h2 class="anchored" data-anchor-id="put-call-parity">Put-call parity</h2>
-<p>As you may have noticed, a put option always provides a payout when a call option does not (and vice versa), assuming the strike price is the same. By combining both types of options, an investor can create a cash flow proportional to the share price, regardless of how the share price changes. This relationship between a put, a call, and the share price is known as <strong>put-call parity</strong>:</p>
-<p><span id="eq-put_call_parity"><span class="math display">\[
+<p>As you may have noticed, a put option always provides a payout when a call option does not (and vice versa), assuming the strike price is the same. By combining both types of options, an investor can create a cash flow proportional to the share price, regardless of how the share price changes. This relationship between a put, a call, and the share price is known as <strong>put-call parity</strong>: <span id="eq-put_call_parity"><span class="math display">\[
 S_{t} - PV_{t}(X) = C_{t} - P_{t}
-\tag{7}\]</span></span></p>
+\tag{6}\]</span></span></p>
 <p>Where <span class="math inline">\(PV_{t}(X)\)</span> is the present value at time <span class="math inline">\(t\)</span>. As we see, this formula applies at any time, including before the terminal date <span class="math inline">\(T\)</span>.</p>
 <p>In the figure below, we see the cash flow for a call option (<span class="math inline">\(+C_t\)</span>) and an issued put (<span class="math inline">\(-P_t\)</span>) plotted. The dotted line represents the combined value of these two positions, that is, the value of <span class="math inline">\(C_t - P_t\)</span>, along with the stock price <span class="math inline">\(S\)</span> itself.</p>
 <p>If the date is before the terminal date, we use the present value of the exercise price at that time, <span class="math inline">\(PV_{t}(X)\)</span>. However, for now, we assume the terminal exercise price <span class="math inline">\(X\)</span> that has been used throughout.</p>
 <p>The call-put and <span class="math inline">\(S - X\)</span> positions in <a href="#fig-put_call_par" class="quarto-xref">Figure&nbsp;5</a> are shifted up and down by 1 to make all lines visible.</p>
 <div id="cell-fig-put_call_par" class="cell" data-execution_count="5">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>ax, S <span class="op">=</span> create_canvas(<span class="st">"Put-call parity"</span>)</span>
-<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>call_payoff <span class="op">=</span> np.maximum(S <span class="op">-</span> X, <span class="dv">0</span>) <span class="co">#call option payoff</span></span>
-<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>put_payoff <span class="op">=</span> np.maximum(X<span class="op">-</span>S, <span class="dv">0</span>) <span class="co">#call option payoff</span></span>
-<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>ax.plot(S, call_payoff, label<span class="op">=</span><span class="st">"Call Option Payoff"</span>, </span>
-<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>                                    linewidth<span class="op">=</span><span class="dv">3</span>)</span>
-<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a>ax.plot(S, <span class="op">-</span>put_payoff, label<span class="op">=</span><span class="st">"Put Option Payoff"</span>, </span>
-<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a>                                    linewidth<span class="op">=</span><span class="dv">3</span>)</span>
-<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a>ax.plot(S, call_payoff<span class="op">-</span>put_payoff <span class="op">+</span> <span class="dv">1</span>, </span>
-<span id="cb6-10"><a href="#cb6-10" aria-hidden="true" tabindex="-1"></a>                label<span class="op">=</span><span class="st">"$C_t-P_t$ Payoff"</span>, linewidth<span class="op">=</span><span class="dv">3</span>)</span>
-<span id="cb6-11"><a href="#cb6-11" aria-hidden="true" tabindex="-1"></a>ax.plot(S, S<span class="op">-</span>X <span class="op">-</span> <span class="dv">1</span>, label<span class="op">=</span><span class="st">"$S-X$ Payoff"</span>, linewidth<span class="op">=</span><span class="dv">3</span>)</span>
-<span id="cb6-12"><a href="#cb6-12" aria-hidden="true" tabindex="-1"></a>ax.legend()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>ax, S <span class="op">=</span> create_canvas(<span class="st">"Put-call parity"</span>)</span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>call_payoff <span class="op">=</span> np.maximum(S <span class="op">-</span> X, <span class="dv">0</span>) <span class="co">#call option payoff</span></span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>put_payoff <span class="op">=</span> np.maximum(X<span class="op">-</span>S, <span class="dv">0</span>) <span class="co">#call option payoff</span></span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>ax.plot(S, call_payoff, label<span class="op">=</span><span class="st">"Call Option Payoff"</span>, </span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>                                    linewidth<span class="op">=</span><span class="dv">3</span>)</span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a>ax.plot(S, <span class="op">-</span>put_payoff, label<span class="op">=</span><span class="st">"Put Option Payoff"</span>, </span>
+<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a>                                    linewidth<span class="op">=</span><span class="dv">3</span>)</span>
+<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a>ax.plot(S, call_payoff<span class="op">-</span>put_payoff <span class="op">+</span> <span class="dv">1</span>, </span>
+<span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a>                label<span class="op">=</span><span class="st">"$C_t-P_t$ Payoff"</span>, linewidth<span class="op">=</span><span class="dv">3</span>)</span>
+<span id="cb5-11"><a href="#cb5-11" aria-hidden="true" tabindex="-1"></a>ax.plot(S, S<span class="op">-</span>X <span class="op">-</span> <span class="dv">1</span>, label<span class="op">=</span><span class="st">"$S-X$ Payoff"</span>, linewidth<span class="op">=</span><span class="dv">3</span>)</span>
+<span id="cb5-12"><a href="#cb5-12" aria-hidden="true" tabindex="-1"></a>ax.legend()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-display">
 <div id="fig-put_call_par" class="quarto-float quarto-figure quarto-figure-center anchored">
 <figure class="quarto-float quarto-float-fig figure">
@@ -460,13 +456,13 @@ Figure&nbsp;5: Put-call parity
 <p>By combining a put and a call, it is possible to replicate the cash flows of buying a share and taking out a loan. Additionally, one can buy and sell puts and calls with different exercise prices to create customized cash flows at different share prices.</p>
 <p>In <a href="#fig-issue_call_put" class="quarto-xref">Figure&nbsp;6</a>, we have plotted the net cash flow from issuing both a call option (call) and a put option (put).</p>
 <div id="cell-fig-issue_call_put" class="cell" data-execution_count="6">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>ax, S <span class="op">=</span> create_canvas(<span class="st">"Issuing a call and put"</span>)</span>
-<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>call_payoff <span class="op">=</span> np.maximum(S <span class="op">-</span> X, <span class="dv">0</span>) <span class="co">#call option payoff</span></span>
-<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>put_payoff <span class="op">=</span> np.maximum(X<span class="op">-</span>S, <span class="dv">0</span>) <span class="co">#call option payoff</span></span>
-<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>ax.plot(S, <span class="op">-</span>call_payoff<span class="op">-</span>put_payoff<span class="op">+</span><span class="dv">8</span>, </span>
-<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a>                        label<span class="op">=</span><span class="st">"Issued call and put"</span>, linewidth<span class="op">=</span><span class="dv">3</span>)</span>
-<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a>ax.legend()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>ax, S <span class="op">=</span> create_canvas(<span class="st">"Issuing a call and put"</span>)</span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>call_payoff <span class="op">=</span> np.maximum(S <span class="op">-</span> X, <span class="dv">0</span>) <span class="co">#call option payoff</span></span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>put_payoff <span class="op">=</span> np.maximum(X<span class="op">-</span>S, <span class="dv">0</span>) <span class="co">#call option payoff</span></span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>ax.plot(S, <span class="op">-</span>call_payoff<span class="op">-</span>put_payoff<span class="op">+</span><span class="dv">8</span>, </span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>                        label<span class="op">=</span><span class="st">"Issued call and put"</span>, linewidth<span class="op">=</span><span class="dv">3</span>)</span>
+<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a>ax.legend()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-display">
 <div id="fig-issue_call_put" class="quarto-float quarto-figure quarto-figure-center anchored">
 <figure class="quarto-float quarto-float-fig figure">
@@ -504,57 +500,50 @@ Try different combinations of call and put options, including those with differe
 </div>
 <p>The task is to determine the current option price, denoted as <span class="math inline">\(f_0\)</span> in the figure above. We use <span class="math inline">\(f_0\)</span> instead of <span class="math inline">\(c_0\)</span> because we aim to develop a general pricing method that applies to both put and call options. In fact, this method can be used to price any derivative.</p>
 <p>The key to solving this problem is recognizing that the same cash flow can be replicated by borrowing money to finance a fraction of the shares that the option delivers, regardless of whether the price goes up or down. The reason this replication is possible is that an option’s value is a function of the stock price. When the stock is worth 115, the option will always be worth 15. When the stock is worth 95, the option is always worthless. By substituting the stock price into this function, we can determine the value of the option.</p>
-<p>Now, suppose we borrow money to purchase a certain number of shares per option, denoted by <span class="math inline">\(\Delta\)</span>. For example, if we buy half as many shares as options, then <span class="math inline">\(\Delta = \frac{1}{2}\)</span>. Since the stock price is 100, we buy shares worth:</p>
-<p><span id="eq-delta_example"><span class="math display">\[
+<p>Now, suppose we borrow money to purchase a certain number of shares per option, denoted by <span class="math inline">\(\Delta\)</span>. For example, if we buy half as many shares as options, then <span class="math inline">\(\Delta = \frac{1}{2}\)</span>. Since the stock price is 100, we buy shares worth: <span id="eq-delta_example"><span class="math display">\[
 100 \cdot \Delta = 50
-\tag{8}\]</span></span></p>
-<p>per option. After half a year (<span class="math inline">\(T = \frac{1}{2}\)</span>), we must repay the loan with interest, so the total repayment amount will be:</p>
-<p><span id="eq-repayment_example"><span class="math display">\[
+\tag{7}\]</span></span></p>
+<p>per option. After half a year (<span class="math inline">\(T = \frac{1}{2}\)</span>), we must repay the loan with interest, so the total repayment amount will be: <span id="eq-repayment_example"><span class="math display">\[
 100 \cdot 1.05^{\tfrac{1}{2}} \cdot \Delta
-\tag{9}\]</span></span></p>
-<p>If the share price rises, our account balance will then show a surplus of:</p>
-<p><span id="eq-cf_up"><span class="math display">\[
+\tag{8}\]</span></span></p>
+<p>If the share price rises, our account balance will then show a surplus of: <span id="eq-cf_up"><span class="math display">\[
 \Delta \cdot (115 - 100 \cdot 1.05^{\tfrac{1}{2}})
-\tag{10}\]</span></span></p>
-<p>Similarly, we receive 15 on the option if the stock price goes up. If we buy the option for <span class="math inline">\(f_0\)</span> today and fund it with a loan equal amount <span class="math inline">\(f_0\)</span>, we will next year have:</p>
-<p><span id="eq-option_up"><span class="math display">\[
+\tag{9}\]</span></span></p>
+<p>Similarly, we receive 15 on the option if the stock price goes up. If we buy the option for <span class="math inline">\(f_0\)</span> today and fund it with a loan equal amount <span class="math inline">\(f_0\)</span>, we will next year have: <span id="eq-option_up"><span class="math display">\[
 10 - f_0 \cdot 1.05^{\tfrac{1}{2}}
-\tag{11}\]</span></span></p>
+\tag{10}\]</span></span></p>
 <p>We can now select an appropriate proportion of shares <span class="math inline">\(\Delta\)</span> so that these two transactions provide identical cash flows. This means that we can find a fraction of shares <span class="math inline">\(\Delta\)</span> so that the leveraged purchase of <span class="math inline">\(\Delta\)</span> shares give the same return as a similar purchase of the option by solving the following equation for <span class="math inline">\(\Delta\)</span>: <span id="eq-no_arbitrage_up"><span class="math display">\[
 \Delta \cdot (115 - 100 \cdot 1.05^{\tfrac{1}{2}}) = 10 - f_0 \cdot 1.05^{\tfrac{1}{2}}
-\tag{12}\]</span></span></p>
-<p>If the stock goes down, we can reason in exactly the same way. We get a loss of</p>
-<p><span id="eq-cf_down"><span class="math display">\[
+\tag{11}\]</span></span></p>
+<p>If the stock goes down, we can reason in exactly the same way. We get a loss of <span id="eq-cf_down"><span class="math display">\[
 \Delta \cdot (95 - 100 \cdot 1.05^{\frac{1}{2}})
-\tag{13}\]</span></span></p>
-<p>on the share and a loss of</p>
-<p><span id="eq-option_down"><span class="math display">\[
+\tag{12}\]</span></span></p>
+<p>on the share and a loss of <span id="eq-option_down"><span class="math display">\[
 0 - f_0 \cdot 1.05^{\frac{1}{2}}
-\tag{14}\]</span></span></p>
-<p>on the option. We require that the investments should provide the same return, so we can set an equality between them:</p>
-<p><span id="eq-no_arbitrage_down"><span class="math display">\[
+\tag{13}\]</span></span></p>
+<p>on the option. We require that the investments should provide the same return, so we can set an equality between them: <span id="eq-no_arbitrage_down"><span class="math display">\[
 \Delta \cdot (95 - 100 \cdot 1.05^{\frac{1}{2}}) = 0 - f_0 \cdot 1.05^{\frac{1}{2}}
-\tag{15}\]</span></span></p>
+\tag{14}\]</span></span></p>
 <p>We now have two relatively simple equations with two unknowns, <span class="math inline">\(\Delta\)</span> and <span class="math inline">\(f_0\)</span>, which we can solve using sympy:</p>
-<div id="ca72cf38" class="cell" data-execution_count="7">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb8"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> sympy <span class="im">as</span> sp</span>
-<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> IPython.display <span class="im">import</span> display, Markdown</span>
-<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Define symbols</span></span>
-<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a>Delta, f0 <span class="op">=</span> sp.symbols(<span class="st">'Delta f0'</span>)</span>
-<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Define the equations</span></span>
-<span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a>eq1 <span class="op">=</span> sp.Eq(Delta <span class="op">*</span> (<span class="dv">95</span> <span class="op">-</span> <span class="dv">100</span> <span class="op">*</span> <span class="fl">1.05</span><span class="op">**</span>(<span class="dv">1</span><span class="op">/</span><span class="dv">2</span>)), </span>
-<span id="cb8-9"><a href="#cb8-9" aria-hidden="true" tabindex="-1"></a>                            <span class="dv">0</span> <span class="op">-</span> f0 <span class="op">*</span> <span class="fl">1.05</span><span class="op">**</span>(<span class="dv">1</span><span class="op">/</span><span class="dv">2</span>))</span>
-<span id="cb8-10"><a href="#cb8-10" aria-hidden="true" tabindex="-1"></a>eq2 <span class="op">=</span> sp.Eq(Delta <span class="op">*</span> (<span class="dv">115</span> <span class="op">-</span> <span class="dv">100</span> <span class="op">*</span> <span class="fl">1.05</span><span class="op">**</span>(<span class="dv">1</span><span class="op">/</span><span class="dv">2</span>)), </span>
-<span id="cb8-11"><a href="#cb8-11" aria-hidden="true" tabindex="-1"></a>                            <span class="dv">10</span> <span class="op">-</span> f0 <span class="op">*</span> <span class="fl">1.05</span><span class="op">**</span>(<span class="dv">1</span><span class="op">/</span><span class="dv">2</span>))</span>
-<span id="cb8-12"><a href="#cb8-12" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb8-13"><a href="#cb8-13" aria-hidden="true" tabindex="-1"></a><span class="co"># Solve for Delta and f0</span></span>
-<span id="cb8-14"><a href="#cb8-14" aria-hidden="true" tabindex="-1"></a>sol <span class="op">=</span> sp.solve((eq1, eq2), (Delta, f0))</span>
-<span id="cb8-15"><a href="#cb8-15" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb8-16"><a href="#cb8-16" aria-hidden="true" tabindex="-1"></a><span class="co"># Display the solution</span></span>
-<span id="cb8-17"><a href="#cb8-17" aria-hidden="true" tabindex="-1"></a>display(Markdown(<span class="ss">f"$f_0=</span><span class="sc">{</span>sol[f0]<span class="sc">}</span><span class="ss">$"</span>))</span>
-<span id="cb8-18"><a href="#cb8-18" aria-hidden="true" tabindex="-1"></a>display(Markdown(<span class="ss">f"$</span><span class="ch">\\</span><span class="ss">Delta=</span><span class="sc">{</span>sol[Delta]<span class="sc">}</span><span class="ss">$"</span>))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div id="2c1c53da" class="cell" data-execution_count="7">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> sympy <span class="im">as</span> sp</span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> IPython.display <span class="im">import</span> display, Markdown</span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Define symbols</span></span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>Delta, f0 <span class="op">=</span> sp.symbols(<span class="st">'Delta f0'</span>)</span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Define the equations</span></span>
+<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a>eq1 <span class="op">=</span> sp.Eq(Delta <span class="op">*</span> (<span class="dv">95</span> <span class="op">-</span> <span class="dv">100</span> <span class="op">*</span> <span class="fl">1.05</span><span class="op">**</span>(<span class="dv">1</span><span class="op">/</span><span class="dv">2</span>)), </span>
+<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a>                            <span class="dv">0</span> <span class="op">-</span> f0 <span class="op">*</span> <span class="fl">1.05</span><span class="op">**</span>(<span class="dv">1</span><span class="op">/</span><span class="dv">2</span>))</span>
+<span id="cb7-10"><a href="#cb7-10" aria-hidden="true" tabindex="-1"></a>eq2 <span class="op">=</span> sp.Eq(Delta <span class="op">*</span> (<span class="dv">115</span> <span class="op">-</span> <span class="dv">100</span> <span class="op">*</span> <span class="fl">1.05</span><span class="op">**</span>(<span class="dv">1</span><span class="op">/</span><span class="dv">2</span>)), </span>
+<span id="cb7-11"><a href="#cb7-11" aria-hidden="true" tabindex="-1"></a>                            <span class="dv">10</span> <span class="op">-</span> f0 <span class="op">*</span> <span class="fl">1.05</span><span class="op">**</span>(<span class="dv">1</span><span class="op">/</span><span class="dv">2</span>))</span>
+<span id="cb7-12"><a href="#cb7-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-13"><a href="#cb7-13" aria-hidden="true" tabindex="-1"></a><span class="co"># Solve for Delta and f0</span></span>
+<span id="cb7-14"><a href="#cb7-14" aria-hidden="true" tabindex="-1"></a>sol <span class="op">=</span> sp.solve((eq1, eq2), (Delta, f0))</span>
+<span id="cb7-15"><a href="#cb7-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-16"><a href="#cb7-16" aria-hidden="true" tabindex="-1"></a><span class="co"># Display the solution</span></span>
+<span id="cb7-17"><a href="#cb7-17" aria-hidden="true" tabindex="-1"></a>display(Markdown(<span class="ss">f"$f_0=</span><span class="sc">{</span>sol[f0]<span class="sc">}</span><span class="ss">$"</span>))</span>
+<span id="cb7-18"><a href="#cb7-18" aria-hidden="true" tabindex="-1"></a>display(Markdown(<span class="ss">f"$</span><span class="ch">\\</span><span class="ss">Delta=</span><span class="sc">{</span>sol[Delta]<span class="sc">}</span><span class="ss">$"</span>))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-display cell-output-markdown">
 <p><span class="math inline">\(f_0=3.64474653494468\)</span></p>
 </div>
@@ -564,11 +553,10 @@ Try different combinations of call and put options, including those with differe
 </div>
 <p><span id="eq-delta_sol"><span class="math display">\[
 \Delta = \tfrac{1}{2}
-\tag{16}\]</span></span></p>
-<p>and</p>
-<p><span id="eq-f0_sol"><span class="math display">\[
+\tag{15}\]</span></span></p>
+<p>and <span id="eq-f0_sol"><span class="math display">\[
 f_0 \approx 3.645
-\tag{17}\]</span></span></p>
+\tag{16}\]</span></span></p>
 <p>What we have done is find a combination of loans and equity investments that produce the same return as an equivalent position in the option. This is the fundamental principle behind all option pricing.</p>
 <p>Thus, it is possible to achieve the same cash flows as the option by holding a fraction <span class="math inline">\(\Delta\)</span> of the share. This principle applies generally—an option can always be replicated by holding a portion of the stock. In fact, many banks profit by issuing options and hedging them through this replication strategy.</p>
 </section>
@@ -618,82 +606,74 @@ f_0 \approx 3.645
 </table>
 <p>Here, the subscripts <em>u</em> and <em>d</em> represent the up and down movements of the stock, respectively. We use a general variable <span class="math inline">\(f\)</span> that can stand for both a put (<span class="math inline">\(P\)</span>) and a call option (<span class="math inline">\(C\)</span>). Additionally, we define two variables, <span class="math inline">\(u\)</span> and <span class="math inline">\(d\)</span>, which represent the relative movement of the stock price when it increases or decreases.</p>
 <p>In our example, we are considering an option with a strike price <span class="math inline">\(X = 105\)</span>, where the stock can either rise to <span class="math inline">\(S_u = 115\)</span> or fall to <span class="math inline">\(S_d = 95\)</span> from <span class="math inline">\(S_0=100\)</span>. The interest rate is <span class="math inline">\(r=0.05\)</span> and time to expiration is <span class="math inline">\(T=0.5\)</span>, so</p>
-<div id="371f5fc0" class="cell" data-execution_count="8">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb9"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>S_u <span class="op">=</span> <span class="dv">115</span></span>
-<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>S_d <span class="op">=</span> <span class="dv">95</span></span>
-<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>S_0 <span class="op">=</span> <span class="dv">100</span></span>
-<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a>f_u <span class="op">=</span> <span class="dv">10</span></span>
-<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a>f_d <span class="op">=</span> <span class="dv">0</span></span>
-<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a>u <span class="op">=</span> S_u<span class="op">/</span>S_0</span>
-<span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a>d <span class="op">=</span> S_d<span class="op">/</span>S_0</span>
-<span id="cb9-8"><a href="#cb9-8" aria-hidden="true" tabindex="-1"></a>r <span class="op">=</span> <span class="fl">0.05</span></span>
-<span id="cb9-9"><a href="#cb9-9" aria-hidden="true" tabindex="-1"></a>T <span class="op">=</span> <span class="fl">0.5</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div id="6fd135af" class="cell" data-execution_count="8">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb8"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>S_u <span class="op">=</span> <span class="dv">115</span></span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>S_d <span class="op">=</span> <span class="dv">95</span></span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>S_0 <span class="op">=</span> <span class="dv">100</span></span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>f_u <span class="op">=</span> <span class="dv">10</span></span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a>f_d <span class="op">=</span> <span class="dv">0</span></span>
+<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a>u <span class="op">=</span> S_u<span class="op">/</span>S_0</span>
+<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a>d <span class="op">=</span> S_d<span class="op">/</span>S_0</span>
+<span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a>r <span class="op">=</span> <span class="fl">0.05</span></span>
+<span id="cb8-9"><a href="#cb8-9" aria-hidden="true" tabindex="-1"></a>T <span class="op">=</span> <span class="fl">0.5</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <p>Now, instead of using specific numbers, we generalize the approach from the previous section to find <span class="math inline">\(f_0\)</span>.</p>
-<p>As before, the investor buys <span class="math inline">\(\Delta\)</span> shares and borrows <span class="math inline">\(\Delta \cdot S_0\)</span> to finance the purchase. Taking interest into account, the investor must repay</p>
-<p><span id="eq-repay"><span class="math display">\[
+<p>As before, the investor buys <span class="math inline">\(\Delta\)</span> shares and borrows <span class="math inline">\(\Delta \cdot S_0\)</span> to finance the purchase. Taking interest into account, the investor must repay <span id="eq-repay"><span class="math display">\[
 \Delta \cdot S_0 \cdot (1 + r)^T
-\tag{18}\]</span></span></p>
-<p>after one year. If the stock price rises, the investor can sell the stock for <span class="math inline">\(S_u\)</span> in the market. The resulting profit will be:</p>
-<p><span id="eq-up_delta_profit"><span class="math display">\[
+\tag{17}\]</span></span></p>
+<p>after one year. If the stock price rises, the investor can sell the stock for <span class="math inline">\(S_u\)</span> in the market. The resulting profit will be: <span id="eq-up_delta_profit"><span class="math display">\[
 \Delta\cdot(S_u - S_0 \cdot(1+r)^T)
-\tag{19}\]</span></span></p>
-<p>This should match the profit gained from financing the option purchase with a loan. The option provides a payoff of <span class="math inline">\(f_u\)</span> when the stock price rises. The loan that must be repaid consists of the initial purchase price plus interest, which is:</p>
-<p><span id="eq-up_f_profit"><span class="math display">\[
+\tag{18}\]</span></span></p>
+<p>This should match the profit gained from financing the option purchase with a loan. The option provides a payoff of <span class="math inline">\(f_u\)</span> when the stock price rises. The loan that must be repaid consists of the initial purchase price plus interest, which is: <span id="eq-up_f_profit"><span class="math display">\[
 f_0 \cdot (1 + r)^T
-\tag{20}\]</span></span></p>
-<p>Thus, the profit from the leveraged option purchase is:</p>
-<p><span id="eq-up_f"><span class="math display">\[
+\tag{19}\]</span></span></p>
+<p>Thus, the profit from the leveraged option purchase is: <span id="eq-up_f"><span class="math display">\[
 f_u - f_0\cdot(1+r)^T
-\tag{21}\]</span></span></p>
+\tag{20}\]</span></span></p>
 <p>As before, we choose now a share of shares so that the profits of shares and option price match. That is, we find a <span class="math inline">\(\Delta\)</span> such that: <span id="eq-up_equation"><span class="math display">\[
 \Delta\cdot(S_u - S_0 \cdot(1+r)^T) = f_u - f_0\cdot(1+r)^T
-\tag{22}\]</span></span></p>
-<p>Exactly the same argument applies if the stock goes down, so in that case we need only replace subscript u with d:</p>
-<p><span id="eq-down_equation"><span class="math display">\[
+\tag{21}\]</span></span></p>
+<p>Exactly the same argument applies if the stock goes down, so in that case we need only replace subscript u with d: <span id="eq-down_equation"><span class="math display">\[
 \Delta\cdot(S_d - S_0 \cdot(1+r)^T) = f_d - f_0\cdot(1+r)^T
-\tag{23}\]</span></span></p>
+\tag{22}\]</span></span></p>
 </section>
 <section id="risk-neutral-probability" class="level2">
 <h2 class="anchored" data-anchor-id="risk-neutral-probability">Risk-neutral probability</h2>
-<p>As in the previous section, we have two unknowns: the proportion of <span class="math inline">\(\Delta\)</span> shares and the option price <span class="math inline">\(f\)</span>, which can be easily solved. We will not go into the full derivation of the solution here. However, it turns out that the solution can be expressed in a relatively simple way using a variable <span class="math inline">\(q\)</span>, known as the “risk-neutral probability.” It is calculated as:</p>
-<p><span id="eq-q_formula"><span class="math display">\[
+<p>As in the previous section, we have two unknowns: the proportion of <span class="math inline">\(\Delta\)</span> shares and the option price <span class="math inline">\(f\)</span>, which can be easily solved. We will not go into the full derivation of the solution here. However, it turns out that the solution can be expressed in a relatively simple way using a variable <span class="math inline">\(q\)</span>, known as the “risk-neutral probability.” It is calculated as: <span id="eq-q_formula"><span class="math display">\[
 q=\frac{(1+r)^T-d}{u-d}
-\tag{24}\]</span></span></p>
+\tag{23}\]</span></span></p>
 <p><span class="math inline">\(q\)</span> is really just a tool for calculating the option price and is not actually a probability. However, it shares a key property with real probabilities in that it always lies between zero and one. We use it to compute an expectation in the same way as we do with normal probabilities.</p>
-<p>It is called “risk-neutral” because if we apply it to the terminal values of the underlying stock (<span class="math inline">\(S_u\)</span> and <span class="math inline">\(S_d\)</span>), the expected value equals the current stock price plus interest:</p>
-<p><span id="eq-q_expectation"><span class="math display">\[
+<p>It is called “risk-neutral” because if we apply it to the terminal values of the underlying stock (<span class="math inline">\(S_u\)</span> and <span class="math inline">\(S_d\)</span>), the expected value equals the current stock price plus interest: <span id="eq-q_expectation"><span class="math display">\[
 \mathbb{E}_q[S_T] = S_u \cdot q + S_d \cdot (1-q) = S_0 \cdot (1+r)^T
-\tag{25}\]</span></span></p>
+\tag{24}\]</span></span></p>
 <p>We can verify this with sympy:</p>
-<div id="ec5266e2" class="cell" data-execution_count="9">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb10"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Define symbols</span></span>
-<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>Su, Sd, S0, r, T, q <span class="op">=</span> sp.symbols(<span class="st">'Su Sd S0 r T q'</span>)</span>
-<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>u <span class="op">=</span> Su<span class="op">/</span>S0</span>
-<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a>d <span class="op">=</span> Sd<span class="op">/</span>S0</span>
-<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb10-8"><a href="#cb10-8" aria-hidden="true" tabindex="-1"></a>q <span class="op">=</span> ((<span class="dv">1</span><span class="op">+</span>r)<span class="op">**</span>T<span class="op">-</span>d)<span class="op">/</span>(u<span class="op">-</span>d)</span>
-<span id="cb10-9"><a href="#cb10-9" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb10-10"><a href="#cb10-10" aria-hidden="true" tabindex="-1"></a><span class="co"># The expected stock price under risk neutral </span></span>
-<span id="cb10-11"><a href="#cb10-11" aria-hidden="true" tabindex="-1"></a><span class="co"># probability</span></span>
-<span id="cb10-12"><a href="#cb10-12" aria-hidden="true" tabindex="-1"></a>sp.simplify(Su <span class="op">*</span> q <span class="op">+</span> Sd <span class="op">*</span> (<span class="dv">1</span> <span class="op">-</span> q))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div id="3e97ac5f" class="cell" data-execution_count="9">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb9"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Define symbols</span></span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>Su, Sd, S0, r, T, q <span class="op">=</span> sp.symbols(<span class="st">'Su Sd S0 r T q'</span>)</span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a>u <span class="op">=</span> Su<span class="op">/</span>S0</span>
+<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a>d <span class="op">=</span> Sd<span class="op">/</span>S0</span>
+<span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-8"><a href="#cb9-8" aria-hidden="true" tabindex="-1"></a>q <span class="op">=</span> ((<span class="dv">1</span><span class="op">+</span>r)<span class="op">**</span>T<span class="op">-</span>d)<span class="op">/</span>(u<span class="op">-</span>d)</span>
+<span id="cb9-9"><a href="#cb9-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-10"><a href="#cb9-10" aria-hidden="true" tabindex="-1"></a><span class="co"># The expected stock price under risk neutral </span></span>
+<span id="cb9-11"><a href="#cb9-11" aria-hidden="true" tabindex="-1"></a><span class="co"># probability</span></span>
+<span id="cb9-12"><a href="#cb9-12" aria-hidden="true" tabindex="-1"></a>sp.simplify(Su <span class="op">*</span> q <span class="op">+</span> Sd <span class="op">*</span> (<span class="dv">1</span> <span class="op">-</span> q))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-display cell-output-markdown" data-execution_count="33">
 <p><span class="math inline">\(\displaystyle S_{0} \left(r + 1\right)^{T}\)</span></p>
 </div>
 </div>
 <p>Once we find <span class="math inline">\(q\)</span>, the option price is simply given as the present value of the expected option value at exercise, where we use the risk-neutral probability <span class="math inline">\(q\)</span> as the probability of “up” and “down”.</p>
-<p>The option price today is therefore:</p>
-<p><span id="eq-gen_formula"><span class="math display">\[
+<p>The option price today is therefore: <span id="eq-gen_formula"><span class="math display">\[
 f_0=\frac{q \cdot f_u + (1-q) \cdot f_d}{(1+r)^T}
-\tag{26}\]</span></span></p>
+\tag{25}\]</span></span></p>
 <p>We have discounted the expected value because <span class="math inline">\(f_u\)</span> and <span class="math inline">\(f_d\)</span> are not present cash flows but represent cash flows at the terminal time <span class="math inline">\(T\)</span>.</p>
 <p>The process for calculating the price of a binomial option is as follows:</p>
 <ol type="1">
 <li>Calculate <span class="math inline">\(u\)</span> and <span class="math inline">\(d\)</span></li>
-<li>Calculate the risk-neutral probability <span class="math inline">\(q\)</span> (<a href="#eq-q_formula" class="quarto-xref">24</a>)</li>
-<li>Calculate the present value of the expected option value using probability <span class="math inline">\(q\)</span> (<a href="#eq-gen_formula" class="quarto-xref">26</a>)</li>
+<li>Calculate the risk-neutral probability <span class="math inline">\(q\)</span> (<a href="#eq-q_formula" class="quarto-xref">23</a>)</li>
+<li>Calculate the present value of the expected option value using probability <span class="math inline">\(q\)</span> (<a href="#eq-gen_formula" class="quarto-xref">25</a>)</li>
 </ol>
 <p>Although we will not delve into the mathematics of more complex payoffs, this illustrates a remarkably general principle: any derivative — a financial security whose value depends on shares or other underlying assets — can be priced using a probability distribution that ensures a risk-neutral return for the stock.</p>
 <p>Thus, the price of any derivative can be determined by defining an appropriate risk-neutral probability distribution.</p>
@@ -702,36 +682,35 @@ f_0=\frac{q \cdot f_u + (1-q) \cdot f_d}{(1+r)^T}
 </section>
 <section id="option-delta" class="level2">
 <h2 class="anchored" data-anchor-id="option-delta">Option delta</h2>
-<p>Another important quantity is <span class="math inline">\(\Delta\)</span>, which represents the number of shares needed to replicate an option. It turns out that the delta is:</p>
-<p><span id="eq-gen_delta_formula"><span class="math display">\[
+<p>Another important quantity is <span class="math inline">\(\Delta\)</span>, which represents the number of shares needed to replicate an option. It turns out that the delta is: <span id="eq-gen_delta_formula"><span class="math display">\[
 \Delta=\frac{f_u-f_d}{S_u-S_d}
-\tag{27}\]</span></span></p>
+\tag{26}\]</span></span></p>
 <p>The <span class="math inline">\(\Delta\)</span> is useful because it indicates how many shares you must buy to replicate the option. Since holding more shares increases risk, delta also serves as a measure of the risk inherent in the option.</p>
 <p>Delta can also be used to achieve the same exposure as holding the underlying derivative. By frequently rebalancing so that your holdings in the underlying asset adjust proportionally to the delta—typically on a daily or weekly basis—your cash flow will closely mimic the exposure of the derivative.</p>
 <p>This strategy is known as <em>“delta hedging”</em>, and it is the method banks use when issuing derivatives. By continuously adjusting their positions in the underlying asset, banks hedge these products to ensure they do not take on financial risk themselves.</p>
 </section>
 <section id="using-the-general-binomial-formula" class="level2">
 <h2 class="anchored" data-anchor-id="using-the-general-binomial-formula">Using the General Binomial Formula</h2>
-<p>Let us apply the numbers from our example to the general binomial formula to calculate the value of the option. We will then compare the result with the solutions <span class="math inline">\(\Delta = \tfrac{1}{2}\)</span> and <span class="math inline">\(f_0 \approx 3.645\)</span> obtained from solving the equations (<a href="#eq-no_arbitrage_up" class="quarto-xref">12</a>) and (<a href="#eq-no_arbitrage_down" class="quarto-xref">15</a>).</p>
-<div id="0781c04f" class="cell" data-execution_count="10">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb11"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> IPython.display <span class="im">import</span> display, Markdown</span>
-<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>S_u <span class="op">=</span> <span class="dv">115</span></span>
-<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a>S_d <span class="op">=</span> <span class="dv">95</span></span>
-<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a>S_0 <span class="op">=</span> <span class="dv">100</span></span>
-<span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a>f_u <span class="op">=</span> <span class="dv">10</span></span>
-<span id="cb11-7"><a href="#cb11-7" aria-hidden="true" tabindex="-1"></a>f_d <span class="op">=</span> <span class="dv">0</span></span>
-<span id="cb11-8"><a href="#cb11-8" aria-hidden="true" tabindex="-1"></a>u <span class="op">=</span> S_u<span class="op">/</span>S_0</span>
-<span id="cb11-9"><a href="#cb11-9" aria-hidden="true" tabindex="-1"></a>d <span class="op">=</span> S_d<span class="op">/</span>S_0</span>
-<span id="cb11-10"><a href="#cb11-10" aria-hidden="true" tabindex="-1"></a>r <span class="op">=</span> <span class="fl">0.05</span></span>
-<span id="cb11-11"><a href="#cb11-11" aria-hidden="true" tabindex="-1"></a>T <span class="op">=</span> <span class="fl">0.5</span></span>
-<span id="cb11-12"><a href="#cb11-12" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb11-13"><a href="#cb11-13" aria-hidden="true" tabindex="-1"></a>q <span class="op">=</span> ((<span class="dv">1</span><span class="op">+</span>r)<span class="op">**</span>T<span class="op">-</span>d)<span class="op">/</span>(u<span class="op">-</span>d)</span>
-<span id="cb11-14"><a href="#cb11-14" aria-hidden="true" tabindex="-1"></a>f0 <span class="op">=</span> (q<span class="op">*</span>f_u<span class="op">+</span>(<span class="dv">1</span><span class="op">-</span>q)<span class="op">*</span>f_d)<span class="op">/</span>((<span class="dv">1</span><span class="op">+</span>r)<span class="op">**</span>T)</span>
-<span id="cb11-15"><a href="#cb11-15" aria-hidden="true" tabindex="-1"></a>delta <span class="op">=</span> (f_u<span class="op">-</span>f_d)<span class="op">/</span>(S_u<span class="op">-</span>S_d)</span>
-<span id="cb11-16"><a href="#cb11-16" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb11-17"><a href="#cb11-17" aria-hidden="true" tabindex="-1"></a>display(Markdown(<span class="ss">f"$f_0=</span><span class="sc">{</span>f0<span class="sc">}</span><span class="ss">$"</span>))</span>
-<span id="cb11-18"><a href="#cb11-18" aria-hidden="true" tabindex="-1"></a>display(Markdown(<span class="ss">f"$</span><span class="ch">\\</span><span class="ss">Delta=</span><span class="sc">{</span>delta<span class="sc">}</span><span class="ss">$"</span>))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>Let us apply the numbers from our example to the general binomial formula to calculate the value of the option. We will then compare the result with the solutions <span class="math inline">\(\Delta = \tfrac{1}{2}\)</span> and <span class="math inline">\(f_0 \approx 3.645\)</span> obtained from solving the equations (<a href="#eq-no_arbitrage_up" class="quarto-xref">11</a>) and (<a href="#eq-no_arbitrage_down" class="quarto-xref">14</a>).</p>
+<div id="350184d7" class="cell" data-execution_count="10">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb10"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> IPython.display <span class="im">import</span> display, Markdown</span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>S_u <span class="op">=</span> <span class="dv">115</span></span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>S_d <span class="op">=</span> <span class="dv">95</span></span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a>S_0 <span class="op">=</span> <span class="dv">100</span></span>
+<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a>f_u <span class="op">=</span> <span class="dv">10</span></span>
+<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a>f_d <span class="op">=</span> <span class="dv">0</span></span>
+<span id="cb10-8"><a href="#cb10-8" aria-hidden="true" tabindex="-1"></a>u <span class="op">=</span> S_u<span class="op">/</span>S_0</span>
+<span id="cb10-9"><a href="#cb10-9" aria-hidden="true" tabindex="-1"></a>d <span class="op">=</span> S_d<span class="op">/</span>S_0</span>
+<span id="cb10-10"><a href="#cb10-10" aria-hidden="true" tabindex="-1"></a>r <span class="op">=</span> <span class="fl">0.05</span></span>
+<span id="cb10-11"><a href="#cb10-11" aria-hidden="true" tabindex="-1"></a>T <span class="op">=</span> <span class="fl">0.5</span></span>
+<span id="cb10-12"><a href="#cb10-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-13"><a href="#cb10-13" aria-hidden="true" tabindex="-1"></a>q <span class="op">=</span> ((<span class="dv">1</span><span class="op">+</span>r)<span class="op">**</span>T<span class="op">-</span>d)<span class="op">/</span>(u<span class="op">-</span>d)</span>
+<span id="cb10-14"><a href="#cb10-14" aria-hidden="true" tabindex="-1"></a>f0 <span class="op">=</span> (q<span class="op">*</span>f_u<span class="op">+</span>(<span class="dv">1</span><span class="op">-</span>q)<span class="op">*</span>f_d)<span class="op">/</span>((<span class="dv">1</span><span class="op">+</span>r)<span class="op">**</span>T)</span>
+<span id="cb10-15"><a href="#cb10-15" aria-hidden="true" tabindex="-1"></a>delta <span class="op">=</span> (f_u<span class="op">-</span>f_d)<span class="op">/</span>(S_u<span class="op">-</span>S_d)</span>
+<span id="cb10-16"><a href="#cb10-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-17"><a href="#cb10-17" aria-hidden="true" tabindex="-1"></a>display(Markdown(<span class="ss">f"$f_0=</span><span class="sc">{</span>f0<span class="sc">}</span><span class="ss">$"</span>))</span>
+<span id="cb10-18"><a href="#cb10-18" aria-hidden="true" tabindex="-1"></a>display(Markdown(<span class="ss">f"$</span><span class="ch">\\</span><span class="ss">Delta=</span><span class="sc">{</span>delta<span class="sc">}</span><span class="ss">$"</span>))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-display cell-output-markdown">
 <p><span class="math inline">\(f_0=3.6447465349446806\)</span></p>
 </div>
@@ -747,47 +726,47 @@ f_0=\frac{q \cdot f_u + (1-q) \cdot f_d}{(1+r)^T}
 <p>Before we explore how contracts on assets with continuous rather than binomial prices are valued, we must first understand how stock prices are modeled in modern finance. This modeling approach provides a practical way to describe stock price movements in mathematical terms.</p>
 <p>Let us begin by plotting some actual intraday prices. The blue line in <a href="#fig-intraday" class="quarto-xref">Figure&nbsp;7</a> shows a snapshot of the intraday price movements for the Norwegian company Equinor on March 24, 2025.</p>
 <div id="cell-fig-intraday" class="cell" data-execution_count="11">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb12"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
-<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> matplotlib <span class="im">import</span> pyplot <span class="im">as</span> plt</span>
-<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib.dates <span class="im">as</span> mdates</span>
-<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
-<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb12-6"><a href="#cb12-6" aria-hidden="true" tabindex="-1"></a><span class="co"># Read the data</span></span>
-<span id="cb12-7"><a href="#cb12-7" aria-hidden="true" tabindex="-1"></a>df <span class="op">=</span> pd.read_csv(<span class="st">'data/'</span></span>
-<span id="cb12-8"><a href="#cb12-8" aria-hidden="true" tabindex="-1"></a>                <span class="st">'equinor_intraday_240325.csv'</span>)</span>
-<span id="cb12-9"><a href="#cb12-9" aria-hidden="true" tabindex="-1"></a>df[<span class="st">'TID'</span>] <span class="op">=</span> pd.to_datetime(df[<span class="st">'TID'</span>], </span>
-<span id="cb12-10"><a href="#cb12-10" aria-hidden="true" tabindex="-1"></a>                            <span class="bu">format</span><span class="op">=</span><span class="st">'%H:%M:%S'</span>)</span>
-<span id="cb12-11"><a href="#cb12-11" aria-hidden="true" tabindex="-1"></a>df <span class="op">=</span> df.sort_values(<span class="st">'TID'</span>)</span>
-<span id="cb12-12"><a href="#cb12-12" aria-hidden="true" tabindex="-1"></a>df<span class="op">=</span>df[df[<span class="st">'TID'</span>]<span class="op">&gt;=</span>pd.to_datetime(<span class="st">'9:00:00'</span>, </span>
-<span id="cb12-13"><a href="#cb12-13" aria-hidden="true" tabindex="-1"></a>                            <span class="bu">format</span><span class="op">=</span><span class="st">'%H:%M:%S'</span>)]</span>
-<span id="cb12-14"><a href="#cb12-14" aria-hidden="true" tabindex="-1"></a>df<span class="op">=</span>df[df[<span class="st">'TID'</span>]<span class="op">&lt;=</span>pd.to_datetime(<span class="st">'16:00:00'</span>, </span>
-<span id="cb12-15"><a href="#cb12-15" aria-hidden="true" tabindex="-1"></a>                            <span class="bu">format</span><span class="op">=</span><span class="st">'%H:%M:%S'</span>)] </span>
-<span id="cb12-16"><a href="#cb12-16" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb12-17"><a href="#cb12-17" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> create_canvas():</span>
-<span id="cb12-18"><a href="#cb12-18" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Create figure and axis objects</span></span>
-<span id="cb12-19"><a href="#cb12-19" aria-hidden="true" tabindex="-1"></a>    fig, ax <span class="op">=</span> plt.subplots(figsize<span class="op">=</span>(<span class="dv">10</span>, <span class="dv">5</span>))</span>
-<span id="cb12-20"><a href="#cb12-20" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb12-21"><a href="#cb12-21" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Set major ticks to round hours every hour</span></span>
-<span id="cb12-22"><a href="#cb12-22" aria-hidden="true" tabindex="-1"></a>    ax.xaxis.set_major_locator(</span>
-<span id="cb12-23"><a href="#cb12-23" aria-hidden="true" tabindex="-1"></a>        mdates.HourLocator(interval<span class="op">=</span><span class="dv">1</span>))</span>
-<span id="cb12-24"><a href="#cb12-24" aria-hidden="true" tabindex="-1"></a>    ax.xaxis.set_major_formatter(</span>
-<span id="cb12-25"><a href="#cb12-25" aria-hidden="true" tabindex="-1"></a>        mdates.DateFormatter(<span class="st">'%H:%M'</span>))</span>
-<span id="cb12-26"><a href="#cb12-26" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb12-27"><a href="#cb12-27" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Rotate x-axis labels for readability</span></span>
-<span id="cb12-28"><a href="#cb12-28" aria-hidden="true" tabindex="-1"></a>    plt.setp(ax.xaxis.get_majorticklabels(), </span>
-<span id="cb12-29"><a href="#cb12-29" aria-hidden="true" tabindex="-1"></a>                                    rotation<span class="op">=</span><span class="dv">90</span>)</span>
-<span id="cb12-30"><a href="#cb12-30" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb12-31"><a href="#cb12-31" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Labels and title</span></span>
-<span id="cb12-32"><a href="#cb12-32" aria-hidden="true" tabindex="-1"></a>    ax.set_xlabel(<span class="st">'Time'</span>)</span>
-<span id="cb12-33"><a href="#cb12-33" aria-hidden="true" tabindex="-1"></a>    ax.set_ylabel(<span class="st">'Price'</span>)</span>
-<span id="cb12-34"><a href="#cb12-34" aria-hidden="true" tabindex="-1"></a>    ax.set_title(<span class="st">'Equinor Intraday Price'</span>)</span>
-<span id="cb12-35"><a href="#cb12-35" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb12-36"><a href="#cb12-36" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> ax</span>
-<span id="cb12-37"><a href="#cb12-37" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb12-38"><a href="#cb12-38" aria-hidden="true" tabindex="-1"></a>ax <span class="op">=</span> create_canvas()</span>
-<span id="cb12-39"><a href="#cb12-39" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb12-40"><a href="#cb12-40" aria-hidden="true" tabindex="-1"></a><span class="co">#Plot the data</span></span>
-<span id="cb12-41"><a href="#cb12-41" aria-hidden="true" tabindex="-1"></a>ax.plot(df[<span class="st">'TID'</span>], df[<span class="st">'PRIS'</span>])</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb11"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> matplotlib <span class="im">import</span> pyplot <span class="im">as</span> plt</span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib.dates <span class="im">as</span> mdates</span>
+<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
+<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a><span class="co"># Read the data</span></span>
+<span id="cb11-7"><a href="#cb11-7" aria-hidden="true" tabindex="-1"></a>df <span class="op">=</span> pd.read_csv(<span class="st">'data/'</span></span>
+<span id="cb11-8"><a href="#cb11-8" aria-hidden="true" tabindex="-1"></a>                <span class="st">'equinor_intraday_240325.csv'</span>)</span>
+<span id="cb11-9"><a href="#cb11-9" aria-hidden="true" tabindex="-1"></a>df[<span class="st">'TID'</span>] <span class="op">=</span> pd.to_datetime(df[<span class="st">'TID'</span>], </span>
+<span id="cb11-10"><a href="#cb11-10" aria-hidden="true" tabindex="-1"></a>                            <span class="bu">format</span><span class="op">=</span><span class="st">'%H:%M:%S'</span>)</span>
+<span id="cb11-11"><a href="#cb11-11" aria-hidden="true" tabindex="-1"></a>df <span class="op">=</span> df.sort_values(<span class="st">'TID'</span>)</span>
+<span id="cb11-12"><a href="#cb11-12" aria-hidden="true" tabindex="-1"></a>df<span class="op">=</span>df[df[<span class="st">'TID'</span>]<span class="op">&gt;=</span>pd.to_datetime(<span class="st">'9:00:00'</span>, </span>
+<span id="cb11-13"><a href="#cb11-13" aria-hidden="true" tabindex="-1"></a>                            <span class="bu">format</span><span class="op">=</span><span class="st">'%H:%M:%S'</span>)]</span>
+<span id="cb11-14"><a href="#cb11-14" aria-hidden="true" tabindex="-1"></a>df<span class="op">=</span>df[df[<span class="st">'TID'</span>]<span class="op">&lt;=</span>pd.to_datetime(<span class="st">'16:00:00'</span>, </span>
+<span id="cb11-15"><a href="#cb11-15" aria-hidden="true" tabindex="-1"></a>                            <span class="bu">format</span><span class="op">=</span><span class="st">'%H:%M:%S'</span>)] </span>
+<span id="cb11-16"><a href="#cb11-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-17"><a href="#cb11-17" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> create_canvas():</span>
+<span id="cb11-18"><a href="#cb11-18" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Create figure and axis objects</span></span>
+<span id="cb11-19"><a href="#cb11-19" aria-hidden="true" tabindex="-1"></a>    fig, ax <span class="op">=</span> plt.subplots(figsize<span class="op">=</span>(<span class="dv">10</span>, <span class="dv">5</span>))</span>
+<span id="cb11-20"><a href="#cb11-20" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-21"><a href="#cb11-21" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Set major ticks to round hours every hour</span></span>
+<span id="cb11-22"><a href="#cb11-22" aria-hidden="true" tabindex="-1"></a>    ax.xaxis.set_major_locator(</span>
+<span id="cb11-23"><a href="#cb11-23" aria-hidden="true" tabindex="-1"></a>        mdates.HourLocator(interval<span class="op">=</span><span class="dv">1</span>))</span>
+<span id="cb11-24"><a href="#cb11-24" aria-hidden="true" tabindex="-1"></a>    ax.xaxis.set_major_formatter(</span>
+<span id="cb11-25"><a href="#cb11-25" aria-hidden="true" tabindex="-1"></a>        mdates.DateFormatter(<span class="st">'%H:%M'</span>))</span>
+<span id="cb11-26"><a href="#cb11-26" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-27"><a href="#cb11-27" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Rotate x-axis labels for readability</span></span>
+<span id="cb11-28"><a href="#cb11-28" aria-hidden="true" tabindex="-1"></a>    plt.setp(ax.xaxis.get_majorticklabels(), </span>
+<span id="cb11-29"><a href="#cb11-29" aria-hidden="true" tabindex="-1"></a>                                    rotation<span class="op">=</span><span class="dv">90</span>)</span>
+<span id="cb11-30"><a href="#cb11-30" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-31"><a href="#cb11-31" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Labels and title</span></span>
+<span id="cb11-32"><a href="#cb11-32" aria-hidden="true" tabindex="-1"></a>    ax.set_xlabel(<span class="st">'Time'</span>)</span>
+<span id="cb11-33"><a href="#cb11-33" aria-hidden="true" tabindex="-1"></a>    ax.set_ylabel(<span class="st">'Price'</span>)</span>
+<span id="cb11-34"><a href="#cb11-34" aria-hidden="true" tabindex="-1"></a>    ax.set_title(<span class="st">'Equinor Intraday Price'</span>)</span>
+<span id="cb11-35"><a href="#cb11-35" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-36"><a href="#cb11-36" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> ax</span>
+<span id="cb11-37"><a href="#cb11-37" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-38"><a href="#cb11-38" aria-hidden="true" tabindex="-1"></a>ax <span class="op">=</span> create_canvas()</span>
+<span id="cb11-39"><a href="#cb11-39" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-40"><a href="#cb11-40" aria-hidden="true" tabindex="-1"></a><span class="co">#Plot the data</span></span>
+<span id="cb11-41"><a href="#cb11-41" aria-hidden="true" tabindex="-1"></a>ax.plot(df[<span class="st">'TID'</span>], df[<span class="st">'PRIS'</span>])</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-display">
 <div id="fig-intraday" class="quarto-float quarto-figure quarto-figure-center anchored">
 <figure class="quarto-float quarto-float-fig figure">
@@ -808,27 +787,27 @@ Figure&nbsp;7: Intraday prices for Equinor
 <h2 class="anchored" data-anchor-id="modeling-the-stock-price">Modeling the stock price</h2>
 <p>Let us now examine how financial economists model stock prices to replicate actual price movements as closely as possible. In <a href="#fig-intraday_sim" class="quarto-xref">Figure&nbsp;8</a>, a stock price process is simulated using the standard approach in finance and presented alongside the actual stock price of Equinor.</p>
 <div id="cell-fig-intraday_sim" class="cell" data-execution_count="12">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb13"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="co">#Simulation:</span></span>
-<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a><span class="co">#Calculating the mean and volatility</span></span>
-<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a>mu <span class="op">=</span> np.log(df[<span class="st">'PRIS'</span>]).diff().mean()</span>
-<span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a>sigma <span class="op">=</span> np.log(df[<span class="st">'PRIS'</span>]).diff().std()</span>
-<span id="cb13-6"><a href="#cb13-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb13-7"><a href="#cb13-7" aria-hidden="true" tabindex="-1"></a><span class="co">#The Wiener process</span></span>
-<span id="cb13-8"><a href="#cb13-8" aria-hidden="true" tabindex="-1"></a>dlnS <span class="op">=</span> (mu <span class="op">-</span> <span class="fl">0.5</span> <span class="op">*</span> sigma<span class="op">**</span><span class="dv">2</span> </span>
-<span id="cb13-9"><a href="#cb13-9" aria-hidden="true" tabindex="-1"></a>                <span class="op">+</span> sigma <span class="op">*</span> np.random.randn(<span class="bu">len</span>(df)))</span>
-<span id="cb13-10"><a href="#cb13-10" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb13-11"><a href="#cb13-11" aria-hidden="true" tabindex="-1"></a><span class="co">#Ensuring the proces starts at the same point, </span></span>
-<span id="cb13-12"><a href="#cb13-12" aria-hidden="true" tabindex="-1"></a><span class="co">#and calulating the level</span></span>
-<span id="cb13-13"><a href="#cb13-13" aria-hidden="true" tabindex="-1"></a>dlnS[<span class="dv">0</span>] <span class="op">=</span> <span class="dv">0</span></span>
-<span id="cb13-14"><a href="#cb13-14" aria-hidden="true" tabindex="-1"></a>df[<span class="st">'PRIS_sim'</span>] <span class="op">=</span> (df[<span class="st">'PRIS'</span>].iloc[<span class="dv">0</span>] </span>
-<span id="cb13-15"><a href="#cb13-15" aria-hidden="true" tabindex="-1"></a>                        <span class="op">*</span> np.exp(np.cumsum(dlnS)))</span>
-<span id="cb13-16"><a href="#cb13-16" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb13-17"><a href="#cb13-17" aria-hidden="true" tabindex="-1"></a><span class="co">#plotting:</span></span>
-<span id="cb13-18"><a href="#cb13-18" aria-hidden="true" tabindex="-1"></a>ax <span class="op">=</span> create_canvas()</span>
-<span id="cb13-19"><a href="#cb13-19" aria-hidden="true" tabindex="-1"></a>ax.plot(df[<span class="st">'TID'</span>], df[<span class="st">'PRIS'</span>])</span>
-<span id="cb13-20"><a href="#cb13-20" aria-hidden="true" tabindex="-1"></a>ax.plot(df[<span class="st">'TID'</span>], df[<span class="st">'PRIS_sim'</span>])</span>
-<span id="cb13-21"><a href="#cb13-21" aria-hidden="true" tabindex="-1"></a>ax.legend([<span class="st">'Real'</span>, <span class="st">'Simulated'</span>], frameon<span class="op">=</span><span class="va">False</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb12"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="co">#Simulation:</span></span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a><span class="co">#Calculating the mean and volatility</span></span>
+<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a>mu <span class="op">=</span> np.log(df[<span class="st">'PRIS'</span>]).diff().mean()</span>
+<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a>sigma <span class="op">=</span> np.log(df[<span class="st">'PRIS'</span>]).diff().std()</span>
+<span id="cb12-6"><a href="#cb12-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-7"><a href="#cb12-7" aria-hidden="true" tabindex="-1"></a><span class="co">#The Wiener process</span></span>
+<span id="cb12-8"><a href="#cb12-8" aria-hidden="true" tabindex="-1"></a>dlnS <span class="op">=</span> (mu <span class="op">-</span> <span class="fl">0.5</span> <span class="op">*</span> sigma<span class="op">**</span><span class="dv">2</span> </span>
+<span id="cb12-9"><a href="#cb12-9" aria-hidden="true" tabindex="-1"></a>                <span class="op">+</span> sigma <span class="op">*</span> np.random.randn(<span class="bu">len</span>(df)))</span>
+<span id="cb12-10"><a href="#cb12-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-11"><a href="#cb12-11" aria-hidden="true" tabindex="-1"></a><span class="co">#Ensuring the proces starts at the same point, </span></span>
+<span id="cb12-12"><a href="#cb12-12" aria-hidden="true" tabindex="-1"></a><span class="co">#and calulating the level</span></span>
+<span id="cb12-13"><a href="#cb12-13" aria-hidden="true" tabindex="-1"></a>dlnS[<span class="dv">0</span>] <span class="op">=</span> <span class="dv">0</span></span>
+<span id="cb12-14"><a href="#cb12-14" aria-hidden="true" tabindex="-1"></a>df[<span class="st">'PRIS_sim'</span>] <span class="op">=</span> (df[<span class="st">'PRIS'</span>].iloc[<span class="dv">0</span>] </span>
+<span id="cb12-15"><a href="#cb12-15" aria-hidden="true" tabindex="-1"></a>                        <span class="op">*</span> np.exp(np.cumsum(dlnS)))</span>
+<span id="cb12-16"><a href="#cb12-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-17"><a href="#cb12-17" aria-hidden="true" tabindex="-1"></a><span class="co">#plotting:</span></span>
+<span id="cb12-18"><a href="#cb12-18" aria-hidden="true" tabindex="-1"></a>ax <span class="op">=</span> create_canvas()</span>
+<span id="cb12-19"><a href="#cb12-19" aria-hidden="true" tabindex="-1"></a>ax.plot(df[<span class="st">'TID'</span>], df[<span class="st">'PRIS'</span>])</span>
+<span id="cb12-20"><a href="#cb12-20" aria-hidden="true" tabindex="-1"></a>ax.plot(df[<span class="st">'TID'</span>], df[<span class="st">'PRIS_sim'</span>])</span>
+<span id="cb12-21"><a href="#cb12-21" aria-hidden="true" tabindex="-1"></a>ax.legend([<span class="st">'Real'</span>, <span class="st">'Simulated'</span>], frameon<span class="op">=</span><span class="va">False</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-display">
 <div id="fig-intraday_sim" class="quarto-float quarto-figure quarto-figure-center anchored">
 <figure class="quarto-float quarto-float-fig figure">
@@ -843,68 +822,59 @@ Figure&nbsp;8: Intraday prices for Equinor
 </div>
 </div>
 <p>The orange line in <a href="#fig-intraday_sim" class="quarto-xref">Figure&nbsp;8</a> represents simulated prices, meaning that each time the code is executed, the orange path will vary.</p>
-<p>You can see this from the formula in <a href="#fig-intraday_sim" class="quarto-xref">Figure&nbsp;8</a>, but we will now take a closer look at how stock prices are typically modeled in finance. We start with a model based on the relative <em>geometric</em> change in stock prices. By relative geometric change, we mean to the log difference, defined as:</p>
-<p><span id="eq-logdiff_def"><span class="math display">\[
+<p>You can see this from the formula in <a href="#fig-intraday_sim" class="quarto-xref">Figure&nbsp;8</a>, but we will now take a closer look at how stock prices are typically modeled in finance. We start with a model based on the relative <em>geometric</em> change in stock prices. By relative geometric change, we mean to the log difference, defined as: <span id="eq-logdiff_def"><span class="math display">\[
 \Delta \log(S_t) = \log(S_t) - \log(S_{t-1}) = \Delta s_t
-\tag{28}\]</span></span></p>
-<p>Alternatively, we could consider the <em>discrete percentage difference</em>:</p>
-<p><span class="math display">\[
+\tag{27}\]</span></span></p>
+<p>Alternatively, we could consider the <em>discrete percentage difference</em>: <span class="math display">\[
 \Delta S_t / S_t
 \]</span></p>
 <p>However, using log differences instead of percentage differences has a key advantage: the latter is <em>not symmetric</em>. If a stock price increases by 10% and then decreases by 10%, it does not return to its original level. In contrast, with log differences, a 10% increase followed by a 10% decrease brings the stock price <em>exactly</em> back to its starting point.</p>
 <p>Log differences are closely related to <em>continuous compounding</em> and the <em>exponential function</em>. Since the logarithm is the inverse of the exponential function, the following identity holds for any <span class="math inline">\(x\)</span>:</p>
-<div id="5fc04d3f" class="cell" data-execution_count="13">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb14"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
-<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>x <span class="op">=</span> <span class="fl">23.434</span></span>
-<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a>np.exp(np.log(x))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div id="2f29104a" class="cell" data-execution_count="13">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb13"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>x <span class="op">=</span> <span class="fl">23.434</span></span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a>np.exp(np.log(x))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-display" data-execution_count="37">
 <pre><code>np.float64(23.434)</code></pre>
 </div>
 </div>
-<p>Thus, if we know the log change <span class="math inline">\(\Delta s_t\)</span> over a given period, it follows directly from (<a href="#eq-logdiff_def" class="quarto-xref">28</a>) that the stock price at time <span class="math inline">\(t\)</span> is given by:</p>
-<p><span id="eq-price_log_diff"><span class="math display">\[
+<p>Thus, if we know the log change <span class="math inline">\(\Delta s_t\)</span> over a given period, it follows directly from (<a href="#eq-logdiff_def" class="quarto-xref">27</a>) that the stock price at time <span class="math inline">\(t\)</span> is given by: <span id="eq-price_log_diff"><span class="math display">\[
 S_t = S_0 \cdot e^{s_t}
-\tag{29}\]</span></span></p>
+\tag{28}\]</span></span></p>
 <p>The log change in stock price consists of three key components: <em>drift, volatility correction, and innovation</em>, which will now be explained in more detail:</p>
 </section>
 <section id="innovation" class="level2">
 <h2 class="anchored" data-anchor-id="innovation">Innovation</h2>
 <p>Since stock prices are not fully predictable, we need to introduce a random element. This randomness should be structured so that the variance increases proportionally with time. This assumption is reasonable because it implies that the stock price two months from now will have twice the variance — and thus twice the risk — of the stock price one month from now.</p>
-<p>This simple assumption can be expressed as</p>
-<p><span id="eq-wiener"><span class="math display">\[
+<p>This simple assumption can be expressed as <span id="eq-wiener"><span class="math display">\[
 z_{t} = \varepsilon_{t}\sqrt{t}
-\tag{30}\]</span></span></p>
+\tag{29}\]</span></span></p>
 <p>where <span class="math inline">\(\varepsilon_{t}\)</span> is standard normally distributed, <span class="math inline">\(\varepsilon_{t} \sim N(0,1)\)</span>, meaning it has a mean of zero and variance of one.</p>
-<p>The standard random variable is multiplied by the square root of <span class="math inline">\(t\)</span>, ensuring that:</p>
-<p><span id="eq-var_deltaz"><span class="math display">\[
+<p>The standard random variable is multiplied by the square root of <span class="math inline">\(t\)</span>, ensuring that: <span id="eq-var_deltaz"><span class="math display">\[
 Var(z_t) = t
-\tag{31}\]</span></span></p>
+\tag{30}\]</span></span></p>
 <p>A random variable that increases in variance with time is called a Wiener Process. The further into the future, the less we know about the stock price.</p>
-<p>The actual innovation also has a scale parameter <span class="math inline">\(\sigma\)</span>, so that the innovation to the price becomes:</p>
-<p><span id="eq-sigma_zt"><span class="math display">\[
+<p>The actual innovation also has a scale parameter <span class="math inline">\(\sigma\)</span>, so that the innovation to the price becomes: <span id="eq-sigma_zt"><span class="math display">\[
 \sigma \cdot z_t
-\tag{32}\]</span></span></p>
-<p>The associated variance is proportional to the time period:</p>
-<p><span id="eq-var_sigma_zt"><span class="math display">\[
+\tag{31}\]</span></span></p>
+<p>The associated variance is proportional to the time period: <span id="eq-var_sigma_zt"><span class="math display">\[
 var(\sigma \cdot z_t) = \sigma^2 \cdot t
-\tag{33}\]</span></span></p>
-<p>When simulating, we want to draw each innovation in the process <span class="math inline">\(z_t\)</span>, in other words, we want to draw the change in <span class="math inline">\(z_t\)</span>. Change is as usual indicated by <span class="math inline">\(\Delta\)</span>, so that the innovation per observation becomes</p>
-<p><span id="eq-sigma_delta_zt"><span class="math display">\[
+\tag{32}\]</span></span></p>
+<p>When simulating, we want to draw each innovation in the process <span class="math inline">\(z_t\)</span>, in other words, we want to draw the change in <span class="math inline">\(z_t\)</span>. Change is as usual indicated by <span class="math inline">\(\Delta\)</span>, so that the innovation per observation becomes <span id="eq-sigma_delta_zt"><span class="math display">\[
 \sigma \cdot \Delta z_t
-\tag{34}\]</span></span></p>
-<p>The associated variance is then:</p>
-<p><span class="math display">\[
+\tag{33}\]</span></span></p>
+<p>The associated variance is then: <span class="math display">\[
 var(\sigma \cdot \Delta z_t) = \sigma^2 \cdot \Delta t
 \]</span></p>
 <p>This means that the variance of each period in the Wiener Process <span class="math inline">\(z_t\)</span> is directly proportional to the length of the period.</p>
 <p>In the specific dataset used for <a href="#fig-intraday" class="quarto-xref">Figure&nbsp;7</a>, the time intervals between observations vary because the data is based on transaction records. The time period is determined by the actual time elapsed between consecutive data points. However, in most financial models, <span class="math inline">\(\Delta t\)</span> is typically assumed to be constant.</p>
 <p>For simplicity, in the simulation shown in <a href="#fig-intraday_sim" class="quarto-xref">Figure&nbsp;8</a>, we assume that the time step between observations is fixed at <span class="math inline">\(\Delta t = 1\)</span>. To create a process that closely replicates Equinor’s price movements, we estimate the period volatility using the standard deviation of the log price differences between observations:</p>
-<div id="08592608" class="cell" data-execution_count="14">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb16"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a>sigma <span class="op">=</span> np.log(df[<span class="st">'PRIS'</span>]).diff().std()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div id="c0d3599f" class="cell" data-execution_count="14">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb15"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>sigma <span class="op">=</span> np.log(df[<span class="st">'PRIS'</span>]).diff().std()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
-<p>The implementation of the innovation term from (<a href="#eq-sigma_delta_zt" class="quarto-xref">34</a>) in the code is then:</p>
-<div id="52e0a1d5" class="cell" data-execution_count="15">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb17"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a>sigma <span class="op">*</span> np.random.randn(<span class="bu">len</span>(df))<span class="op">;</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>The implementation of the innovation term from (<a href="#eq-sigma_delta_zt" class="quarto-xref">33</a>) in the code is then:</p>
+<div id="7ab6595e" class="cell" data-execution_count="15">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb16"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a>sigma <span class="op">*</span> np.random.randn(<span class="bu">len</span>(df))<span class="op">;</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <p>Here, <code>np.random.randn(len(df))</code> generates random draws from a standard normal distribution, representing <span class="math inline">\(\varepsilon_{t}\)</span>, while multiplying by <code>sigma</code> scales the randomness according to the estimated volatility of the stock price.</p>
 </section>
@@ -913,55 +883,47 @@ var(\sigma \cdot \Delta z_t) = \sigma^2 \cdot \Delta t
 <p>The stock price is expected to change by a certain percentage each period. This expectation is captured by a drift term <span class="math inline">\(\mu\)</span>, which represents the average rate of return per time unit. On average, the stock price is expected to increase by <span class="math inline">\(\mu \Delta t\)</span> in each period.</p>
 <p>By combining this deterministic drift term with the stochastic Wiener process, we obtain the full stock price process.</p>
 <p>In the code for <a href="#fig-intraday" class="quarto-xref">Figure&nbsp;7</a>, the drift term is estimated as the mean log price change of Equinor throughout the trading day:</p>
-<div id="da96d5e4" class="cell" data-execution_count="16">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb18"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a>mu <span class="op">=</span> np.log(df[<span class="st">'PRIS'</span>]).diff().mean()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div id="20370037" class="cell" data-execution_count="16">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb17"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a>mu <span class="op">=</span> np.log(df[<span class="st">'PRIS'</span>]).diff().mean()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
-<p>Mathematicaly the drift can be written</p>
-<p><span id="eq-logdiff_drift_innov"><span class="math display">\[
+<p>Mathematicaly the drift can be written <span id="eq-logdiff_drift_innov"><span class="math display">\[
 \mu \cdot \Delta t
-\tag{35}\]</span></span></p>
+\tag{34}\]</span></span></p>
 <p>In the calculation of <a href="#fig-intraday" class="quarto-xref">Figure&nbsp;7</a>, <span class="math inline">\(\Delta t = 1\)</span></p>
 </section>
 <section id="volatility-correction" class="level2">
 <h2 class="anchored" data-anchor-id="volatility-correction">Volatility Correction</h2>
-<p>If we were to define the change in log price using only the drift and innovation terms, as in (<a href="#eq-logdiff_drift_innov" class="quarto-xref">35</a>) and (<a href="#eq-sigma_delta_zt" class="quarto-xref">34</a>), the cumulative log price change from time 0 to <span class="math inline">\(t\)</span> would be:</p>
-<p><span class="math display">\[
+<p>If we were to define the change in log price using only the drift and innovation terms, as in (<a href="#eq-logdiff_drift_innov" class="quarto-xref">34</a>) and (<a href="#eq-sigma_delta_zt" class="quarto-xref">33</a>), the cumulative log price change from time 0 to <span class="math inline">\(t\)</span> would be: <span class="math display">\[
 s_t = \mu \cdot t + \sigma \cdot z_t
 \]</span></p>
-<p>Substituting this into the exponential price model from (<a href="#eq-price_log_diff" class="quarto-xref">29</a>) gives:</p>
-<p><span class="math display">\[
+<p>Substituting this into the exponential price model from (<a href="#eq-price_log_diff" class="quarto-xref">28</a>) gives: <span class="math display">\[
 S_t = S_0 \cdot e^{\mu \cdot t + \sigma \cdot z_t}
 \]</span></p>
-<p>However, as we previously discussed in <a href="#fig-jensen" class="quarto-xref">Figure&nbsp;3</a>, this expression ignores the effect of Jensen’s inequality. Because the exponential function is convex, the expected value of <span class="math inline">\(S_t\)</span> is greater than the expected value of the log price change:</p>
-<p><span id="eq-incorrect_exp"><span class="math display">\[
+<p>However, as we previously discussed in <a href="#fig-jensen" class="quarto-xref">Figure&nbsp;3</a>, this expression ignores the effect of Jensen’s inequality. Because the exponential function is convex, the expected value of <span class="math inline">\(S_t\)</span> is greater than the expected value of the log price change: <span id="eq-incorrect_exp"><span class="math display">\[
 \mathbb{E}[S_t] &gt; S_0 \cdot e^{\mu \cdot t}
-\tag{36}\]</span></span></p>
-<p>We do know, however, what accounts for this difference between the expectation of the function and the function of the expectation. By adding a correction term</p>
-<p><span id="eq-volatility_correction"><span class="math display">\[
+\tag{35}\]</span></span></p>
+<p>We do know, however, what accounts for this difference between the expectation of the function and the function of the expectation. By adding a correction term <span id="eq-volatility_correction"><span class="math display">\[
 -\tfrac{1}{2} \sigma^2 t
-\tag{37}\]</span></span></p>
-<p>we can adjust for Jensen’s inequality exactly. That is, we know that</p>
-<p><span id="eq-correct_exp"><span class="math display">\[
+\tag{36}\]</span></span></p>
+<p>we can adjust for Jensen’s inequality exactly. That is, we know that <span id="eq-correct_exp"><span class="math display">\[
 \mathbb{E}[S_t] = S_0 \cdot e^{\mu \cdot t - \tfrac{1}{2} \sigma^2 t}
-\tag{38}\]</span></span></p>
+\tag{37}\]</span></span></p>
 </section>
 <section id="putting-it-all-together" class="level2">
 <h2 class="anchored" data-anchor-id="putting-it-all-together">Putting It All Together</h2>
-<p>By combining the innovation term (<a href="#eq-sigma_delta_zt" class="quarto-xref">34</a>), the volatility correction term (<a href="#eq-volatility_correction" class="quarto-xref">37</a>), and the drift component from (<a href="#eq-logdiff_drift_innov" class="quarto-xref">35</a>), we arrive at a realistic model for the log change in stock price:</p>
-<p><span id="eq-logdiff_model"><span class="math display">\[
+<p>By combining the innovation term (<a href="#eq-sigma_delta_zt" class="quarto-xref">33</a>), the volatility correction term (<a href="#eq-volatility_correction" class="quarto-xref">36</a>), and the drift component from (<a href="#eq-logdiff_drift_innov" class="quarto-xref">34</a>), we arrive at a realistic model for the log change in stock price: <span id="eq-logdiff_model"><span class="math display">\[
 \Delta s_t = \mu \cdot \Delta t - \tfrac{1}{2} \sigma^2 \Delta t + \sigma \cdot \Delta z_t
-\tag{39}\]</span></span></p>
-<p>This leads to the full model for the stock price at any point in time:</p>
-<p><span id="eq-final_price_model"><span class="math display">\[
+\tag{38}\]</span></span></p>
+<p>This leads to the full model for the stock price at any point in time: <span id="eq-final_price_model"><span class="math display">\[
 S_t = S_0 \cdot e^{\mu \cdot t - \tfrac{1}{2} \sigma^2 \cdot t + \sigma \cdot z_t}
-\tag{40}\]</span></span></p>
-<p>Using (<a href="#eq-logdiff_model" class="quarto-xref">39</a>), the Python implementation therefore becomes</p>
-<div id="4f123347" class="cell" data-execution_count="17">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb19"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a>dlnS <span class="op">=</span> (mu <span class="op">-</span> <span class="fl">0.5</span> <span class="op">*</span> sigma<span class="op">**</span><span class="dv">2</span> </span>
-<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a>                <span class="op">+</span> sigma <span class="op">*</span> np.random.randn(<span class="bu">len</span>(df)))</span>
-<span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb19-4"><a href="#cb19-4" aria-hidden="true" tabindex="-1"></a>df[<span class="st">'PRIS_sim'</span>] <span class="op">=</span> (df[<span class="st">'PRIS'</span>].iloc[<span class="dv">0</span>] </span>
-<span id="cb19-5"><a href="#cb19-5" aria-hidden="true" tabindex="-1"></a>                        <span class="op">*</span>np.exp(np.cumsum(dlnS)))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+\tag{39}\]</span></span></p>
+<p>Using (<a href="#eq-logdiff_model" class="quarto-xref">38</a>), the Python implementation therefore becomes</p>
+<div id="7834cde1" class="cell" data-execution_count="17">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb18"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a>dlnS <span class="op">=</span> (mu <span class="op">-</span> <span class="fl">0.5</span> <span class="op">*</span> sigma<span class="op">**</span><span class="dv">2</span> </span>
+<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a>                <span class="op">+</span> sigma <span class="op">*</span> np.random.randn(<span class="bu">len</span>(df)))</span>
+<span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-4"><a href="#cb18-4" aria-hidden="true" tabindex="-1"></a>df[<span class="st">'PRIS_sim'</span>] <span class="op">=</span> (df[<span class="st">'PRIS'</span>].iloc[<span class="dv">0</span>] </span>
+<span id="cb18-5"><a href="#cb18-5" aria-hidden="true" tabindex="-1"></a>                        <span class="op">*</span>np.exp(np.cumsum(dlnS)))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <p>Here, <code>np.cumsum(dlnS)</code> computes the cumulative sum of log changes across all observations in the dataset, giving the full simulated price path.</p>
 </section>
@@ -969,74 +931,69 @@ S_t = S_0 \cdot e^{\mu \cdot t - \tfrac{1}{2} \sigma^2 \cdot t + \sigma \cdot z_
 <section id="risk-neutral-pricing" class="level1">
 <h1>Risk neutral pricing</h1>
 <p>In the original papers, the derivation of the Black and Scholes option pricing formula, uses som pretty fancy math and sophisticated theory. However, if we know that we can price any derivative using risk neutral expectations, it becomes easier to understand how derivatives are priced.</p>
-<p>For example the Black-Scholes-Merton option pricing fomula can be obtained by applying risk netural pricing. That involves calculating this integral</p>
-<p><span id="eq-bs_expectation_call"><span class="math display">\[
+<p>For example the Black-Scholes-Merton option pricing fomula can be obtained by applying risk netural pricing. That involves calculating this integral <span id="eq-bs_expectation_call"><span class="math display">\[
 f_0 = e^{-rt} \int_{-\infty}^{\infty} \max \left( S_0 e^{(r - \tfrac{1}{2} \sigma^2)t + \sigma \sqrt{t} \epsilon} - X, 0 \right) \phi(\epsilon) d\epsilon
-\tag{41}\]</span></span></p>
+\tag{40}\]</span></span></p>
 <p>Here - <span class="math inline">\(f_0\)</span> is the valuation - <span class="math inline">\(e^{-rT}\)</span>: Is the contnously compunded discount factor (time value of money). - <span class="math inline">\(S_t = S_0 e^{(r - \frac{1}{2} \sigma^2)T + \sigma \sqrt{T} \epsilon}\)</span> is the value of the option at time <span class="math inline">\(t\)</span> - <span class="math inline">\(X\)</span> is the strike price - <span class="math inline">\(\phi(\epsilon)\)</span> is the standard normal density function.</p>
-<p>We will not go through the calculations in this course, but it turns out that the solution to this integral is the Black-Scholes-Merton call option formula:</p>
-<p><span id="eq-bs_call"><span class="math display">\[
+<p>We will not go through the calculations in this course, but it turns out that the solution to this integral is the Black-Scholes-Merton call option formula: <span id="eq-bs_call"><span class="math display">\[
 C(S, X, T, r, \sigma) = S \Phi(d_1) - X e^{-rT} \Phi(d_2)
-\tag{42}\]</span></span></p>
-<p>where</p>
-<p><span id="eq-bs_call_d1"><span class="math display">\[
+\tag{41}\]</span></span></p>
+<p>where <span id="eq-bs_call_d1"><span class="math display">\[
 d_1 = \frac{\ln(S / X) + \left(r + \frac{1}{2} \sigma^2 \right)T}{\sigma \sqrt{T}}
-\tag{43}\]</span></span></p>
-<p>and</p>
-<p><span id="eq-bs_call_d2"><span class="math display">\[
+\tag{42}\]</span></span></p>
+<p>and <span id="eq-bs_call_d2"><span class="math display">\[
 d_2 = d_1 - \sigma \sqrt{T}
-\tag{44}\]</span></span></p>
+\tag{43}\]</span></span></p>
 <p><span class="math inline">\(\Phi\)</span> is the cumulative standard normal distribution function.</p>
 <p>Here’s an improved version of your section for clarity, flow, and grammar, while keeping the technical content intact:</p>
 <hr>
 <section id="numerical-approximation" class="level2">
 <h2 class="anchored" data-anchor-id="numerical-approximation">Numerical Approximation</h2>
-<p>Knowing that we can price derivatives using risk-neutral expectations means that we can, in principle, determine the fair value of almost any contract written on tradable assets. The expected value is defined as the sum of outcomes (or events) weighted by their probabilities. For example, the expected value of a die roll is:</p>
-<p><span id="eq-dice"><span class="math display">\[
+<p>Knowing that we can price derivatives using risk-neutral expectations means that we can, in principle, determine the fair value of almost any contract written on tradable assets. The expected value is defined as the sum of outcomes (or events) weighted by their probabilities. For example, the expected value of a die roll is: <span id="eq-dice"><span class="math display">\[
 (1+2+3+4+5+6) \cdot \frac{1}{6} = 3.5
-\tag{45}\]</span></span></p>
+\tag{44}\]</span></span></p>
 <p>that is, each outcome multiplied by its probability, summed over all outcomes.</p>
 <p>As mentioned above, when we are dealing with a continuous distribution such as the normal distribution, the discrete concept of a probability is replaced by the probability density <span class="math inline">\(\phi(x)\)</span> multiplied by a small interval <span class="math inline">\(dx\)</span>. The outcome is the derivative’s value, and the summation becomes an integral.</p>
 <p>However, solving such integrals analytically is often difficult or impossible. In practice, it is therefore common to compute the integral numerically. This involves converting the continuous distribution into a discrete one, allowing us to approximate the integral using a finite sum over discrete probabilities and outcomes.</p>
 <p>This discretization means dividing the range of outcomes into intervals and calculating the probability mass in each interval. In other words, we approximate the continuous probability density by a histogram-like representation.</p>
 <p>This process is illustrated in <a href="#fig-nummerical_approx" class="quarto-xref">Figure&nbsp;9</a>. Each bar represents the probability of an outcome falling within a given interval. We can then approximate the expected value by multiplying each outcome <span class="math inline">\(x\)</span> by its associated probability, <span class="math inline">\(\phi(x) \cdot dx\)</span>, where <span class="math inline">\(dx\)</span> is the interval width. In this case, the range is defined as ±5 standard deviations, divided into 30 intervals.</p>
 <div id="cell-fig-nummerical_approx" class="cell" data-execution_count="18">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb20"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
-<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span>
-<span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> scipy.stats <span class="im">import</span> norm</span>
-<span id="cb20-4"><a href="#cb20-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb20-5"><a href="#cb20-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Parameters</span></span>
-<span id="cb20-6"><a href="#cb20-6" aria-hidden="true" tabindex="-1"></a>mu <span class="op">=</span> <span class="fl">0.15</span>  <span class="co"># Risk-free rate</span></span>
-<span id="cb20-7"><a href="#cb20-7" aria-hidden="true" tabindex="-1"></a>sigma <span class="op">=</span> <span class="fl">0.2</span>  <span class="co"># Volatility</span></span>
-<span id="cb20-8"><a href="#cb20-8" aria-hidden="true" tabindex="-1"></a>width <span class="op">=</span> <span class="dv">5</span></span>
-<span id="cb20-9"><a href="#cb20-9" aria-hidden="true" tabindex="-1"></a>N <span class="op">=</span> <span class="dv">30</span></span>
-<span id="cb20-10"><a href="#cb20-10" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb20-11"><a href="#cb20-11" aria-hidden="true" tabindex="-1"></a><span class="co"># Define the range for x</span></span>
-<span id="cb20-12"><a href="#cb20-12" aria-hidden="true" tabindex="-1"></a>dx <span class="op">=</span> width<span class="op">*</span>sigma<span class="op">/</span>((N<span class="op">-</span><span class="dv">1</span>)<span class="op">*</span><span class="fl">0.5</span>)</span>
-<span id="cb20-13"><a href="#cb20-13" aria-hidden="true" tabindex="-1"></a>x <span class="op">=</span> np.arange(mu <span class="op">-</span> <span class="dv">4</span><span class="op">*</span>sigma, mu <span class="op">+</span> width<span class="op">*</span>sigma, dx)</span>
-<span id="cb20-14"><a href="#cb20-14" aria-hidden="true" tabindex="-1"></a>x_fine <span class="op">=</span> np.linspace(mu <span class="op">-</span> width<span class="op">*</span>sigma, mu </span>
-<span id="cb20-15"><a href="#cb20-15" aria-hidden="true" tabindex="-1"></a>                                <span class="op">+</span> width<span class="op">*</span>sigma, <span class="dv">1000</span>)</span>
-<span id="cb20-16"><a href="#cb20-16" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb20-17"><a href="#cb20-17" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb20-18"><a href="#cb20-18" aria-hidden="true" tabindex="-1"></a><span class="co"># PDF values</span></span>
-<span id="cb20-19"><a href="#cb20-19" aria-hidden="true" tabindex="-1"></a>pdf <span class="op">=</span> norm.pdf(x, mu, sigma)</span>
-<span id="cb20-20"><a href="#cb20-20" aria-hidden="true" tabindex="-1"></a>pdf_fine <span class="op">=</span> norm.pdf(x_fine, mu, sigma)</span>
-<span id="cb20-21"><a href="#cb20-21" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb20-22"><a href="#cb20-22" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb20-23"><a href="#cb20-23" aria-hidden="true" tabindex="-1"></a><span class="co"># Plot</span></span>
-<span id="cb20-24"><a href="#cb20-24" aria-hidden="true" tabindex="-1"></a>plt.figure(figsize<span class="op">=</span>(<span class="dv">10</span>, <span class="dv">6</span>))</span>
-<span id="cb20-25"><a href="#cb20-25" aria-hidden="true" tabindex="-1"></a>plt.plot(x_fine, pdf_fine, label<span class="op">=</span><span class="st">'Normal PDF'</span>, </span>
-<span id="cb20-26"><a href="#cb20-26" aria-hidden="true" tabindex="-1"></a>                                        color<span class="op">=</span><span class="st">'blue'</span>)</span>
-<span id="cb20-27"><a href="#cb20-27" aria-hidden="true" tabindex="-1"></a>plt.bar(x, pdf, width<span class="op">=</span>dx, alpha<span class="op">=</span><span class="fl">0.5</span>, align<span class="op">=</span><span class="st">'center'</span>, </span>
-<span id="cb20-28"><a href="#cb20-28" aria-hidden="true" tabindex="-1"></a>    label<span class="op">=</span><span class="st">'PDF * dx (approximation)'</span>, edgecolor<span class="op">=</span><span class="st">'black'</span>)</span>
-<span id="cb20-29"><a href="#cb20-29" aria-hidden="true" tabindex="-1"></a>plt.title(<span class="st">'Numerical Approximation of Expectationc '</span></span>
-<span id="cb20-30"><a href="#cb20-30" aria-hidden="true" tabindex="-1"></a>                                    <span class="st">'using PDF * dx'</span>)</span>
-<span id="cb20-31"><a href="#cb20-31" aria-hidden="true" tabindex="-1"></a>plt.xlabel(<span class="st">'x'</span>)</span>
-<span id="cb20-32"><a href="#cb20-32" aria-hidden="true" tabindex="-1"></a>plt.ylabel(<span class="st">'Density'</span>)</span>
-<span id="cb20-33"><a href="#cb20-33" aria-hidden="true" tabindex="-1"></a>plt.legend()</span>
-<span id="cb20-34"><a href="#cb20-34" aria-hidden="true" tabindex="-1"></a>plt.grid(<span class="va">True</span>)</span>
-<span id="cb20-35"><a href="#cb20-35" aria-hidden="true" tabindex="-1"></a>plt.tight_layout()</span>
-<span id="cb20-36"><a href="#cb20-36" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb19"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
+<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span>
+<span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> scipy.stats <span class="im">import</span> norm</span>
+<span id="cb19-4"><a href="#cb19-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-5"><a href="#cb19-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Parameters</span></span>
+<span id="cb19-6"><a href="#cb19-6" aria-hidden="true" tabindex="-1"></a>mu <span class="op">=</span> <span class="fl">0.15</span>  <span class="co"># Risk-free rate</span></span>
+<span id="cb19-7"><a href="#cb19-7" aria-hidden="true" tabindex="-1"></a>sigma <span class="op">=</span> <span class="fl">0.2</span>  <span class="co"># Volatility</span></span>
+<span id="cb19-8"><a href="#cb19-8" aria-hidden="true" tabindex="-1"></a>width <span class="op">=</span> <span class="dv">5</span></span>
+<span id="cb19-9"><a href="#cb19-9" aria-hidden="true" tabindex="-1"></a>N <span class="op">=</span> <span class="dv">30</span></span>
+<span id="cb19-10"><a href="#cb19-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-11"><a href="#cb19-11" aria-hidden="true" tabindex="-1"></a><span class="co"># Define the range for x</span></span>
+<span id="cb19-12"><a href="#cb19-12" aria-hidden="true" tabindex="-1"></a>dx <span class="op">=</span> width<span class="op">*</span>sigma<span class="op">/</span>((N<span class="op">-</span><span class="dv">1</span>)<span class="op">*</span><span class="fl">0.5</span>)</span>
+<span id="cb19-13"><a href="#cb19-13" aria-hidden="true" tabindex="-1"></a>x <span class="op">=</span> np.arange(mu <span class="op">-</span> <span class="dv">4</span><span class="op">*</span>sigma, mu <span class="op">+</span> width<span class="op">*</span>sigma, dx)</span>
+<span id="cb19-14"><a href="#cb19-14" aria-hidden="true" tabindex="-1"></a>x_fine <span class="op">=</span> np.linspace(mu <span class="op">-</span> width<span class="op">*</span>sigma, mu </span>
+<span id="cb19-15"><a href="#cb19-15" aria-hidden="true" tabindex="-1"></a>                                <span class="op">+</span> width<span class="op">*</span>sigma, <span class="dv">1000</span>)</span>
+<span id="cb19-16"><a href="#cb19-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-17"><a href="#cb19-17" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-18"><a href="#cb19-18" aria-hidden="true" tabindex="-1"></a><span class="co"># PDF values</span></span>
+<span id="cb19-19"><a href="#cb19-19" aria-hidden="true" tabindex="-1"></a>pdf <span class="op">=</span> norm.pdf(x, mu, sigma)</span>
+<span id="cb19-20"><a href="#cb19-20" aria-hidden="true" tabindex="-1"></a>pdf_fine <span class="op">=</span> norm.pdf(x_fine, mu, sigma)</span>
+<span id="cb19-21"><a href="#cb19-21" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-22"><a href="#cb19-22" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-23"><a href="#cb19-23" aria-hidden="true" tabindex="-1"></a><span class="co"># Plot</span></span>
+<span id="cb19-24"><a href="#cb19-24" aria-hidden="true" tabindex="-1"></a>plt.figure(figsize<span class="op">=</span>(<span class="dv">10</span>, <span class="dv">6</span>))</span>
+<span id="cb19-25"><a href="#cb19-25" aria-hidden="true" tabindex="-1"></a>plt.plot(x_fine, pdf_fine, label<span class="op">=</span><span class="st">'Normal PDF'</span>, </span>
+<span id="cb19-26"><a href="#cb19-26" aria-hidden="true" tabindex="-1"></a>                                        color<span class="op">=</span><span class="st">'blue'</span>)</span>
+<span id="cb19-27"><a href="#cb19-27" aria-hidden="true" tabindex="-1"></a>plt.bar(x, pdf, width<span class="op">=</span>dx, alpha<span class="op">=</span><span class="fl">0.5</span>, align<span class="op">=</span><span class="st">'center'</span>, </span>
+<span id="cb19-28"><a href="#cb19-28" aria-hidden="true" tabindex="-1"></a>    label<span class="op">=</span><span class="st">'PDF * dx (approximation)'</span>, edgecolor<span class="op">=</span><span class="st">'black'</span>)</span>
+<span id="cb19-29"><a href="#cb19-29" aria-hidden="true" tabindex="-1"></a>plt.title(<span class="st">'Numerical Approximation of Expectationc '</span></span>
+<span id="cb19-30"><a href="#cb19-30" aria-hidden="true" tabindex="-1"></a>                                    <span class="st">'using PDF * dx'</span>)</span>
+<span id="cb19-31"><a href="#cb19-31" aria-hidden="true" tabindex="-1"></a>plt.xlabel(<span class="st">'x'</span>)</span>
+<span id="cb19-32"><a href="#cb19-32" aria-hidden="true" tabindex="-1"></a>plt.ylabel(<span class="st">'Density'</span>)</span>
+<span id="cb19-33"><a href="#cb19-33" aria-hidden="true" tabindex="-1"></a>plt.legend()</span>
+<span id="cb19-34"><a href="#cb19-34" aria-hidden="true" tabindex="-1"></a>plt.grid(<span class="va">True</span>)</span>
+<span id="cb19-35"><a href="#cb19-35" aria-hidden="true" tabindex="-1"></a>plt.tight_layout()</span>
+<span id="cb19-36"><a href="#cb19-36" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-display">
 <div id="fig-nummerical_approx" class="quarto-float quarto-figure quarto-figure-center anchored">
 <figure class="quarto-float quarto-float-fig figure">
@@ -1054,109 +1011,106 @@ Figure&nbsp;9: Nummerica approximation of normal distribution
 <section id="a-simple-function-for-valuing-a-derivative" class="level2">
 <h2 class="anchored" data-anchor-id="a-simple-function-for-valuing-a-derivative">A Simple Function for Valuing a Derivative</h2>
 <p>To compute the expected value of a derivative, we need to evaluate the probability of each small interval on the <span class="math inline">\(x\)</span>-axis and multiply it by the corresponding derivative payoff. For a simple normally distributed variable, the probability of each interval can be approximated as:</p>
-<div id="0a251506" class="cell" data-execution_count="19">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb21"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> scipy.stats <span class="im">as</span> stats</span>
-<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a>p <span class="op">=</span> stats.norm.pdf(x, mu, sigma) <span class="op">*</span> dx</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div id="e698f1ba" class="cell" data-execution_count="19">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb20"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> scipy.stats <span class="im">as</span> stats</span>
+<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a>p <span class="op">=</span> stats.norm.pdf(x, mu, sigma) <span class="op">*</span> dx</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
-<p>However, as we saw when modeling the stock price process, the mean is not simply <span class="math inline">\(\mu\)</span>, and the volatility is not simply <span class="math inline">\(\sigma\)</span>. According to Equation <a href="#eq-final_price_model" class="quarto-xref">Equation&nbsp;40</a>, after adjusting for the time to maturity and the volatility correction, the mean of the log return becomes:</p>
-<p><span id="eq-mean_stockprocess"><span class="math display">\[
+<p>However, as we saw when modeling the stock price process, the mean is not simply <span class="math inline">\(\mu\)</span>, and the volatility is not simply <span class="math inline">\(\sigma\)</span>. According to Equation <a href="#eq-final_price_model" class="quarto-xref">Equation&nbsp;39</a>, after adjusting for the time to maturity and the volatility correction, the mean of the log return becomes: <span id="eq-mean_stockprocess"><span class="math display">\[
 (\mu - \tfrac{1}{2} \sigma^2) \cdot T
-\tag{46}\]</span></span></p>
-<p>Since we are working under the risk-neutral measure, we replace the expected return <span class="math inline">\(\mu\)</span> with the risk-free rate <span class="math inline">\(r\)</span>, resulting in:</p>
-<p><span id="eq-riskneutral_mean"><span class="math display">\[
+\tag{45}\]</span></span></p>
+<p>Since we are working under the risk-neutral measure, we replace the expected return <span class="math inline">\(\mu\)</span> with the risk-free rate <span class="math inline">\(r\)</span>, resulting in: <span id="eq-riskneutral_mean"><span class="math display">\[
 (r - \tfrac{1}{2} \sigma^2) \cdot T
-\tag{47}\]</span></span></p>
-<p>The corresponding volatility over the time horizon <span class="math inline">\(T\)</span> becomes:</p>
-<p><span id="eq-volatility_scaled"><span class="math display">\[
+\tag{46}\]</span></span></p>
+<p>The corresponding volatility over the time horizon <span class="math inline">\(T\)</span> becomes: <span id="eq-volatility_scaled"><span class="math display">\[
 \sigma \cdot \sqrt{T}
-\tag{48}\]</span></span></p>
+\tag{47}\]</span></span></p>
 <p>With these substitutions, the discrete risk-neutral probability distribution used to price a derivative is:</p>
-<div id="8333de47" class="cell" data-execution_count="20">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb22"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> scipy.stats <span class="im">as</span> stats</span>
-<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a>p <span class="op">=</span> stats.norm.pdf(x, (r <span class="op">-</span> <span class="fl">0.5</span> <span class="op">*</span> sigma<span class="op">**</span><span class="dv">2</span>) <span class="op">*</span> T, </span>
-<span id="cb22-3"><a href="#cb22-3" aria-hidden="true" tabindex="-1"></a>                        sigma <span class="op">*</span> np.sqrt(T)) <span class="op">*</span> dx</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div id="9403965f" class="cell" data-execution_count="20">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb21"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> scipy.stats <span class="im">as</span> stats</span>
+<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a>p <span class="op">=</span> stats.norm.pdf(x, (r <span class="op">-</span> <span class="fl">0.5</span> <span class="op">*</span> sigma<span class="op">**</span><span class="dv">2</span>) <span class="op">*</span> T, </span>
+<span id="cb21-3"><a href="#cb21-3" aria-hidden="true" tabindex="-1"></a>                        sigma <span class="op">*</span> np.sqrt(T)) <span class="op">*</span> dx</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <p>Using this setup, we can now define a simple and general function for computing the risk-neutral expected value of a derivative with terminal payoff <span class="math inline">\(f(S_T)\)</span>:</p>
-<div id="302cb98d" class="cell" data-execution_count="21">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb23"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
-<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> scipy.stats <span class="im">as</span> stats</span>
-<span id="cb23-3"><a href="#cb23-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb23-4"><a href="#cb23-4" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> derivative_value_risk_neutral(f, S0, sigma, r, </span>
-<span id="cb23-5"><a href="#cb23-5" aria-hidden="true" tabindex="-1"></a>                                    T,N<span class="op">=</span><span class="dv">1000</span>, width<span class="op">=</span><span class="dv">5</span>):</span>
-<span id="cb23-6"><a href="#cb23-6" aria-hidden="true" tabindex="-1"></a>    <span class="co">"f is a function of ST, the terminal stock price"</span></span>
-<span id="cb23-7"><a href="#cb23-7" aria-hidden="true" tabindex="-1"></a>    vol_T <span class="op">=</span> sigma <span class="op">*</span> np.sqrt(T)</span>
-<span id="cb23-8"><a href="#cb23-8" aria-hidden="true" tabindex="-1"></a>    mu_T <span class="op">=</span> (r <span class="op">-</span> <span class="fl">0.5</span> <span class="op">*</span> sigma<span class="op">**</span><span class="dv">2</span>) <span class="op">*</span> T</span>
-<span id="cb23-9"><a href="#cb23-9" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb23-10"><a href="#cb23-10" aria-hidden="true" tabindex="-1"></a>    x <span class="op">=</span> np.linspace(<span class="op">-</span>width <span class="op">*</span> vol_T, width <span class="op">*</span> vol_T, N)</span>
-<span id="cb23-11"><a href="#cb23-11" aria-hidden="true" tabindex="-1"></a>    dx <span class="op">=</span> x[<span class="dv">1</span>] <span class="op">-</span> x[<span class="dv">0</span>]</span>
-<span id="cb23-12"><a href="#cb23-12" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb23-13"><a href="#cb23-13" aria-hidden="true" tabindex="-1"></a>    ST <span class="op">=</span> S0 <span class="op">*</span> np.exp(x)</span>
-<span id="cb23-14"><a href="#cb23-14" aria-hidden="true" tabindex="-1"></a>    p <span class="op">=</span> stats.norm.pdf(x, mu_T, vol_T) <span class="op">*</span> dx</span>
-<span id="cb23-15"><a href="#cb23-15" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb23-16"><a href="#cb23-16" aria-hidden="true" tabindex="-1"></a>    pv <span class="op">=</span> np.exp(<span class="op">-</span>r <span class="op">*</span> T) <span class="op">*</span> np.<span class="bu">sum</span>(f(ST) <span class="op">*</span> p)</span>
-<span id="cb23-17"><a href="#cb23-17" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> pv</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div id="2a4510dd" class="cell" data-execution_count="21">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb22"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
+<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> scipy.stats <span class="im">as</span> stats</span>
+<span id="cb22-3"><a href="#cb22-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-4"><a href="#cb22-4" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> derivative_value_risk_neutral(f, S0, sigma, r, </span>
+<span id="cb22-5"><a href="#cb22-5" aria-hidden="true" tabindex="-1"></a>                                    T,N<span class="op">=</span><span class="dv">1000</span>, width<span class="op">=</span><span class="dv">5</span>):</span>
+<span id="cb22-6"><a href="#cb22-6" aria-hidden="true" tabindex="-1"></a>    <span class="co">"f is a function of ST, the terminal stock price"</span></span>
+<span id="cb22-7"><a href="#cb22-7" aria-hidden="true" tabindex="-1"></a>    vol_T <span class="op">=</span> sigma <span class="op">*</span> np.sqrt(T)</span>
+<span id="cb22-8"><a href="#cb22-8" aria-hidden="true" tabindex="-1"></a>    mu_T <span class="op">=</span> (r <span class="op">-</span> <span class="fl">0.5</span> <span class="op">*</span> sigma<span class="op">**</span><span class="dv">2</span>) <span class="op">*</span> T</span>
+<span id="cb22-9"><a href="#cb22-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-10"><a href="#cb22-10" aria-hidden="true" tabindex="-1"></a>    x <span class="op">=</span> np.linspace(<span class="op">-</span>width <span class="op">*</span> vol_T, width <span class="op">*</span> vol_T, N)</span>
+<span id="cb22-11"><a href="#cb22-11" aria-hidden="true" tabindex="-1"></a>    dx <span class="op">=</span> x[<span class="dv">1</span>] <span class="op">-</span> x[<span class="dv">0</span>]</span>
+<span id="cb22-12"><a href="#cb22-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-13"><a href="#cb22-13" aria-hidden="true" tabindex="-1"></a>    ST <span class="op">=</span> S0 <span class="op">*</span> np.exp(x)</span>
+<span id="cb22-14"><a href="#cb22-14" aria-hidden="true" tabindex="-1"></a>    p <span class="op">=</span> stats.norm.pdf(x, mu_T, vol_T) <span class="op">*</span> dx</span>
+<span id="cb22-15"><a href="#cb22-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-16"><a href="#cb22-16" aria-hidden="true" tabindex="-1"></a>    pv <span class="op">=</span> np.exp(<span class="op">-</span>r <span class="op">*</span> T) <span class="op">*</span> np.<span class="bu">sum</span>(f(ST) <span class="op">*</span> p)</span>
+<span id="cb22-17"><a href="#cb22-17" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> pv</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <p>This function allows you to numerically evaluate the fair value of any derivative written on the terminal asset price <span class="math inline">\(S_T\)</span>, using risk-neutral expectations.</p>
-<div id="c1e61fe0" class="cell" data-execution_count="22">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb24"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> scipy.stats <span class="im">as</span> stats</span>
-<span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> derivative_value_risk_neutral(f, S0, sigma, r, T, </span>
-<span id="cb24-3"><a href="#cb24-3" aria-hidden="true" tabindex="-1"></a>                                    N <span class="op">=</span> <span class="dv">1000</span>, width <span class="op">=</span> <span class="dv">5</span>):</span>
-<span id="cb24-4"><a href="#cb24-4" aria-hidden="true" tabindex="-1"></a>    <span class="co">"Calculates the risk neutral value of f"</span></span>
-<span id="cb24-5"><a href="#cb24-5" aria-hidden="true" tabindex="-1"></a>    x <span class="op">=</span> np.linspace(<span class="op">-</span>width<span class="op">*</span>sigma<span class="op">*</span>(T<span class="op">**</span><span class="fl">0.5</span>), </span>
-<span id="cb24-6"><a href="#cb24-6" aria-hidden="true" tabindex="-1"></a>                                width<span class="op">*</span>sigma<span class="op">*</span>(T<span class="op">**</span><span class="fl">0.5</span>), N)</span>
-<span id="cb24-7"><a href="#cb24-7" aria-hidden="true" tabindex="-1"></a>    dx <span class="op">=</span> width<span class="op">*</span>sigma<span class="op">*</span>(T<span class="op">**</span><span class="fl">0.5</span>)<span class="op">/</span>((N<span class="op">-</span><span class="dv">1</span>)<span class="op">*</span><span class="fl">0.5</span>)</span>
-<span id="cb24-8"><a href="#cb24-8" aria-hidden="true" tabindex="-1"></a>    p <span class="op">=</span> stats.norm.pdf(x, (r<span class="op">-</span><span class="fl">0.5</span><span class="op">*</span>sigma<span class="op">**</span><span class="dv">2</span>)<span class="op">*</span>T, </span>
-<span id="cb24-9"><a href="#cb24-9" aria-hidden="true" tabindex="-1"></a>                                        sigma<span class="op">*</span>(T<span class="op">**</span><span class="fl">0.5</span>))<span class="op">*</span>dx</span>
-<span id="cb24-10"><a href="#cb24-10" aria-hidden="true" tabindex="-1"></a>        </span>
-<span id="cb24-11"><a href="#cb24-11" aria-hidden="true" tabindex="-1"></a>    pv <span class="op">=</span> np.exp(<span class="op">-</span>r<span class="op">*</span>T)<span class="op">*</span>np.<span class="bu">sum</span>(f(S0<span class="op">*</span>np.exp(x))<span class="op">*</span>p)</span>
-<span id="cb24-12"><a href="#cb24-12" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb24-13"><a href="#cb24-13" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> pv</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div id="c036400f" class="cell" data-execution_count="22">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb23"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> scipy.stats <span class="im">as</span> stats</span>
+<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> derivative_value_risk_neutral(f, S0, sigma, r, T, </span>
+<span id="cb23-3"><a href="#cb23-3" aria-hidden="true" tabindex="-1"></a>                                    N <span class="op">=</span> <span class="dv">1000</span>, width <span class="op">=</span> <span class="dv">5</span>):</span>
+<span id="cb23-4"><a href="#cb23-4" aria-hidden="true" tabindex="-1"></a>    <span class="co">"Calculates the risk neutral value of f"</span></span>
+<span id="cb23-5"><a href="#cb23-5" aria-hidden="true" tabindex="-1"></a>    x <span class="op">=</span> np.linspace(<span class="op">-</span>width<span class="op">*</span>sigma<span class="op">*</span>(T<span class="op">**</span><span class="fl">0.5</span>), </span>
+<span id="cb23-6"><a href="#cb23-6" aria-hidden="true" tabindex="-1"></a>                                width<span class="op">*</span>sigma<span class="op">*</span>(T<span class="op">**</span><span class="fl">0.5</span>), N)</span>
+<span id="cb23-7"><a href="#cb23-7" aria-hidden="true" tabindex="-1"></a>    dx <span class="op">=</span> width<span class="op">*</span>sigma<span class="op">*</span>(T<span class="op">**</span><span class="fl">0.5</span>)<span class="op">/</span>((N<span class="op">-</span><span class="dv">1</span>)<span class="op">*</span><span class="fl">0.5</span>)</span>
+<span id="cb23-8"><a href="#cb23-8" aria-hidden="true" tabindex="-1"></a>    p <span class="op">=</span> stats.norm.pdf(x, (r<span class="op">-</span><span class="fl">0.5</span><span class="op">*</span>sigma<span class="op">**</span><span class="dv">2</span>)<span class="op">*</span>T, </span>
+<span id="cb23-9"><a href="#cb23-9" aria-hidden="true" tabindex="-1"></a>                                        sigma<span class="op">*</span>(T<span class="op">**</span><span class="fl">0.5</span>))<span class="op">*</span>dx</span>
+<span id="cb23-10"><a href="#cb23-10" aria-hidden="true" tabindex="-1"></a>        </span>
+<span id="cb23-11"><a href="#cb23-11" aria-hidden="true" tabindex="-1"></a>    pv <span class="op">=</span> np.exp(<span class="op">-</span>r<span class="op">*</span>T)<span class="op">*</span>np.<span class="bu">sum</span>(f(S0<span class="op">*</span>np.exp(x))<span class="op">*</span>p)</span>
+<span id="cb23-12"><a href="#cb23-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb23-13"><a href="#cb23-13" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> pv</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </section>
 <section id="testing-the-derivative-valuation-function" class="level2">
 <h2 class="anchored" data-anchor-id="testing-the-derivative-valuation-function">Testing the derivative valuation function</h2>
 <p>Now, let us test if this function works. We can do that by comparing it with the known Black&amp;Scholes formula. The following defines the terminal value of the call option, and the Black&amp;Scholes formula:</p>
-<div id="4fdf33e8" class="cell" data-execution_count="23">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb25"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> scipy.stats <span class="im">as</span> stats</span>
-<span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a>X <span class="op">=</span> <span class="dv">105</span>   <span class="co"># Strike price</span></span>
-<span id="cb25-3"><a href="#cb25-3" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> call_option(ST):</span>
-<span id="cb25-4"><a href="#cb25-4" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Call option payoff function</span></span>
-<span id="cb25-5"><a href="#cb25-5" aria-hidden="true" tabindex="-1"></a>    </span>
-<span id="cb25-6"><a href="#cb25-6" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> np.maximum(ST <span class="op">-</span> X, <span class="dv">0</span>)</span>
-<span id="cb25-7"><a href="#cb25-7" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb25-8"><a href="#cb25-8" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb25-9"><a href="#cb25-9" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb25-10"><a href="#cb25-10" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> black_scholes(S0, X, r, sigma, T):</span>
-<span id="cb25-11"><a href="#cb25-11" aria-hidden="true" tabindex="-1"></a>    d1 <span class="op">=</span> (np.log(S0<span class="op">/</span>X) <span class="op">+</span> </span>
-<span id="cb25-12"><a href="#cb25-12" aria-hidden="true" tabindex="-1"></a>            (r <span class="op">+</span> <span class="fl">0.5</span><span class="op">*</span>sigma<span class="op">**</span><span class="dv">2</span>)<span class="op">*</span>T)<span class="op">/</span>(sigma<span class="op">*</span>(T<span class="op">**</span><span class="fl">0.5</span>))</span>
-<span id="cb25-13"><a href="#cb25-13" aria-hidden="true" tabindex="-1"></a>    d2 <span class="op">=</span> d1 <span class="op">-</span> sigma<span class="op">*</span>(T<span class="op">**</span><span class="fl">0.5</span>)</span>
-<span id="cb25-14"><a href="#cb25-14" aria-hidden="true" tabindex="-1"></a>    bs <span class="op">=</span> (S0<span class="op">*</span>stats.norm.cdf(d1) </span>
-<span id="cb25-15"><a href="#cb25-15" aria-hidden="true" tabindex="-1"></a>            <span class="op">-</span> X<span class="op">*</span>np.exp(<span class="op">-</span>r<span class="op">*</span>T)<span class="op">*</span>stats.norm.cdf(d2))</span>
-<span id="cb25-16"><a href="#cb25-16" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span>  bs</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div id="afac7b6c" class="cell" data-execution_count="23">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb24"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> scipy.stats <span class="im">as</span> stats</span>
+<span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a>X <span class="op">=</span> <span class="dv">105</span>   <span class="co"># Strike price</span></span>
+<span id="cb24-3"><a href="#cb24-3" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> call_option(ST):</span>
+<span id="cb24-4"><a href="#cb24-4" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Call option payoff function</span></span>
+<span id="cb24-5"><a href="#cb24-5" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb24-6"><a href="#cb24-6" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> np.maximum(ST <span class="op">-</span> X, <span class="dv">0</span>)</span>
+<span id="cb24-7"><a href="#cb24-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb24-8"><a href="#cb24-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb24-9"><a href="#cb24-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb24-10"><a href="#cb24-10" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> black_scholes(S0, X, r, sigma, T):</span>
+<span id="cb24-11"><a href="#cb24-11" aria-hidden="true" tabindex="-1"></a>    d1 <span class="op">=</span> (np.log(S0<span class="op">/</span>X) <span class="op">+</span> </span>
+<span id="cb24-12"><a href="#cb24-12" aria-hidden="true" tabindex="-1"></a>            (r <span class="op">+</span> <span class="fl">0.5</span><span class="op">*</span>sigma<span class="op">**</span><span class="dv">2</span>)<span class="op">*</span>T)<span class="op">/</span>(sigma<span class="op">*</span>(T<span class="op">**</span><span class="fl">0.5</span>))</span>
+<span id="cb24-13"><a href="#cb24-13" aria-hidden="true" tabindex="-1"></a>    d2 <span class="op">=</span> d1 <span class="op">-</span> sigma<span class="op">*</span>(T<span class="op">**</span><span class="fl">0.5</span>)</span>
+<span id="cb24-14"><a href="#cb24-14" aria-hidden="true" tabindex="-1"></a>    bs <span class="op">=</span> (S0<span class="op">*</span>stats.norm.cdf(d1) </span>
+<span id="cb24-15"><a href="#cb24-15" aria-hidden="true" tabindex="-1"></a>            <span class="op">-</span> X<span class="op">*</span>np.exp(<span class="op">-</span>r<span class="op">*</span>T)<span class="op">*</span>stats.norm.cdf(d2))</span>
+<span id="cb24-16"><a href="#cb24-16" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span>  bs</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
-<div id="b40cd844" class="cell" data-execution_count="24">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb26"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
-<span id="cb26-2"><a href="#cb26-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> scipy.integrate <span class="im">as</span> integrate</span>
-<span id="cb26-3"><a href="#cb26-3" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> scipy.stats <span class="im">as</span> stats</span>
-<span id="cb26-4"><a href="#cb26-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb26-5"><a href="#cb26-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Define parameters</span></span>
-<span id="cb26-6"><a href="#cb26-6" aria-hidden="true" tabindex="-1"></a>S0 <span class="op">=</span> <span class="dv">100</span>  <span class="co"># Initial stock price</span></span>
-<span id="cb26-7"><a href="#cb26-7" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb26-8"><a href="#cb26-8" aria-hidden="true" tabindex="-1"></a>r <span class="op">=</span> <span class="fl">0.05</span>  <span class="co"># Risk-free rate</span></span>
-<span id="cb26-9"><a href="#cb26-9" aria-hidden="true" tabindex="-1"></a>sigma <span class="op">=</span> <span class="fl">0.2</span>  <span class="co"># Volatility</span></span>
-<span id="cb26-10"><a href="#cb26-10" aria-hidden="true" tabindex="-1"></a>T <span class="op">=</span> <span class="dv">1</span>  <span class="co"># Time to maturity (1 year)</span></span>
-<span id="cb26-11"><a href="#cb26-11" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb26-12"><a href="#cb26-12" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb26-13"><a href="#cb26-13" aria-hidden="true" tabindex="-1"></a>f0_num <span class="op">=</span> derivative_value_risk_neutral(call_option, </span>
-<span id="cb26-14"><a href="#cb26-14" aria-hidden="true" tabindex="-1"></a>                                    S0, sigma, r, T)</span>
-<span id="cb26-15"><a href="#cb26-15" aria-hidden="true" tabindex="-1"></a>f0_bs <span class="op">=</span> black_scholes(S0, X, r, sigma, T)</span>
-<span id="cb26-16"><a href="#cb26-16" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb26-17"><a href="#cb26-17" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"Numerical integral result: </span><span class="sc">{</span>f0_num<span class="sc">}</span><span class="ss">"</span>)</span>
-<span id="cb26-18"><a href="#cb26-18" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"Black-Scholes result: </span><span class="sc">{</span>f0_bs<span class="sc">}</span><span class="ss">"</span>)</span>
-<span id="cb26-19"><a href="#cb26-19" aria-hidden="true" tabindex="-1"></a><span class="co"># Check if the results are close    </span></span>
-<span id="cb26-20"><a href="#cb26-20" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb26-21"><a href="#cb26-21" aria-hidden="true" tabindex="-1"></a>test <span class="op">=</span> np.isclose(f0_num, f0_bs, atol<span class="op">=</span><span class="fl">1e-4</span>)</span>
-<span id="cb26-22"><a href="#cb26-22" aria-hidden="true" tabindex="-1"></a><span class="cf">assert</span> test, <span class="st">"The results are not close!"</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div id="ed070f49" class="cell" data-execution_count="24">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb25"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
+<span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> scipy.integrate <span class="im">as</span> integrate</span>
+<span id="cb25-3"><a href="#cb25-3" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> scipy.stats <span class="im">as</span> stats</span>
+<span id="cb25-4"><a href="#cb25-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-5"><a href="#cb25-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Define parameters</span></span>
+<span id="cb25-6"><a href="#cb25-6" aria-hidden="true" tabindex="-1"></a>S0 <span class="op">=</span> <span class="dv">100</span>  <span class="co"># Initial stock price</span></span>
+<span id="cb25-7"><a href="#cb25-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-8"><a href="#cb25-8" aria-hidden="true" tabindex="-1"></a>r <span class="op">=</span> <span class="fl">0.05</span>  <span class="co"># Risk-free rate</span></span>
+<span id="cb25-9"><a href="#cb25-9" aria-hidden="true" tabindex="-1"></a>sigma <span class="op">=</span> <span class="fl">0.2</span>  <span class="co"># Volatility</span></span>
+<span id="cb25-10"><a href="#cb25-10" aria-hidden="true" tabindex="-1"></a>T <span class="op">=</span> <span class="dv">1</span>  <span class="co"># Time to maturity (1 year)</span></span>
+<span id="cb25-11"><a href="#cb25-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-12"><a href="#cb25-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-13"><a href="#cb25-13" aria-hidden="true" tabindex="-1"></a>f0_num <span class="op">=</span> derivative_value_risk_neutral(call_option, </span>
+<span id="cb25-14"><a href="#cb25-14" aria-hidden="true" tabindex="-1"></a>                                    S0, sigma, r, T)</span>
+<span id="cb25-15"><a href="#cb25-15" aria-hidden="true" tabindex="-1"></a>f0_bs <span class="op">=</span> black_scholes(S0, X, r, sigma, T)</span>
+<span id="cb25-16"><a href="#cb25-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-17"><a href="#cb25-17" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"Numerical integral result: </span><span class="sc">{</span>f0_num<span class="sc">}</span><span class="ss">"</span>)</span>
+<span id="cb25-18"><a href="#cb25-18" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"Black-Scholes result: </span><span class="sc">{</span>f0_bs<span class="sc">}</span><span class="ss">"</span>)</span>
+<span id="cb25-19"><a href="#cb25-19" aria-hidden="true" tabindex="-1"></a><span class="co"># Check if the results are close    </span></span>
+<span id="cb25-20"><a href="#cb25-20" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-21"><a href="#cb25-21" aria-hidden="true" tabindex="-1"></a>test <span class="op">=</span> np.isclose(f0_num, f0_bs, atol<span class="op">=</span><span class="fl">1e-4</span>)</span>
+<span id="cb25-22"><a href="#cb25-22" aria-hidden="true" tabindex="-1"></a><span class="cf">assert</span> test, <span class="st">"The results are not close!"</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>Numerical integral result: 8.021228881041875
 Black-Scholes result: 8.021352235143176</code></pre>

@@ -42,17 +42,12 @@ There are mainly two types of options - put and call options. A call option give
 
 However, if the market price is 95, it would be pointless to buy the stock for 105. Since you do not have any obligation to buy it, you would not exercise your right since that would lead to a certain loss. Therefore, the option price can never be negative, since the right to buy will never be exercised if it leads to a loss. Hence, if C is the value of the call, S the value of the stock, and X the strike price at the terminal date, we have
 $$
-    C = max(S - X, 0)
+    C = \max(S - X, 0)
 $$ {#eq-C}
 
-where 
+But if the price falls to 95, the option loses its entire value
 $$
-    = max(115-105, 0) = 10
-$$ {#eq-C_gain}
-
-But if the price falls to 95, the option loses its entire value 
-$$
-    = max(95-105, 0) = 0
+    C = \max(95-105, 0) = 0
 $$ {#eq-C_loss}
 
 Let us draw this up in a chart where X is the strike price, with a python function giving the maximum betseen the current share price and $S-X$
@@ -239,15 +234,15 @@ The "intrinsic value" here, is then the Black and Scholes fair value in excess o
 
 ***Problems:***
 
--   Change the Black and Scholes figure to show a put option. The formula for the Black and Scholes put is 
+-   Change the Black and Scholes figure to show a put option. The formula for the Black and Scholes put is
 $$
       P(S, X, T, r, \sigma) = X e^{-rT} \Phi(-d_2) - S \Phi(-d_1)
 $$ {#eq-bs_put1} 
-where 
+where
 $$
       d_1 = \frac{\ln(S / X) + \left(r + \frac{1}{2} \sigma^2 \right)T}{\sigma \sqrt{T}}
 $$ {#eq-bs_put2}
- and 
+ and
 $$
       d_2 = d_1 - \sigma \sqrt{T}
 $$ {#eq-bs_put3}
@@ -260,17 +255,16 @@ $$ {#eq-bs_put3}
 
 Sometimes an option can be exercised at any time up to the terminal date. We therefore distinguish between two types of options:
 
-```         
+       
 * **American option**: The option holder can choose whether to exercise the option at any time before the terminal date.
 * **European option**: The option can only be exercised on the terminal date.
-```
+
 
 In addition to buying options, investors may also sell options short in the market, a process known as issuing options. In this case, the cash flow will be the exact opposite of what the buyer receives, as illustrated below. The buyer (owner) receives the same cash flow as previously shown, while the seller has an obligation rather than a right. Therefore, the issuer's cash flow is a mirror image of the buyer's.
 
 ## Put-call parity
 
 As you may have noticed, a put option always provides a payout when a call option does not (and vice versa), assuming the strike price is the same. By combining both types of options, an investor can create a cash flow proportional to the share price, regardless of how the share price changes. This relationship between a put, a call, and the share price is known as **put-call parity**:
-
 $$
 S_{t} - PV_{t}(X) = C_{t} - P_{t}
 $$ {#eq-put_call_parity}
@@ -357,25 +351,21 @@ The task is to determine the current option price, denoted as $f_0$ in the figur
 The key to solving this problem is recognizing that the same cash flow can be replicated by borrowing money to finance a fraction of the shares that the option delivers, regardless of whether the price goes up or down. The reason this replication is possible is that an option’s value is a function of the stock price. When the stock is worth 115, the option will always be worth 15. When the stock is worth 95, the option is always worthless. By substituting the stock price into this function, we can determine the value of the option.
 
 Now, suppose we borrow money to purchase a certain number of shares per option, denoted by $\Delta$. For example, if we buy half as many shares as options, then $\Delta = \frac{1}{2}$. Since the stock price is 100, we buy shares worth:
-
 $$
 100 \cdot \Delta = 50
 $$ {#eq-delta_example}
 
 per option. After half a year ($T = \frac{1}{2}$), we must repay the loan with interest, so the total repayment amount will be:
-
 $$
 100 \cdot 1.05^{\tfrac{1}{2}} \cdot \Delta
 $$ {#eq-repayment_example}
 
 If the share price rises, our account balance will then show a surplus of:
-
 $$
 \Delta \cdot (115 - 100 \cdot 1.05^{\tfrac{1}{2}})
 $$ {#eq-cf_up}
 
 Similarly, we receive 15 on the option if the stock price goes up. If we buy the option for $f_0$ today and fund it with a loan equal amount $f_0$, we will next year have:
-
 $$
 10 - f_0 \cdot 1.05^{\tfrac{1}{2}}
 $$ {#eq-option_up}
@@ -385,19 +375,16 @@ We can now select an appropriate proportion of shares $\Delta$ so that these two
 $$ {#eq-no_arbitrage_up}
 
 If the stock goes down, we can reason in exactly the same way. We get a loss of
-
 $$
 \Delta \cdot (95 - 100 \cdot 1.05^{\frac{1}{2}})
 $$ {#eq-cf_down}
 
 on the share and a loss of
-
 $$
 0 - f_0 \cdot 1.05^{\frac{1}{2}}
 $$ {#eq-option_down}
 
 on the option. We require that the investments should provide the same return, so we can set an equality between them:
-
 $$
 \Delta \cdot (95 - 100 \cdot 1.05^{\frac{1}{2}}) = 0 - f_0 \cdot 1.05^{\frac{1}{2}}
 $$ {#eq-no_arbitrage_down}
@@ -425,13 +412,11 @@ display(Markdown(f"$f_0={sol[f0]}$"))
 display(Markdown(f"$\\Delta={sol[Delta]}$"))
 
 ```
-
 $$
 \Delta = \tfrac{1}{2}
 $$ {#eq-delta_sol}
 
 and
-
 $$
 f_0 \approx 3.645
 $$ {#eq-f0_sol}
@@ -469,25 +454,21 @@ T = 0.5
 Now, instead of using specific numbers, we generalize the approach from the previous section to find $f_0$.
 
 As before, the investor buys $\Delta$ shares and borrows $\Delta \cdot S_0$ to finance the purchase. Taking interest into account, the investor must repay
-
 $$
 \Delta \cdot S_0 \cdot (1 + r)^T
 $$ {#eq-repay}
 
 after one year. If the stock price rises, the investor can sell the stock for $S_u$ in the market. The resulting profit will be:
-
 $$
 \Delta\cdot(S_u - S_0 \cdot(1+r)^T)
 $$ {#eq-up_delta_profit}
 
 This should match the profit gained from financing the option purchase with a loan. The option provides a payoff of $f_u$ when the stock price rises. The loan that must be repaid consists of the initial purchase price plus interest, which is:
-
 $$
 f_0 \cdot (1 + r)^T
 $$ {#eq-up_f_profit}
 
 Thus, the profit from the leveraged option purchase is:
-
 $$
 f_u - f_0\cdot(1+r)^T
 $$ {#eq-up_f}
@@ -497,7 +478,6 @@ As before, we choose now a share of shares so that the profits of shares and opt
 $$ {#eq-up_equation}
 
 Exactly the same argument applies if the stock goes down, so in that case we need only replace subscript u with d:
-
 $$
 \Delta\cdot(S_d - S_0 \cdot(1+r)^T) = f_d - f_0\cdot(1+r)^T
 $$ {#eq-down_equation}
@@ -505,7 +485,6 @@ $$ {#eq-down_equation}
 ## Risk-neutral probability
 
 As in the previous section, we have two unknowns: the proportion of $\Delta$ shares and the option price $f$, which can be easily solved. We will not go into the full derivation of the solution here. However, it turns out that the solution can be expressed in a relatively simple way using a variable $q$, known as the "risk-neutral probability." It is calculated as:
-
 $$
 q=\frac{(1+r)^T-d}{u-d}
 $$ {#eq-q_formula}
@@ -513,7 +492,6 @@ $$ {#eq-q_formula}
 $q$ is really just a tool for calculating the option price and is not actually a probability. However, it shares a key property with real probabilities in that it always lies between zero and one. We use it to compute an expectation in the same way as we do with normal probabilities.
 
 It is called "risk-neutral" because if we apply it to the terminal values of the underlying stock ($S_u$ and $S_d$), the expected value equals the current stock price plus interest:
-
 $$
 \mathbb{E}_q[S_T] = S_u \cdot q + S_d \cdot (1-q) = S_0 \cdot (1+r)^T
 $$ {#eq-q_expectation}
@@ -539,7 +517,6 @@ sp.simplify(Su * q + Sd * (1 - q))
 Once we find $q$, the option price is simply given as the present value of the expected option value at exercise, where we use the risk-neutral probability $q$ as the probability of "up" and "down".
 
 The option price today is therefore:
-
 $$
 f_0=\frac{q \cdot f_u + (1-q) \cdot f_d}{(1+r)^T}
 $$ {#eq-gen_formula}
@@ -563,7 +540,6 @@ In essence, this provides a general framework for pricing any contract written o
 ## Option delta
 
 Another important quantity is $\Delta$, which represents the number of shares needed to replicate an option. It turns out that the delta is:
-
 $$
 \Delta=\frac{f_u-f_d}{S_u-S_d}
 $$ {#eq-gen_delta_formula}
@@ -694,13 +670,11 @@ ax.legend(['Real', 'Simulated'], frameon=False)
 The orange line in @fig-intraday_sim represents simulated prices, meaning that each time the code is executed, the orange path will vary.
 
 You can see this from the formula in @fig-intraday_sim, but we will now take a closer look at how stock prices are typically modeled in finance. We start with a model based on the relative *geometric* change in stock prices. By relative geometric change, we mean to the log difference, defined as:
-
 $$
 \Delta \log(S_t) = \log(S_t) - \log(S_{t-1}) = \Delta s_t
 $$ {#eq-logdiff_def}
 
 Alternatively, we could consider the *discrete percentage difference*:
-
 $$
 \Delta S_t / S_t
 $$
@@ -716,7 +690,6 @@ np.exp(np.log(x))
 ```
 
 Thus, if we know the log change $\Delta s_t$ over a given period, it follows directly from ([-@eq-logdiff_def]) that the stock price at time $t$ is given by:
-
 $$
 S_t = S_0 \cdot e^{s_t}
 $$ {#eq-price_log_diff}
@@ -728,7 +701,6 @@ The log change in stock price consists of three key components: *drift, volatili
 Since stock prices are not fully predictable, we need to introduce a random element. This randomness should be structured so that the variance increases proportionally with time. This assumption is reasonable because it implies that the stock price two months from now will have twice the variance — and thus twice the risk — of the stock price one month from now.
 
 This simple assumption can be expressed as
-
 $$
 z_{t} = \varepsilon_{t}\sqrt{t}
 $$ {#eq-wiener}
@@ -736,7 +708,6 @@ $$ {#eq-wiener}
 where $\varepsilon_{t}$ is standard normally distributed, $\varepsilon_{t} \sim N(0,1)$, meaning it has a mean of zero and variance of one.
 
 The standard random variable is multiplied by the square root of $t$, ensuring that:
-
 $$
 Var(z_t) = t
 $$ {#eq-var_deltaz}
@@ -744,25 +715,21 @@ $$ {#eq-var_deltaz}
 A random variable that increases in variance with time is called a Wiener Process. The further into the future, the less we know about the stock price.
 
 The actual innovation also has a scale parameter $\sigma$, so that the innovation to the price becomes:
-
 $$
 \sigma \cdot z_t
 $$ {#eq-sigma_zt}
 
 The associated variance is proportional to the time period:
-
 $$
 var(\sigma \cdot z_t) = \sigma^2 \cdot t
 $$ {#eq-var_sigma_zt}
 
 When simulating, we want to draw each innovation in the process $z_t$, in other words, we want to draw the change in $z_t$. Change is as usual indicated by $\Delta$, so that the innovation per observation becomes
-
 $$
 \sigma \cdot \Delta z_t
 $$ {#eq-sigma_delta_zt}
 
 The associated variance is then:
-
 $$
 var(\sigma \cdot \Delta z_t) = \sigma^2 \cdot \Delta t
 $$
@@ -798,7 +765,6 @@ mu = np.log(df['PRIS']).diff().mean()
 ```
 
 Mathematicaly the drift can be written
-
 $$
 \mu \cdot \Delta t
 $$ {#eq-logdiff_drift_innov}
@@ -808,31 +774,26 @@ In the calculation of @fig-intraday, $\Delta t = 1$
 ## Volatility Correction
 
 If we were to define the change in log price using only the drift and innovation terms, as in ([-@eq-logdiff_drift_innov]) and ([-@eq-sigma_delta_zt]), the cumulative log price change from time 0 to $t$ would be:
-
 $$
 s_t = \mu \cdot t + \sigma \cdot z_t
 $$
 
 Substituting this into the exponential price model from ([-@eq-price_log_diff]) gives:
-
 $$
 S_t = S_0 \cdot e^{\mu \cdot t + \sigma \cdot z_t}
 $$
 
 However, as we previously discussed in @fig-jensen, this expression ignores the effect of Jensen’s inequality. Because the exponential function is convex, the expected value of $S_t$ is greater than the expected value of the log price change:
-
 $$
 \mathbb{E}[S_t] > S_0 \cdot e^{\mu \cdot t}
 $$ {#eq-incorrect_exp}
 
 We do know, however, what accounts for this difference between the expectation of the function and the function of the expectation. By adding a correction term
-
 $$
 -\tfrac{1}{2} \sigma^2 t
 $$ {#eq-volatility_correction}
 
 we can adjust for Jensen’s inequality exactly. That is, we know that
-
 $$
 \mathbb{E}[S_t] = S_0 \cdot e^{\mu \cdot t - \tfrac{1}{2} \sigma^2 t}
 $$ {#eq-correct_exp}
@@ -840,13 +801,11 @@ $$ {#eq-correct_exp}
 ## Putting It All Together
 
 By combining the innovation term ([-@eq-sigma_delta_zt]), the volatility correction term ([-@eq-volatility_correction]), and the drift component from ([-@eq-logdiff_drift_innov]), we arrive at a realistic model for the log change in stock price:
-
 $$
 \Delta s_t = \mu \cdot \Delta t - \tfrac{1}{2} \sigma^2 \Delta t + \sigma \cdot \Delta z_t
 $$ {#eq-logdiff_model}
 
 This leads to the full model for the stock price at any point in time:
-
 $$
 S_t = S_0 \cdot e^{\mu \cdot t - \tfrac{1}{2} \sigma^2 \cdot t + \sigma \cdot z_t}
 $$ {#eq-final_price_model}
@@ -868,7 +827,6 @@ Here, `np.cumsum(dlnS)` computes the cumulative sum of log changes across all ob
 In the original papers, the derivation of the Black and Scholes option pricing formula, uses som pretty fancy math and sophisticated theory. However, if we know that we can price any derivative using risk neutral expectations, it becomes easier to understand how derivatives are priced.
 
 For example the Black-Scholes-Merton option pricing fomula can be obtained by applying risk netural pricing. That involves calculating this integral
-
 $$
 f_0 = e^{-rt} \int_{-\infty}^{\infty} \max \left( S_0 e^{(r - \tfrac{1}{2} \sigma^2)t + \sigma \sqrt{t} \epsilon} - X, 0 \right) \phi(\epsilon) d\epsilon
 $$ {#eq-bs_expectation_call}
@@ -876,19 +834,16 @@ $$ {#eq-bs_expectation_call}
 Here - $f_0$ is the valuation - $e^{-rT}$: Is the contnously compunded discount factor (time value of money). - $S_t = S_0 e^{(r - \frac{1}{2} \sigma^2)T + \sigma \sqrt{T} \epsilon}$ is the value of the option at time $t$ - $X$ is the strike price - $\phi(\epsilon)$ is the standard normal density function.
 
 We will not go through the calculations in this course, but it turns out that the solution to this integral is the Black-Scholes-Merton call option formula:
-
 $$
 C(S, X, T, r, \sigma) = S \Phi(d_1) - X e^{-rT} \Phi(d_2)
 $$ {#eq-bs_call}
 
 where
-
 $$
 d_1 = \frac{\ln(S / X) + \left(r + \frac{1}{2} \sigma^2 \right)T}{\sigma \sqrt{T}}
 $$ {#eq-bs_call_d1}
 
 and
-
 $$
 d_2 = d_1 - \sigma \sqrt{T}
 $$ {#eq-bs_call_d2}
@@ -902,7 +857,6 @@ Here’s an improved version of your section for clarity, flow, and grammar, whi
 ## Numerical Approximation
 
 Knowing that we can price derivatives using risk-neutral expectations means that we can, in principle, determine the fair value of almost any contract written on tradable assets. The expected value is defined as the sum of outcomes (or events) weighted by their probabilities. For example, the expected value of a die roll is:
-
 $$
 (1+2+3+4+5+6) \cdot \frac{1}{6} = 3.5
 $$ {#eq-dice}
@@ -969,19 +923,16 @@ p = stats.norm.pdf(x, mu, sigma) * dx
 ```
 
 However, as we saw when modeling the stock price process, the mean is not simply $\mu$, and the volatility is not simply $\sigma$. According to Equation @eq-final_price_model, after adjusting for the time to maturity and the volatility correction, the mean of the log return becomes:
-
 $$
 (\mu - \tfrac{1}{2} \sigma^2) \cdot T
 $$ {#eq-mean_stockprocess}
 
 Since we are working under the risk-neutral measure, we replace the expected return $\mu$ with the risk-free rate $r$, resulting in:
-
 $$
 (r - \tfrac{1}{2} \sigma^2) \cdot T
 $$ {#eq-riskneutral_mean}
 
 The corresponding volatility over the time horizon $T$ becomes:
-
 $$
 \sigma \cdot \sqrt{T}
 $$ {#eq-volatility_scaled}

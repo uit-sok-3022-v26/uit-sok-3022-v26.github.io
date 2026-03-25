@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.6.42">
+<meta name="generator" content="quarto-1.9.36">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
@@ -11,6 +11,9 @@
 
 <title>Derivatives</title>
 <style>
+/* Default styles provided by pandoc.
+** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+*/
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
 div.columns{display: flex; gap: min(4vw, 1.5em);}
@@ -23,8 +26,9 @@ ul.task-list li input[type="checkbox"] {
   vertical-align: middle;
 }
 /* CSS for syntax highlighting */
+html { -webkit-text-size-adjust: 100%; }
 pre > code.sourceCode { white-space: pre; position: relative; }
-pre > code.sourceCode > span { line-height: 1.25; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
 pre > code.sourceCode > span:empty { height: 1.2em; }
 .sourceCode { overflow: visible; }
 code.sourceCode > span { color: inherit; text-decoration: inherit; }
@@ -35,7 +39,7 @@ div.sourceCode { overflow: auto; }
 }
 @media print {
 pre > code.sourceCode { white-space: pre-wrap; }
-pre > code.sourceCode > span { display: inline-block; text-indent: -5em; padding-left: 5em; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
 }
 pre.numberSource code
   { counter-reset: source-line 0; }
@@ -60,7 +64,6 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 div.csl-bib-body { }
 div.csl-entry {
   clear: both;
-  margin-bottom: 0em;
 }
 .hanging-indent div.csl-entry {
   margin-left:2em;
@@ -80,18 +83,19 @@ div.csl-indent {
 
 
 <script src="derivatives_files/libs/clipboard/clipboard.min.js"></script>
-<script src="derivatives_files/libs/quarto-html/quarto.js"></script>
+<script src="derivatives_files/libs/quarto-html/quarto.js" type="module"></script>
+<script src="derivatives_files/libs/quarto-html/tabsets/tabsets.js" type="module"></script>
 <script src="derivatives_files/libs/quarto-html/popper.min.js"></script>
 <script src="derivatives_files/libs/quarto-html/tippy.umd.min.js"></script>
 <script src="derivatives_files/libs/quarto-html/anchor.min.js"></script>
 <link href="derivatives_files/libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="derivatives_files/libs/quarto-html/quarto-syntax-highlighting-2f5df379a58b258e96c21c0638c20c03.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<link href="derivatives_files/libs/quarto-html/quarto-syntax-highlighting-845c23b38eaddc0f92fda52bfe77a8c8.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="derivatives_files/libs/bootstrap/bootstrap.min.js"></script>
 <link href="derivatives_files/libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="derivatives_files/libs/bootstrap/bootstrap-1bc8a17f135ab3d594c857e9f48e611b.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<link href="derivatives_files/libs/bootstrap/bootstrap-efbb37e9afcc02144ebbc7afd12a776f.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
 
   <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
-  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+  <script defer="" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
 
 <script type="text/javascript">
 const typesetMath = (el) => {
@@ -104,7 +108,7 @@ const typesetMath = (el) => {
     var macros = [];
     for (var i = 0; i < mathElements.length; i++) {
       var texText = mathElements[i].firstChild;
-      if (mathElements[i].tagName == "SPAN") {
+      if (mathElements[i].tagName == "SPAN" && texText && texText.data) {
         window.katex.render(texText.data, mathElements[i], {
           displayMode: mathElements[i].classList.contains('display'),
           throwOnError: false,
@@ -122,7 +126,7 @@ window.Quarto = {
 
 </head>
 
-<body>
+<body class="quarto-light">
 
 <div id="quarto-content" class="page-columns page-rows-contents page-layout-article">
 <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
@@ -160,7 +164,7 @@ window.Quarto = {
 </header>
 
 
-<p>This note provides an introduction to derivative pricing. In finance, a derivative is an asset or contract whose value depends on another asset. Consequently, the value of a derivative is a function of the underlying asset’s value. If the value of the underlying share is known, the exercise value of an option can be determined immediately.</p>
+<p></p><div style="page-break-after: always;"></div> This note provides an introduction to derivative pricing. In finance, a derivative is an asset or contract whose value depends on another asset. Consequently, the value of a derivative is a function of the underlying asset’s value. If the value of the underlying share is known, the exercise value of an option can be determined immediately.<p></p>
 <p>One of the most common types of derivatives is options. We will begin by exploring how options are priced and later demonstrate how the principles of option pricing extend to a wide range of other derivatives.</p>
 <section id="options" class="level1">
 <h1>Options</h1>
@@ -176,16 +180,18 @@ window.Quarto = {
 <p>There are mainly two types of options - put and call options. A call option gives you the right to buy one share at a fixed price sometime in the future. Let us say that the price agreed upon for an Equinor share is 105. This is called the strike price or exercise price. If the share price is 115 today, you can take advantage of your right to buy it for 105 and sell it in the market for 115. The value of the option is then 15.</p>
 <p>However, if the market price is 95, it would be pointless to buy the stock for 105. Since you do not have any obligation to buy it, you would not exercise your right since that would lead to a certain loss. Therefore, the option price can never be negative, since the right to buy will never be exercised if it leads to a loss. Hence, if C is the value of the call, S the value of the stock, and X the strike price at the terminal date, we have</p>
 <p><span id="eq-C"><span class="math display">\[
-C = \max(S - X, 0)
+    C = \max(S - X, 0)
 \tag{1}\]</span></span></p>
 <p>The share price is 115 option holder is thus left with <span id="eq-C_gain"><span class="math display">\[
-= \max(115-105, 0) = 10
-\tag{2}\]</span></span> But if the price falls to 95, the option loses its entire value <span id="eq-C_loss"><span class="math display">\[
-= \max(95-105, 0) = 0
+    = \max(115-105, 0) = 10
+\tag{2}\]</span></span></p>
+<p>But if the price falls to 95, the option loses its entire value</p>
+<p><span id="eq-C_loss"><span class="math display">\[
+    = \max(95-105, 0) = 0
 \tag{3}\]</span></span></p>
 <p>Let us draw this up in a chart where X is the strike price, with a python function giving the maximum betseen the current share price and <span class="math inline">\(S-X\)</span></p>
 <div id="cell-fig-call_option" class="cell" data-execution_count="1">
-<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span>
 <span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>X <span class="op">=</span> <span class="dv">105</span>  <span class="co"># strike price</span></span>
@@ -217,7 +223,7 @@ C = \max(S - X, 0)
 <span id="cb1-30"><a href="#cb1-30" aria-hidden="true" tabindex="-1"></a>ax, S <span class="op">=</span> create_canvas(<span class="st">"Cash Flow of a Call Option"</span>)</span>
 <span id="cb1-31"><a href="#cb1-31" aria-hidden="true" tabindex="-1"></a>call_payoff <span class="op">=</span> np.maximum(S <span class="op">-</span> X, <span class="dv">0</span>) <span class="co">#call option payoff</span></span>
 <span id="cb1-32"><a href="#cb1-32" aria-hidden="true" tabindex="-1"></a>ax.plot(S, call_payoff, label<span class="op">=</span><span class="st">"Call Option Payoff"</span>, </span>
-<span id="cb1-33"><a href="#cb1-33" aria-hidden="true" tabindex="-1"></a>                                                                                    linewidth<span class="op">=</span><span class="dv">2</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb1-33"><a href="#cb1-33" aria-hidden="true" tabindex="-1"></a>                                                                                    linewidth<span class="op">=</span><span class="dv">2</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-display">
 <div id="fig-call_option" class="quarto-float quarto-figure quarto-figure-center anchored">
 <figure class="quarto-float quarto-float-fig figure">
@@ -235,10 +241,10 @@ Figure&nbsp;1: Call option cash flow
 <p>We have now examined how a call option works. A put option, on the other hand, is the right but not the obligation to sell an asset at a specified price. This means the option holder benefits from a falling share price and receives the difference between the market price S and the strike price X when the market price is lower than X. If the price is higher, the option has no value, and the owner gains nothing.</p>
 <p>This is illustrated in <a href="#fig-put_option" class="quarto-xref">Figure&nbsp;2</a>. To represent the put option, we simply modify the function from <code>np.maximum(S - X, 0)</code> to <code>np.maximum(X - S, 0)</code>, reflecting the fact that the option gains value when the stock price decreases.</p>
 <div id="cell-fig-put_option" class="cell" data-execution_count="2">
-<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>ax, S <span class="op">=</span> create_canvas(<span class="st">"Cash Flow of a Put Option"</span>)</span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>ax, S <span class="op">=</span> create_canvas(<span class="st">"Cash Flow of a Put Option"</span>)</span>
 <span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>put_payoff <span class="op">=</span> np.maximum(X <span class="op">-</span> S, <span class="dv">0</span>) <span class="co">#put option payoff</span></span>
 <span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>ax.plot(S, put_payoff, label<span class="op">=</span><span class="st">"Put Option Payoff"</span>, </span>
-<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>                                                                                linewidth<span class="op">=</span><span class="dv">2</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>                                                                                linewidth<span class="op">=</span><span class="dv">2</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-display">
 <div id="fig-put_option" class="quarto-float quarto-figure quarto-figure-center anchored">
 <figure class="quarto-float quarto-float-fig figure">
@@ -259,7 +265,7 @@ Figure&nbsp;2: Put option cash flow
 <p>In general, it is never advantageous to exercise an option early, before the expiration date. This is because an option always has some value beyond its immediate exercise value, as there is always a chance it will become more valuable. This is due to a principle known as “<em>Jensen’s Inequality</em>” <span class="citation" data-cites="jensen1906">(<a href="#ref-jensen1906" role="doc-biblioref">Jensen 1906</a>)</span>. It states that the mean of a convex function is always higher than the function of the mean.</p>
 <p>This is illustrated in <a href="#fig-jensen" class="quarto-xref">Figure&nbsp;3</a>. Here, we see that if the stock price can take two values, 95 and 115, the option value at the mean of these two points is zero, since this corresponds to the exercise price. However, if we take the mean of the call function values, it is the average of 15 and 0, which equals 7.5. Hence, the mean of a convex function is higher than the function at the mean.</p>
 <div id="cell-fig-jensen" class="cell" data-execution_count="3">
-<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>ax, S <span class="op">=</span> create_canvas(<span class="st">"Jensens inequality"</span>)</span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>ax, S <span class="op">=</span> create_canvas(<span class="st">"Jensens inequality"</span>)</span>
 <span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>call_payoff <span class="op">=</span> np.maximum(S <span class="op">-</span> X, <span class="dv">0</span>) <span class="co">#call option payoff</span></span>
 <span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>ax.plot(S, call_payoff, label<span class="op">=</span><span class="st">"Call Option Payoff"</span>, </span>
 <span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>                                        linewidth<span class="op">=</span><span class="dv">2</span>)</span>
@@ -281,41 +287,41 @@ Figure&nbsp;2: Put option cash flow
 <span id="cb3-20"><a href="#cb3-20" aria-hidden="true" tabindex="-1"></a><span class="co"># Add scatter points illustrating the two sample </span></span>
 <span id="cb3-21"><a href="#cb3-21" aria-hidden="true" tabindex="-1"></a><span class="co"># payoffs</span></span>
 <span id="cb3-22"><a href="#cb3-22" aria-hidden="true" tabindex="-1"></a>ax.scatter([S_left, S_right],[payoff_left,payoff_right], </span>
-<span id="cb3-23"><a href="#cb3-23" aria-hidden="true" tabindex="-1"></a>            color<span class="op">=</span><span class="st">'blue'</span>, label<span class="op">=</span><span class="st">"Sampled Payoffs"</span>, zorder<span class="op">=</span><span class="dv">3</span>)</span>
+<span id="cb3-23"><a href="#cb3-23" aria-hidden="true" tabindex="-1"></a>        color<span class="op">=</span><span class="st">'blue'</span>, label<span class="op">=</span><span class="st">"Sampled Payoffs"</span>, zorder<span class="op">=</span><span class="dv">3</span>)</span>
 <span id="cb3-24"><a href="#cb3-24" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb3-25"><a href="#cb3-25" aria-hidden="true" tabindex="-1"></a><span class="co"># Draw a line between the two points to indicate the </span></span>
 <span id="cb3-26"><a href="#cb3-26" aria-hidden="true" tabindex="-1"></a><span class="co"># mean of </span></span>
 <span id="cb3-27"><a href="#cb3-27" aria-hidden="true" tabindex="-1"></a><span class="co"># payoffs</span></span>
 <span id="cb3-28"><a href="#cb3-28" aria-hidden="true" tabindex="-1"></a>ax.plot([S_left,S_right], [payoff_left,payoff_right], </span>
-<span id="cb3-29"><a href="#cb3-29" aria-hidden="true" tabindex="-1"></a>                                color<span class="op">=</span><span class="st">'blue'</span>, linestyle<span class="op">=</span><span class="st">'dashed'</span>)</span>
+<span id="cb3-29"><a href="#cb3-29" aria-hidden="true" tabindex="-1"></a>                     color<span class="op">=</span><span class="st">'blue'</span>, linestyle<span class="op">=</span><span class="st">'dashed'</span>)</span>
 <span id="cb3-30"><a href="#cb3-30" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb3-31"><a href="#cb3-31" aria-hidden="true" tabindex="-1"></a><span class="co"># Scatter point for the payoff at the mean stock price</span></span>
 <span id="cb3-32"><a href="#cb3-32" aria-hidden="true" tabindex="-1"></a>ax.scatter(S_mean, payoff_mean, color<span class="op">=</span><span class="st">'blue'</span>,</span>
-<span id="cb3-33"><a href="#cb3-33" aria-hidden="true" tabindex="-1"></a>        marker<span class="op">=</span><span class="st">'X'</span>, label<span class="op">=</span><span class="st">"Mean of call payoff"</span>, zorder<span class="op">=</span><span class="dv">4</span>)</span>
+<span id="cb3-33"><a href="#cb3-33" aria-hidden="true" tabindex="-1"></a>    marker<span class="op">=</span><span class="st">'X'</span>, label<span class="op">=</span><span class="st">"Mean of call payoff"</span>, zorder<span class="op">=</span><span class="dv">4</span>)</span>
 <span id="cb3-34"><a href="#cb3-34" aria-hidden="true" tabindex="-1"></a>ax.scatter(S_mean, <span class="dv">0</span>, color<span class="op">=</span><span class="st">'red'</span>, </span>
-<span id="cb3-35"><a href="#cb3-35" aria-hidden="true" tabindex="-1"></a>        marker<span class="op">=</span><span class="st">'X'</span>, label<span class="op">=</span><span class="st">"Call payoff of mean"</span>, zorder<span class="op">=</span><span class="dv">4</span>)</span>
+<span id="cb3-35"><a href="#cb3-35" aria-hidden="true" tabindex="-1"></a>    marker<span class="op">=</span><span class="st">'X'</span>, label<span class="op">=</span><span class="st">"Call payoff of mean"</span>, zorder<span class="op">=</span><span class="dv">4</span>)</span>
 <span id="cb3-36"><a href="#cb3-36" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb3-37"><a href="#cb3-37" aria-hidden="true" tabindex="-1"></a><span class="co"># Annotate points</span></span>
 <span id="cb3-38"><a href="#cb3-38" aria-hidden="true" tabindex="-1"></a>ax.text(S_mean <span class="op">-</span> <span class="dv">1</span>, payoff_mean, <span class="st">"E[call_payoff(S)]"</span>, </span>
-<span id="cb3-39"><a href="#cb3-39" aria-hidden="true" tabindex="-1"></a>                                        ha<span class="op">=</span><span class="st">'right'</span>, </span>
-<span id="cb3-40"><a href="#cb3-40" aria-hidden="true" tabindex="-1"></a>                                        fontsize<span class="op">=</span><span class="dv">10</span>, </span>
-<span id="cb3-41"><a href="#cb3-41" aria-hidden="true" tabindex="-1"></a>                                        color<span class="op">=</span><span class="st">'blue'</span>)</span>
+<span id="cb3-39"><a href="#cb3-39" aria-hidden="true" tabindex="-1"></a>                            ha<span class="op">=</span><span class="st">'right'</span>, </span>
+<span id="cb3-40"><a href="#cb3-40" aria-hidden="true" tabindex="-1"></a>                            fontsize<span class="op">=</span><span class="dv">10</span>, </span>
+<span id="cb3-41"><a href="#cb3-41" aria-hidden="true" tabindex="-1"></a>                            color<span class="op">=</span><span class="st">'blue'</span>)</span>
 <span id="cb3-42"><a href="#cb3-42" aria-hidden="true" tabindex="-1"></a>ax.text(<span class="dv">106</span>, <span class="dv">1</span>, <span class="st">"{"</span>, </span>
-<span id="cb3-43"><a href="#cb3-43" aria-hidden="true" tabindex="-1"></a>                                        ha<span class="op">=</span><span class="st">'right'</span>, </span>
-<span id="cb3-44"><a href="#cb3-44" aria-hidden="true" tabindex="-1"></a>                                        fontsize<span class="op">=</span><span class="dv">90</span>, </span>
-<span id="cb3-45"><a href="#cb3-45" aria-hidden="true" tabindex="-1"></a>                                        color<span class="op">=</span><span class="st">'grey'</span>, </span>
-<span id="cb3-46"><a href="#cb3-46" aria-hidden="true" tabindex="-1"></a>                                        fontweight<span class="op">=</span><span class="st">'ultralight'</span>, </span>
-<span id="cb3-47"><a href="#cb3-47" aria-hidden="true" tabindex="-1"></a>                                        fontname<span class="op">=</span><span class="st">"serif"</span>)</span>
+<span id="cb3-43"><a href="#cb3-43" aria-hidden="true" tabindex="-1"></a>                            ha<span class="op">=</span><span class="st">'right'</span>, </span>
+<span id="cb3-44"><a href="#cb3-44" aria-hidden="true" tabindex="-1"></a>                            fontsize<span class="op">=</span><span class="dv">90</span>, </span>
+<span id="cb3-45"><a href="#cb3-45" aria-hidden="true" tabindex="-1"></a>                            color<span class="op">=</span><span class="st">'grey'</span>, </span>
+<span id="cb3-46"><a href="#cb3-46" aria-hidden="true" tabindex="-1"></a>                            fontweight<span class="op">=</span><span class="st">'ultralight'</span>, </span>
+<span id="cb3-47"><a href="#cb3-47" aria-hidden="true" tabindex="-1"></a>                            fontname<span class="op">=</span><span class="st">"serif"</span>)</span>
 <span id="cb3-48"><a href="#cb3-48" aria-hidden="true" tabindex="-1"></a>ax.text(<span class="dv">102</span>, <span class="dv">2</span>, <span class="st">"Intrinsic value"</span>, </span>
-<span id="cb3-49"><a href="#cb3-49" aria-hidden="true" tabindex="-1"></a>                                        ha<span class="op">=</span><span class="st">'right'</span>, </span>
-<span id="cb3-50"><a href="#cb3-50" aria-hidden="true" tabindex="-1"></a>                                        fontsize<span class="op">=</span><span class="dv">10</span>)</span>
+<span id="cb3-49"><a href="#cb3-49" aria-hidden="true" tabindex="-1"></a>                            ha<span class="op">=</span><span class="st">'right'</span>, </span>
+<span id="cb3-50"><a href="#cb3-50" aria-hidden="true" tabindex="-1"></a>                            fontsize<span class="op">=</span><span class="dv">10</span>)</span>
 <span id="cb3-51"><a href="#cb3-51" aria-hidden="true" tabindex="-1"></a>ax.text(S_mean <span class="op">+</span> <span class="dv">1</span>, <span class="fl">0.5</span>, <span class="st">"call_payoff(E[S])"</span>, </span>
-<span id="cb3-52"><a href="#cb3-52" aria-hidden="true" tabindex="-1"></a>                                        ha<span class="op">=</span><span class="st">'left'</span>, </span>
-<span id="cb3-53"><a href="#cb3-53" aria-hidden="true" tabindex="-1"></a>                                        fontsize<span class="op">=</span><span class="dv">10</span>, </span>
-<span id="cb3-54"><a href="#cb3-54" aria-hidden="true" tabindex="-1"></a>                                        color<span class="op">=</span><span class="st">'red'</span>)</span>
+<span id="cb3-52"><a href="#cb3-52" aria-hidden="true" tabindex="-1"></a>                            ha<span class="op">=</span><span class="st">'left'</span>, </span>
+<span id="cb3-53"><a href="#cb3-53" aria-hidden="true" tabindex="-1"></a>                            fontsize<span class="op">=</span><span class="dv">10</span>, </span>
+<span id="cb3-54"><a href="#cb3-54" aria-hidden="true" tabindex="-1"></a>                            color<span class="op">=</span><span class="st">'red'</span>)</span>
 <span id="cb3-55"><a href="#cb3-55" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb3-56"><a href="#cb3-56" aria-hidden="true" tabindex="-1"></a><span class="co"># Show updated plot</span></span>
-<span id="cb3-57"><a href="#cb3-57" aria-hidden="true" tabindex="-1"></a>ax.legend()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb3-57"><a href="#cb3-57" aria-hidden="true" tabindex="-1"></a>ax.legend()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-display">
 <div id="fig-jensen" class="quarto-float quarto-figure quarto-figure-center anchored">
 <figure class="quarto-float quarto-float-fig figure">
@@ -338,11 +344,11 @@ Figure&nbsp;3: Jensens inequality illustrated by a call option
 </section>
 <section id="black-and-scholes-formula" class="level2">
 <h2 class="anchored" data-anchor-id="black-and-scholes-formula">Black and Scholes formula</h2>
-<p>So, how much is an option worth? The relationship between an option’s value and the underlying stock price makes it possible to derive a formula that determines the value of the right the option represents. This formula, discovered in the early 1970s, is known as the Black-Scholes-Merton option-pricing formula <span class="citation" data-cites="scholes1973pricing">Merton et al. (<a href="#ref-merton1971theory" role="doc-biblioref">1971</a>)</span>. However, it was later found to be closely related to earlier work by <span class="citation" data-cites="bachelier1900">Bachelier (<a href="#ref-bachelier1900" role="doc-biblioref">1900</a>)</span>.</p>
+<p>So, how much is an option worth? The relationship between an option’s value and the underlying stock price makes it possible to derive a formula that determines the value of the right the option represents. This formula, discovered in the early 1970s, is known as the Black-Scholes-Merton option-pricing formula <span class="citation" data-cites="scholes1973pricing"><span class="nocase">Merton et al.</span> (<a href="#ref-merton1971theory" role="doc-biblioref">1971</a>)</span>. However, it was later found to be closely related to earlier work by <span class="citation" data-cites="bachelier1900">Bachelier (<a href="#ref-bachelier1900" role="doc-biblioref">1900</a>)</span>.</p>
 <p>The Black-Scholes formula is one of the most significant innovations in finance and is used daily in global financial markets. The economists behind the formula were awarded the Nobel Prize in 1997 for their contribution. While we will return to the details of the Black-Scholes formula later, you might be interested in seeing how it is calculated now.</p>
 <p>In <a href="#fig-bs" class="quarto-xref">Figure&nbsp;4</a>, we see the Black-Scholes price overlaid on the profit chart.</p>
 <div id="cell-fig-bs" class="cell" data-execution_count="4">
-<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> scipy.stats <span class="im">import</span> norm</span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> scipy.stats <span class="im">import</span> norm</span>
 <span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>ax, S <span class="op">=</span> create_canvas(<span class="st">"Black &amp; Scholes price"</span>)</span>
 <span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>call_payoff <span class="op">=</span> np.maximum(S <span class="op">-</span> X, <span class="dv">0</span>) <span class="co">#call option payoff</span></span>
@@ -374,7 +380,7 @@ Figure&nbsp;3: Jensens inequality illustrated by a call option
 <span id="cb4-30"><a href="#cb4-30" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb4-31"><a href="#cb4-31" aria-hidden="true" tabindex="-1"></a>ax.plot(S,black_scholes_call(S, X, <span class="fl">0.25</span>, <span class="fl">0.05</span>, <span class="fl">0.37</span>), </span>
 <span id="cb4-32"><a href="#cb4-32" aria-hidden="true" tabindex="-1"></a>            label<span class="op">=</span><span class="st">"Black and Scholes option price today"</span>)</span>
-<span id="cb4-33"><a href="#cb4-33" aria-hidden="true" tabindex="-1"></a>ax.legend()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb4-33"><a href="#cb4-33" aria-hidden="true" tabindex="-1"></a>ax.legend()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-display">
 <div id="fig-bs" class="quarto-float quarto-figure quarto-figure-center anchored">
 <figure class="quarto-float quarto-float-fig figure">
@@ -391,13 +397,13 @@ Figure&nbsp;4: Call option and Black&amp;Scholes option price
 <p>The “intrinsic value” here, is then the Black and Scholes fair value in excess of the exercise price (value at expiration).</p>
 <p><strong><em>Problems:</em></strong></p>
 <ul>
-<li><p>Change the Black and Scholes figure to show a put option. The formula for the Black and Scholes put is <span id="eq-bs_put"><span class="math display">\[
+<li><p>Change the Black and Scholes figure to show a put option. The formula for the Black and Scholes put is <span id="eq-bs_put1"><span class="math display">\[
   P(S, X, T, r, \sigma) = X e^{-rT} \Phi(-d_2) - S \Phi(-d_1)
-   \tag{4}\]</span></span> where <span id="eq-bs_put"><span class="math display">\[
+\tag{4}\]</span></span> where <span id="eq-bs_put2"><span class="math display">\[
   d_1 = \frac{\ln(S / X) + \left(r + \frac{1}{2} \sigma^2 \right)T}{\sigma \sqrt{T}}
-   \tag{5}\]</span></span> and <span id="eq-bs_put"><span class="math display">\[
+\tag{5}\]</span></span> and <span id="eq-bs_put3"><span class="math display">\[
   d_2 = d_1 - \sigma \sqrt{T}
-   \tag{6}\]</span></span></p>
+\tag{6}\]</span></span></p>
 <p><span class="math inline">\(\Phi\)</span> is the cumulative standard normal distribution function.</p></li>
 <li><p>Which of the arguments in the Black and Scholes formula are most difficult to estimate?</p></li>
 </ul>
@@ -420,7 +426,7 @@ S_{t} - PV_{t}(X) = C_{t} - P_{t}
 <p>If the date is before the terminal date, we use the present value of the exercise price at that time, <span class="math inline">\(PV_{t}(X)\)</span>. However, for now, we assume the terminal exercise price <span class="math inline">\(X\)</span> that has been used throughout.</p>
 <p>The call-put and <span class="math inline">\(S - X\)</span> positions in <a href="#fig-put_call_par" class="quarto-xref">Figure&nbsp;5</a> are shifted up and down by 1 to make all lines visible.</p>
 <div id="cell-fig-put_call_par" class="cell" data-execution_count="5">
-<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>ax, S <span class="op">=</span> create_canvas(<span class="st">"Put-call parity"</span>)</span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>ax, S <span class="op">=</span> create_canvas(<span class="st">"Put-call parity"</span>)</span>
 <span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>call_payoff <span class="op">=</span> np.maximum(S <span class="op">-</span> X, <span class="dv">0</span>) <span class="co">#call option payoff</span></span>
 <span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>put_payoff <span class="op">=</span> np.maximum(X<span class="op">-</span>S, <span class="dv">0</span>) <span class="co">#call option payoff</span></span>
 <span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a></span>
@@ -431,7 +437,7 @@ S_{t} - PV_{t}(X) = C_{t} - P_{t}
 <span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a>ax.plot(S, call_payoff<span class="op">-</span>put_payoff <span class="op">+</span> <span class="dv">1</span>, </span>
 <span id="cb6-10"><a href="#cb6-10" aria-hidden="true" tabindex="-1"></a>                label<span class="op">=</span><span class="st">"$C_t-P_t$ Payoff"</span>, linewidth<span class="op">=</span><span class="dv">3</span>)</span>
 <span id="cb6-11"><a href="#cb6-11" aria-hidden="true" tabindex="-1"></a>ax.plot(S, S<span class="op">-</span>X <span class="op">-</span> <span class="dv">1</span>, label<span class="op">=</span><span class="st">"$S-X$ Payoff"</span>, linewidth<span class="op">=</span><span class="dv">3</span>)</span>
-<span id="cb6-12"><a href="#cb6-12" aria-hidden="true" tabindex="-1"></a>ax.legend()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb6-12"><a href="#cb6-12" aria-hidden="true" tabindex="-1"></a>ax.legend()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-display">
 <div id="fig-put_call_par" class="quarto-float quarto-figure quarto-figure-center anchored">
 <figure class="quarto-float quarto-float-fig figure">
@@ -454,13 +460,13 @@ Figure&nbsp;5: Put-call parity
 <p>By combining a put and a call, it is possible to replicate the cash flows of buying a share and taking out a loan. Additionally, one can buy and sell puts and calls with different exercise prices to create customized cash flows at different share prices.</p>
 <p>In <a href="#fig-issue_call_put" class="quarto-xref">Figure&nbsp;6</a>, we have plotted the net cash flow from issuing both a call option (call) and a put option (put).</p>
 <div id="cell-fig-issue_call_put" class="cell" data-execution_count="6">
-<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>ax, S <span class="op">=</span> create_canvas(<span class="st">"Issuing a call and put"</span>)</span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>ax, S <span class="op">=</span> create_canvas(<span class="st">"Issuing a call and put"</span>)</span>
 <span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>call_payoff <span class="op">=</span> np.maximum(S <span class="op">-</span> X, <span class="dv">0</span>) <span class="co">#call option payoff</span></span>
 <span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>put_payoff <span class="op">=</span> np.maximum(X<span class="op">-</span>S, <span class="dv">0</span>) <span class="co">#call option payoff</span></span>
 <span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>ax.plot(S, <span class="op">-</span>call_payoff<span class="op">-</span>put_payoff<span class="op">+</span><span class="dv">8</span>, </span>
 <span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a>                        label<span class="op">=</span><span class="st">"Issued call and put"</span>, linewidth<span class="op">=</span><span class="dv">3</span>)</span>
-<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a>ax.legend()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a>ax.legend()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-display">
 <div id="fig-issue_call_put" class="quarto-float quarto-figure quarto-figure-center anchored">
 <figure class="quarto-float quarto-float-fig figure">
@@ -530,8 +536,8 @@ Try different combinations of call and put options, including those with differe
 \Delta \cdot (95 - 100 \cdot 1.05^{\frac{1}{2}}) = 0 - f_0 \cdot 1.05^{\frac{1}{2}}
 \tag{15}\]</span></span></p>
 <p>We now have two relatively simple equations with two unknowns, <span class="math inline">\(\Delta\)</span> and <span class="math inline">\(f_0\)</span>, which we can solve using sympy:</p>
-<div id="0e65e304" class="cell" data-execution_count="7">
-<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> sympy <span class="im">as</span> sp</span>
+<div id="ca72cf38" class="cell" data-execution_count="7">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb8"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> sympy <span class="im">as</span> sp</span>
 <span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> IPython.display <span class="im">import</span> display, Markdown</span>
 <span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Define symbols</span></span>
@@ -548,7 +554,7 @@ Try different combinations of call and put options, including those with differe
 <span id="cb8-15"><a href="#cb8-15" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb8-16"><a href="#cb8-16" aria-hidden="true" tabindex="-1"></a><span class="co"># Display the solution</span></span>
 <span id="cb8-17"><a href="#cb8-17" aria-hidden="true" tabindex="-1"></a>display(Markdown(<span class="ss">f"$f_0=</span><span class="sc">{</span>sol[f0]<span class="sc">}</span><span class="ss">$"</span>))</span>
-<span id="cb8-18"><a href="#cb8-18" aria-hidden="true" tabindex="-1"></a>display(Markdown(<span class="ss">f"$</span><span class="ch">\\</span><span class="ss">Delta=</span><span class="sc">{</span>sol[Delta]<span class="sc">}</span><span class="ss">$"</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb8-18"><a href="#cb8-18" aria-hidden="true" tabindex="-1"></a>display(Markdown(<span class="ss">f"$</span><span class="ch">\\</span><span class="ss">Delta=</span><span class="sc">{</span>sol[Delta]<span class="sc">}</span><span class="ss">$"</span>))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-display cell-output-markdown">
 <p><span class="math inline">\(f_0=3.64474653494468\)</span></p>
 </div>
@@ -571,11 +577,11 @@ f_0 \approx 3.645
 <p>When the stock and option can only take two values, we call this the binomial option pricing model. While we could use the method above to calculate the option price every time, it is much easier to apply a more general formula. Let us introduce the following notation:</p>
 <table class="caption-top table">
 <colgroup>
-<col style="width: 33%">
-<col style="width: 8%">
-<col style="width: 15%">
-<col style="width: 21%">
-<col style="width: 21%">
+<col style="width: 26%">
+<col style="width: 18%">
+<col style="width: 18%">
+<col style="width: 18%">
+<col style="width: 18%">
 </colgroup>
 <thead>
 <tr class="header">
@@ -612,8 +618,8 @@ f_0 \approx 3.645
 </table>
 <p>Here, the subscripts <em>u</em> and <em>d</em> represent the up and down movements of the stock, respectively. We use a general variable <span class="math inline">\(f\)</span> that can stand for both a put (<span class="math inline">\(P\)</span>) and a call option (<span class="math inline">\(C\)</span>). Additionally, we define two variables, <span class="math inline">\(u\)</span> and <span class="math inline">\(d\)</span>, which represent the relative movement of the stock price when it increases or decreases.</p>
 <p>In our example, we are considering an option with a strike price <span class="math inline">\(X = 105\)</span>, where the stock can either rise to <span class="math inline">\(S_u = 115\)</span> or fall to <span class="math inline">\(S_d = 95\)</span> from <span class="math inline">\(S_0=100\)</span>. The interest rate is <span class="math inline">\(r=0.05\)</span> and time to expiration is <span class="math inline">\(T=0.5\)</span>, so</p>
-<div id="b3a105b7" class="cell" data-execution_count="8">
-<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>S_u <span class="op">=</span> <span class="dv">115</span></span>
+<div id="371f5fc0" class="cell" data-execution_count="8">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb9"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>S_u <span class="op">=</span> <span class="dv">115</span></span>
 <span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>S_d <span class="op">=</span> <span class="dv">95</span></span>
 <span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>S_0 <span class="op">=</span> <span class="dv">100</span></span>
 <span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a>f_u <span class="op">=</span> <span class="dv">10</span></span>
@@ -621,7 +627,7 @@ f_0 \approx 3.645
 <span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a>u <span class="op">=</span> S_u<span class="op">/</span>S_0</span>
 <span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a>d <span class="op">=</span> S_d<span class="op">/</span>S_0</span>
 <span id="cb9-8"><a href="#cb9-8" aria-hidden="true" tabindex="-1"></a>r <span class="op">=</span> <span class="fl">0.05</span></span>
-<span id="cb9-9"><a href="#cb9-9" aria-hidden="true" tabindex="-1"></a>T <span class="op">=</span> <span class="fl">0.5</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb9-9"><a href="#cb9-9" aria-hidden="true" tabindex="-1"></a>T <span class="op">=</span> <span class="fl">0.5</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <p>Now, instead of using specific numbers, we generalize the approach from the previous section to find <span class="math inline">\(f_0\)</span>.</p>
 <p>As before, the investor buys <span class="math inline">\(\Delta\)</span> shares and borrows <span class="math inline">\(\Delta \cdot S_0\)</span> to finance the purchase. Taking interest into account, the investor must repay</p>
@@ -660,8 +666,8 @@ q=\frac{(1+r)^T-d}{u-d}
 \mathbb{E}_q[S_T] = S_u \cdot q + S_d \cdot (1-q) = S_0 \cdot (1+r)^T
 \tag{25}\]</span></span></p>
 <p>We can verify this with sympy:</p>
-<div id="01da6577" class="cell" data-execution_count="9">
-<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Define symbols</span></span>
+<div id="ec5266e2" class="cell" data-execution_count="9">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb10"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Define symbols</span></span>
 <span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>Su, Sd, S0, r, T, q <span class="op">=</span> sp.symbols(<span class="st">'Su Sd S0 r T q'</span>)</span>
 <span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>u <span class="op">=</span> Su<span class="op">/</span>S0</span>
@@ -672,8 +678,8 @@ q=\frac{(1+r)^T-d}{u-d}
 <span id="cb10-9"><a href="#cb10-9" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb10-10"><a href="#cb10-10" aria-hidden="true" tabindex="-1"></a><span class="co"># The expected stock price under risk neutral </span></span>
 <span id="cb10-11"><a href="#cb10-11" aria-hidden="true" tabindex="-1"></a><span class="co"># probability</span></span>
-<span id="cb10-12"><a href="#cb10-12" aria-hidden="true" tabindex="-1"></a>sp.simplify(Su <span class="op">*</span> q <span class="op">+</span> Sd <span class="op">*</span> (<span class="dv">1</span> <span class="op">-</span> q))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-display cell-output-markdown" data-execution_count="9">
+<span id="cb10-12"><a href="#cb10-12" aria-hidden="true" tabindex="-1"></a>sp.simplify(Su <span class="op">*</span> q <span class="op">+</span> Sd <span class="op">*</span> (<span class="dv">1</span> <span class="op">-</span> q))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-display cell-output-markdown" data-execution_count="33">
 <p><span class="math inline">\(\displaystyle S_{0} \left(r + 1\right)^{T}\)</span></p>
 </div>
 </div>
@@ -707,8 +713,8 @@ f_0=\frac{q \cdot f_u + (1-q) \cdot f_d}{(1+r)^T}
 <section id="using-the-general-binomial-formula" class="level2">
 <h2 class="anchored" data-anchor-id="using-the-general-binomial-formula">Using the General Binomial Formula</h2>
 <p>Let us apply the numbers from our example to the general binomial formula to calculate the value of the option. We will then compare the result with the solutions <span class="math inline">\(\Delta = \tfrac{1}{2}\)</span> and <span class="math inline">\(f_0 \approx 3.645\)</span> obtained from solving the equations (<a href="#eq-no_arbitrage_up" class="quarto-xref">12</a>) and (<a href="#eq-no_arbitrage_down" class="quarto-xref">15</a>).</p>
-<div id="788e1901" class="cell" data-execution_count="10">
-<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> IPython.display <span class="im">import</span> display, Markdown</span>
+<div id="0781c04f" class="cell" data-execution_count="10">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb11"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> IPython.display <span class="im">import</span> display, Markdown</span>
 <span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>S_u <span class="op">=</span> <span class="dv">115</span></span>
 <span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a>S_d <span class="op">=</span> <span class="dv">95</span></span>
@@ -725,7 +731,7 @@ f_0=\frac{q \cdot f_u + (1-q) \cdot f_d}{(1+r)^T}
 <span id="cb11-15"><a href="#cb11-15" aria-hidden="true" tabindex="-1"></a>delta <span class="op">=</span> (f_u<span class="op">-</span>f_d)<span class="op">/</span>(S_u<span class="op">-</span>S_d)</span>
 <span id="cb11-16"><a href="#cb11-16" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb11-17"><a href="#cb11-17" aria-hidden="true" tabindex="-1"></a>display(Markdown(<span class="ss">f"$f_0=</span><span class="sc">{</span>f0<span class="sc">}</span><span class="ss">$"</span>))</span>
-<span id="cb11-18"><a href="#cb11-18" aria-hidden="true" tabindex="-1"></a>display(Markdown(<span class="ss">f"$</span><span class="ch">\\</span><span class="ss">Delta=</span><span class="sc">{</span>delta<span class="sc">}</span><span class="ss">$"</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb11-18"><a href="#cb11-18" aria-hidden="true" tabindex="-1"></a>display(Markdown(<span class="ss">f"$</span><span class="ch">\\</span><span class="ss">Delta=</span><span class="sc">{</span>delta<span class="sc">}</span><span class="ss">$"</span>))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-display cell-output-markdown">
 <p><span class="math inline">\(f_0=3.6447465349446806\)</span></p>
 </div>
@@ -741,7 +747,7 @@ f_0=\frac{q \cdot f_u + (1-q) \cdot f_d}{(1+r)^T}
 <p>Before we explore how contracts on assets with continuous rather than binomial prices are valued, we must first understand how stock prices are modeled in modern finance. This modeling approach provides a practical way to describe stock price movements in mathematical terms.</p>
 <p>Let us begin by plotting some actual intraday prices. The blue line in <a href="#fig-intraday" class="quarto-xref">Figure&nbsp;7</a> shows a snapshot of the intraday price movements for the Norwegian company Equinor on March 24, 2025.</p>
 <div id="cell-fig-intraday" class="cell" data-execution_count="11">
-<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb12"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
 <span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> matplotlib <span class="im">import</span> pyplot <span class="im">as</span> plt</span>
 <span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib.dates <span class="im">as</span> mdates</span>
 <span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
@@ -781,7 +787,7 @@ f_0=\frac{q \cdot f_u + (1-q) \cdot f_d}{(1+r)^T}
 <span id="cb12-38"><a href="#cb12-38" aria-hidden="true" tabindex="-1"></a>ax <span class="op">=</span> create_canvas()</span>
 <span id="cb12-39"><a href="#cb12-39" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb12-40"><a href="#cb12-40" aria-hidden="true" tabindex="-1"></a><span class="co">#Plot the data</span></span>
-<span id="cb12-41"><a href="#cb12-41" aria-hidden="true" tabindex="-1"></a>ax.plot(df[<span class="st">'TID'</span>], df[<span class="st">'PRIS'</span>])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb12-41"><a href="#cb12-41" aria-hidden="true" tabindex="-1"></a>ax.plot(df[<span class="st">'TID'</span>], df[<span class="st">'PRIS'</span>])</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-display">
 <div id="fig-intraday" class="quarto-float quarto-figure quarto-figure-center anchored">
 <figure class="quarto-float quarto-float-fig figure">
@@ -802,7 +808,7 @@ Figure&nbsp;7: Intraday prices for Equinor
 <h2 class="anchored" data-anchor-id="modeling-the-stock-price">Modeling the stock price</h2>
 <p>Let us now examine how financial economists model stock prices to replicate actual price movements as closely as possible. In <a href="#fig-intraday_sim" class="quarto-xref">Figure&nbsp;8</a>, a stock price process is simulated using the standard approach in finance and presented alongside the actual stock price of Equinor.</p>
 <div id="cell-fig-intraday_sim" class="cell" data-execution_count="12">
-<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="co">#Simulation:</span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb13"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="co">#Simulation:</span></span>
 <span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a><span class="co">#Calculating the mean and volatility</span></span>
 <span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a>mu <span class="op">=</span> np.log(df[<span class="st">'PRIS'</span>]).diff().mean()</span>
@@ -822,7 +828,7 @@ Figure&nbsp;7: Intraday prices for Equinor
 <span id="cb13-18"><a href="#cb13-18" aria-hidden="true" tabindex="-1"></a>ax <span class="op">=</span> create_canvas()</span>
 <span id="cb13-19"><a href="#cb13-19" aria-hidden="true" tabindex="-1"></a>ax.plot(df[<span class="st">'TID'</span>], df[<span class="st">'PRIS'</span>])</span>
 <span id="cb13-20"><a href="#cb13-20" aria-hidden="true" tabindex="-1"></a>ax.plot(df[<span class="st">'TID'</span>], df[<span class="st">'PRIS_sim'</span>])</span>
-<span id="cb13-21"><a href="#cb13-21" aria-hidden="true" tabindex="-1"></a>ax.legend([<span class="st">'Real'</span>, <span class="st">'Simulated'</span>], frameon<span class="op">=</span><span class="va">False</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb13-21"><a href="#cb13-21" aria-hidden="true" tabindex="-1"></a>ax.legend([<span class="st">'Real'</span>, <span class="st">'Simulated'</span>], frameon<span class="op">=</span><span class="va">False</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-display">
 <div id="fig-intraday_sim" class="quarto-float quarto-figure quarto-figure-center anchored">
 <figure class="quarto-float quarto-float-fig figure">
@@ -847,12 +853,12 @@ Figure&nbsp;8: Intraday prices for Equinor
 \]</span></p>
 <p>However, using log differences instead of percentage differences has a key advantage: the latter is <em>not symmetric</em>. If a stock price increases by 10% and then decreases by 10%, it does not return to its original level. In contrast, with log differences, a 10% increase followed by a 10% decrease brings the stock price <em>exactly</em> back to its starting point.</p>
 <p>Log differences are closely related to <em>continuous compounding</em> and the <em>exponential function</em>. Since the logarithm is the inverse of the exponential function, the following identity holds for any <span class="math inline">\(x\)</span>:</p>
-<div id="851c31bf" class="cell" data-execution_count="13">
-<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
+<div id="5fc04d3f" class="cell" data-execution_count="13">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb14"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
 <span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>x <span class="op">=</span> <span class="fl">23.434</span></span>
-<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a>np.exp(np.log(x))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-display" data-execution_count="13">
-<pre><code>23.434</code></pre>
+<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a>np.exp(np.log(x))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-display" data-execution_count="37">
+<pre><code>np.float64(23.434)</code></pre>
 </div>
 </div>
 <p>Thus, if we know the log change <span class="math inline">\(\Delta s_t\)</span> over a given period, it follows directly from (<a href="#eq-logdiff_def" class="quarto-xref">28</a>) that the stock price at time <span class="math inline">\(t\)</span> is given by:</p>
@@ -887,18 +893,18 @@ var(\sigma \cdot z_t) = \sigma^2 \cdot t
 \sigma \cdot \Delta z_t
 \tag{34}\]</span></span></p>
 <p>The associated variance is then:</p>
-<p><span id="eq-var_deltaz"><span class="math display">\[
+<p><span class="math display">\[
 var(\sigma \cdot \Delta z_t) = \sigma^2 \cdot \Delta t
-\tag{35}\]</span></span></p>
+\]</span></p>
 <p>This means that the variance of each period in the Wiener Process <span class="math inline">\(z_t\)</span> is directly proportional to the length of the period.</p>
 <p>In the specific dataset used for <a href="#fig-intraday" class="quarto-xref">Figure&nbsp;7</a>, the time intervals between observations vary because the data is based on transaction records. The time period is determined by the actual time elapsed between consecutive data points. However, in most financial models, <span class="math inline">\(\Delta t\)</span> is typically assumed to be constant.</p>
 <p>For simplicity, in the simulation shown in <a href="#fig-intraday_sim" class="quarto-xref">Figure&nbsp;8</a>, we assume that the time step between observations is fixed at <span class="math inline">\(\Delta t = 1\)</span>. To create a process that closely replicates Equinor’s price movements, we estimate the period volatility using the standard deviation of the log price differences between observations:</p>
-<div id="5b22ebc4" class="cell" data-execution_count="14">
-<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a>sigma <span class="op">=</span> np.log(df[<span class="st">'PRIS'</span>]).diff().std()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="08592608" class="cell" data-execution_count="14">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb16"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a>sigma <span class="op">=</span> np.log(df[<span class="st">'PRIS'</span>]).diff().std()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <p>The implementation of the innovation term from (<a href="#eq-sigma_delta_zt" class="quarto-xref">34</a>) in the code is then:</p>
-<div id="8166c42a" class="cell" data-execution_count="15">
-<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a>sigma <span class="op">*</span> np.random.randn(<span class="bu">len</span>(df))<span class="op">;</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="52e0a1d5" class="cell" data-execution_count="15">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb17"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a>sigma <span class="op">*</span> np.random.randn(<span class="bu">len</span>(df))<span class="op">;</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <p>Here, <code>np.random.randn(len(df))</code> generates random draws from a standard normal distribution, representing <span class="math inline">\(\varepsilon_{t}\)</span>, while multiplying by <code>sigma</code> scales the randomness according to the estimated volatility of the stock price.</p>
 </section>
@@ -907,55 +913,55 @@ var(\sigma \cdot \Delta z_t) = \sigma^2 \cdot \Delta t
 <p>The stock price is expected to change by a certain percentage each period. This expectation is captured by a drift term <span class="math inline">\(\mu\)</span>, which represents the average rate of return per time unit. On average, the stock price is expected to increase by <span class="math inline">\(\mu \Delta t\)</span> in each period.</p>
 <p>By combining this deterministic drift term with the stochastic Wiener process, we obtain the full stock price process.</p>
 <p>In the code for <a href="#fig-intraday" class="quarto-xref">Figure&nbsp;7</a>, the drift term is estimated as the mean log price change of Equinor throughout the trading day:</p>
-<div id="5c950eab" class="cell" data-execution_count="16">
-<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a>mu <span class="op">=</span> np.log(df[<span class="st">'PRIS'</span>]).diff().mean()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="da96d5e4" class="cell" data-execution_count="16">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb18"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a>mu <span class="op">=</span> np.log(df[<span class="st">'PRIS'</span>]).diff().mean()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <p>Mathematicaly the drift can be written</p>
 <p><span id="eq-logdiff_drift_innov"><span class="math display">\[
 \mu \cdot \Delta t
-\tag{36}\]</span></span></p>
+\tag{35}\]</span></span></p>
 <p>In the calculation of <a href="#fig-intraday" class="quarto-xref">Figure&nbsp;7</a>, <span class="math inline">\(\Delta t = 1\)</span></p>
 </section>
 <section id="volatility-correction" class="level2">
 <h2 class="anchored" data-anchor-id="volatility-correction">Volatility Correction</h2>
-<p>If we were to define the change in log price using only the drift and innovation terms, as in (<a href="#eq-logdiff_drift_innov" class="quarto-xref">37</a>) and (<a href="#eq-sigma_delta_zt" class="quarto-xref">34</a>), the cumulative log price change from time 0 to <span class="math inline">\(t\)</span> would be:</p>
-<p><span id="eq-logdiff_drift_innov"><span class="math display">\[
+<p>If we were to define the change in log price using only the drift and innovation terms, as in (<a href="#eq-logdiff_drift_innov" class="quarto-xref">35</a>) and (<a href="#eq-sigma_delta_zt" class="quarto-xref">34</a>), the cumulative log price change from time 0 to <span class="math inline">\(t\)</span> would be:</p>
+<p><span class="math display">\[
 s_t = \mu \cdot t + \sigma \cdot z_t
-\tag{37}\]</span></span></p>
-<p>Substituting this into the exponential price model from (<a href="#eq-price_log_diff" class="quarto-xref">38</a>) gives:</p>
-<p><span id="eq-price_log_diff"><span class="math display">\[
+\]</span></p>
+<p>Substituting this into the exponential price model from (<a href="#eq-price_log_diff" class="quarto-xref">29</a>) gives:</p>
+<p><span class="math display">\[
 S_t = S_0 \cdot e^{\mu \cdot t + \sigma \cdot z_t}
-\tag{38}\]</span></span></p>
+\]</span></p>
 <p>However, as we previously discussed in <a href="#fig-jensen" class="quarto-xref">Figure&nbsp;3</a>, this expression ignores the effect of Jensen’s inequality. Because the exponential function is convex, the expected value of <span class="math inline">\(S_t\)</span> is greater than the expected value of the log price change:</p>
 <p><span id="eq-incorrect_exp"><span class="math display">\[
 \mathbb{E}[S_t] &gt; S_0 \cdot e^{\mu \cdot t}
-\tag{39}\]</span></span></p>
+\tag{36}\]</span></span></p>
 <p>We do know, however, what accounts for this difference between the expectation of the function and the function of the expectation. By adding a correction term</p>
 <p><span id="eq-volatility_correction"><span class="math display">\[
 -\tfrac{1}{2} \sigma^2 t
-\tag{40}\]</span></span></p>
+\tag{37}\]</span></span></p>
 <p>we can adjust for Jensen’s inequality exactly. That is, we know that</p>
 <p><span id="eq-correct_exp"><span class="math display">\[
 \mathbb{E}[S_t] = S_0 \cdot e^{\mu \cdot t - \tfrac{1}{2} \sigma^2 t}
-\tag{41}\]</span></span></p>
+\tag{38}\]</span></span></p>
 </section>
 <section id="putting-it-all-together" class="level2">
 <h2 class="anchored" data-anchor-id="putting-it-all-together">Putting It All Together</h2>
-<p>By combining the innovation term (<a href="#eq-sigma_delta_zt" class="quarto-xref">34</a>), the volatility correction term (<a href="#eq-volatility_correction" class="quarto-xref">40</a>), and the drift component from (<a href="#eq-logdiff_drift_innov" class="quarto-xref">37</a>), we arrive at a realistic model for the log change in stock price:</p>
+<p>By combining the innovation term (<a href="#eq-sigma_delta_zt" class="quarto-xref">34</a>), the volatility correction term (<a href="#eq-volatility_correction" class="quarto-xref">37</a>), and the drift component from (<a href="#eq-logdiff_drift_innov" class="quarto-xref">35</a>), we arrive at a realistic model for the log change in stock price:</p>
 <p><span id="eq-logdiff_model"><span class="math display">\[
 \Delta s_t = \mu \cdot \Delta t - \tfrac{1}{2} \sigma^2 \Delta t + \sigma \cdot \Delta z_t
-\tag{42}\]</span></span></p>
+\tag{39}\]</span></span></p>
 <p>This leads to the full model for the stock price at any point in time:</p>
 <p><span id="eq-final_price_model"><span class="math display">\[
 S_t = S_0 \cdot e^{\mu \cdot t - \tfrac{1}{2} \sigma^2 \cdot t + \sigma \cdot z_t}
-\tag{43}\]</span></span></p>
-<p>Using (<a href="#eq-logdiff_model" class="quarto-xref">42</a>), the Python implementation therefore becomes</p>
-<div id="cd927100" class="cell" data-execution_count="17">
-<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a>dlnS <span class="op">=</span> (mu <span class="op">-</span> <span class="fl">0.5</span> <span class="op">*</span> sigma<span class="op">**</span><span class="dv">2</span> </span>
+\tag{40}\]</span></span></p>
+<p>Using (<a href="#eq-logdiff_model" class="quarto-xref">39</a>), the Python implementation therefore becomes</p>
+<div id="4f123347" class="cell" data-execution_count="17">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb19"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a>dlnS <span class="op">=</span> (mu <span class="op">-</span> <span class="fl">0.5</span> <span class="op">*</span> sigma<span class="op">**</span><span class="dv">2</span> </span>
 <span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a>                <span class="op">+</span> sigma <span class="op">*</span> np.random.randn(<span class="bu">len</span>(df)))</span>
 <span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb19-4"><a href="#cb19-4" aria-hidden="true" tabindex="-1"></a>df[<span class="st">'PRIS_sim'</span>] <span class="op">=</span> (df[<span class="st">'PRIS'</span>].iloc[<span class="dv">0</span>] </span>
-<span id="cb19-5"><a href="#cb19-5" aria-hidden="true" tabindex="-1"></a>                        <span class="op">*</span>np.exp(np.cumsum(dlnS)))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb19-5"><a href="#cb19-5" aria-hidden="true" tabindex="-1"></a>                        <span class="op">*</span>np.exp(np.cumsum(dlnS)))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <p>Here, <code>np.cumsum(dlnS)</code> computes the cumulative sum of log changes across all observations in the dataset, giving the full simulated price path.</p>
 </section>
@@ -966,20 +972,20 @@ S_t = S_0 \cdot e^{\mu \cdot t - \tfrac{1}{2} \sigma^2 \cdot t + \sigma \cdot z_
 <p>For example the Black-Scholes-Merton option pricing fomula can be obtained by applying risk netural pricing. That involves calculating this integral</p>
 <p><span id="eq-bs_expectation_call"><span class="math display">\[
 f_0 = e^{-rt} \int_{-\infty}^{\infty} \max \left( S_0 e^{(r - \tfrac{1}{2} \sigma^2)t + \sigma \sqrt{t} \epsilon} - X, 0 \right) \phi(\epsilon) d\epsilon
-\tag{44}\]</span></span></p>
+\tag{41}\]</span></span></p>
 <p>Here - <span class="math inline">\(f_0\)</span> is the valuation - <span class="math inline">\(e^{-rT}\)</span>: Is the contnously compunded discount factor (time value of money). - <span class="math inline">\(S_t = S_0 e^{(r - \frac{1}{2} \sigma^2)T + \sigma \sqrt{T} \epsilon}\)</span> is the value of the option at time <span class="math inline">\(t\)</span> - <span class="math inline">\(X\)</span> is the strike price - <span class="math inline">\(\phi(\epsilon)\)</span> is the standard normal density function.</p>
 <p>We will not go through the calculations in this course, but it turns out that the solution to this integral is the Black-Scholes-Merton call option formula:</p>
 <p><span id="eq-bs_call"><span class="math display">\[
 C(S, X, T, r, \sigma) = S \Phi(d_1) - X e^{-rT} \Phi(d_2)
-\tag{45}\]</span></span></p>
+\tag{42}\]</span></span></p>
 <p>where</p>
 <p><span id="eq-bs_call_d1"><span class="math display">\[
 d_1 = \frac{\ln(S / X) + \left(r + \frac{1}{2} \sigma^2 \right)T}{\sigma \sqrt{T}}
-\tag{46}\]</span></span></p>
+\tag{43}\]</span></span></p>
 <p>and</p>
 <p><span id="eq-bs_call_d2"><span class="math display">\[
 d_2 = d_1 - \sigma \sqrt{T}
-\tag{47}\]</span></span></p>
+\tag{44}\]</span></span></p>
 <p><span class="math inline">\(\Phi\)</span> is the cumulative standard normal distribution function.</p>
 <p>Here’s an improved version of your section for clarity, flow, and grammar, while keeping the technical content intact:</p>
 <hr>
@@ -988,14 +994,14 @@ d_2 = d_1 - \sigma \sqrt{T}
 <p>Knowing that we can price derivatives using risk-neutral expectations means that we can, in principle, determine the fair value of almost any contract written on tradable assets. The expected value is defined as the sum of outcomes (or events) weighted by their probabilities. For example, the expected value of a die roll is:</p>
 <p><span id="eq-dice"><span class="math display">\[
 (1+2+3+4+5+6) \cdot \frac{1}{6} = 3.5
-\tag{48}\]</span></span></p>
+\tag{45}\]</span></span></p>
 <p>that is, each outcome multiplied by its probability, summed over all outcomes.</p>
 <p>As mentioned above, when we are dealing with a continuous distribution such as the normal distribution, the discrete concept of a probability is replaced by the probability density <span class="math inline">\(\phi(x)\)</span> multiplied by a small interval <span class="math inline">\(dx\)</span>. The outcome is the derivative’s value, and the summation becomes an integral.</p>
 <p>However, solving such integrals analytically is often difficult or impossible. In practice, it is therefore common to compute the integral numerically. This involves converting the continuous distribution into a discrete one, allowing us to approximate the integral using a finite sum over discrete probabilities and outcomes.</p>
 <p>This discretization means dividing the range of outcomes into intervals and calculating the probability mass in each interval. In other words, we approximate the continuous probability density by a histogram-like representation.</p>
 <p>This process is illustrated in <a href="#fig-nummerical_approx" class="quarto-xref">Figure&nbsp;9</a>. Each bar represents the probability of an outcome falling within a given interval. We can then approximate the expected value by multiplying each outcome <span class="math inline">\(x\)</span> by its associated probability, <span class="math inline">\(\phi(x) \cdot dx\)</span>, where <span class="math inline">\(dx\)</span> is the interval width. In this case, the range is defined as ±5 standard deviations, divided into 30 intervals.</p>
 <div id="cell-fig-nummerical_approx" class="cell" data-execution_count="18">
-<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb20"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
 <span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span>
 <span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> scipy.stats <span class="im">import</span> norm</span>
 <span id="cb20-4"><a href="#cb20-4" aria-hidden="true" tabindex="-1"></a></span>
@@ -1030,7 +1036,7 @@ d_2 = d_1 - \sigma \sqrt{T}
 <span id="cb20-33"><a href="#cb20-33" aria-hidden="true" tabindex="-1"></a>plt.legend()</span>
 <span id="cb20-34"><a href="#cb20-34" aria-hidden="true" tabindex="-1"></a>plt.grid(<span class="va">True</span>)</span>
 <span id="cb20-35"><a href="#cb20-35" aria-hidden="true" tabindex="-1"></a>plt.tight_layout()</span>
-<span id="cb20-36"><a href="#cb20-36" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb20-36"><a href="#cb20-36" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-display">
 <div id="fig-nummerical_approx" class="quarto-float quarto-figure quarto-figure-center anchored">
 <figure class="quarto-float quarto-float-fig figure">
@@ -1048,31 +1054,31 @@ Figure&nbsp;9: Nummerica approximation of normal distribution
 <section id="a-simple-function-for-valuing-a-derivative" class="level2">
 <h2 class="anchored" data-anchor-id="a-simple-function-for-valuing-a-derivative">A Simple Function for Valuing a Derivative</h2>
 <p>To compute the expected value of a derivative, we need to evaluate the probability of each small interval on the <span class="math inline">\(x\)</span>-axis and multiply it by the corresponding derivative payoff. For a simple normally distributed variable, the probability of each interval can be approximated as:</p>
-<div id="106f296a" class="cell" data-execution_count="19">
-<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> scipy.stats <span class="im">as</span> stats</span>
-<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a>p <span class="op">=</span> stats.norm.pdf(x, mu, sigma) <span class="op">*</span> dx</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="0a251506" class="cell" data-execution_count="19">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb21"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> scipy.stats <span class="im">as</span> stats</span>
+<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a>p <span class="op">=</span> stats.norm.pdf(x, mu, sigma) <span class="op">*</span> dx</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
-<p>However, as we saw when modeling the stock price process, the mean is not simply <span class="math inline">\(\mu\)</span>, and the volatility is not simply <span class="math inline">\(\sigma\)</span>. According to Equation <a href="#eq-final_price_model" class="quarto-xref">Equation&nbsp;43</a>, after adjusting for the time to maturity and the volatility correction, the mean of the log return becomes:</p>
+<p>However, as we saw when modeling the stock price process, the mean is not simply <span class="math inline">\(\mu\)</span>, and the volatility is not simply <span class="math inline">\(\sigma\)</span>. According to Equation <a href="#eq-final_price_model" class="quarto-xref">Equation&nbsp;40</a>, after adjusting for the time to maturity and the volatility correction, the mean of the log return becomes:</p>
 <p><span id="eq-mean_stockprocess"><span class="math display">\[
 (\mu - \tfrac{1}{2} \sigma^2) \cdot T
-\tag{49}\]</span></span></p>
+\tag{46}\]</span></span></p>
 <p>Since we are working under the risk-neutral measure, we replace the expected return <span class="math inline">\(\mu\)</span> with the risk-free rate <span class="math inline">\(r\)</span>, resulting in:</p>
 <p><span id="eq-riskneutral_mean"><span class="math display">\[
 (r - \tfrac{1}{2} \sigma^2) \cdot T
-\tag{50}\]</span></span></p>
+\tag{47}\]</span></span></p>
 <p>The corresponding volatility over the time horizon <span class="math inline">\(T\)</span> becomes:</p>
 <p><span id="eq-volatility_scaled"><span class="math display">\[
 \sigma \cdot \sqrt{T}
-\tag{51}\]</span></span></p>
+\tag{48}\]</span></span></p>
 <p>With these substitutions, the discrete risk-neutral probability distribution used to price a derivative is:</p>
-<div id="76a58bf8" class="cell" data-execution_count="20">
-<div class="sourceCode cell-code" id="cb22"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> scipy.stats <span class="im">as</span> stats</span>
+<div id="8333de47" class="cell" data-execution_count="20">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb22"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> scipy.stats <span class="im">as</span> stats</span>
 <span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a>p <span class="op">=</span> stats.norm.pdf(x, (r <span class="op">-</span> <span class="fl">0.5</span> <span class="op">*</span> sigma<span class="op">**</span><span class="dv">2</span>) <span class="op">*</span> T, </span>
-<span id="cb22-3"><a href="#cb22-3" aria-hidden="true" tabindex="-1"></a>                        sigma <span class="op">*</span> np.sqrt(T)) <span class="op">*</span> dx</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb22-3"><a href="#cb22-3" aria-hidden="true" tabindex="-1"></a>                        sigma <span class="op">*</span> np.sqrt(T)) <span class="op">*</span> dx</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <p>Using this setup, we can now define a simple and general function for computing the risk-neutral expected value of a derivative with terminal payoff <span class="math inline">\(f(S_T)\)</span>:</p>
-<div id="7a9f87ad" class="cell" data-execution_count="21">
-<div class="sourceCode cell-code" id="cb23"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
+<div id="302cb98d" class="cell" data-execution_count="21">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb23"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
 <span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> scipy.stats <span class="im">as</span> stats</span>
 <span id="cb23-3"><a href="#cb23-3" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb23-4"><a href="#cb23-4" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> derivative_value_risk_neutral(f, S0, sigma, r, </span>
@@ -1088,11 +1094,11 @@ Figure&nbsp;9: Nummerica approximation of normal distribution
 <span id="cb23-14"><a href="#cb23-14" aria-hidden="true" tabindex="-1"></a>    p <span class="op">=</span> stats.norm.pdf(x, mu_T, vol_T) <span class="op">*</span> dx</span>
 <span id="cb23-15"><a href="#cb23-15" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb23-16"><a href="#cb23-16" aria-hidden="true" tabindex="-1"></a>    pv <span class="op">=</span> np.exp(<span class="op">-</span>r <span class="op">*</span> T) <span class="op">*</span> np.<span class="bu">sum</span>(f(ST) <span class="op">*</span> p)</span>
-<span id="cb23-17"><a href="#cb23-17" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> pv</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb23-17"><a href="#cb23-17" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> pv</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <p>This function allows you to numerically evaluate the fair value of any derivative written on the terminal asset price <span class="math inline">\(S_T\)</span>, using risk-neutral expectations.</p>
-<div id="58c27542" class="cell" data-execution_count="22">
-<div class="sourceCode cell-code" id="cb24"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> scipy.stats <span class="im">as</span> stats</span>
+<div id="c1e61fe0" class="cell" data-execution_count="22">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb24"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> scipy.stats <span class="im">as</span> stats</span>
 <span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> derivative_value_risk_neutral(f, S0, sigma, r, T, </span>
 <span id="cb24-3"><a href="#cb24-3" aria-hidden="true" tabindex="-1"></a>                                    N <span class="op">=</span> <span class="dv">1000</span>, width <span class="op">=</span> <span class="dv">5</span>):</span>
 <span id="cb24-4"><a href="#cb24-4" aria-hidden="true" tabindex="-1"></a>    <span class="co">"Calculates the risk neutral value of f"</span></span>
@@ -1104,14 +1110,14 @@ Figure&nbsp;9: Nummerica approximation of normal distribution
 <span id="cb24-10"><a href="#cb24-10" aria-hidden="true" tabindex="-1"></a>        </span>
 <span id="cb24-11"><a href="#cb24-11" aria-hidden="true" tabindex="-1"></a>    pv <span class="op">=</span> np.exp(<span class="op">-</span>r<span class="op">*</span>T)<span class="op">*</span>np.<span class="bu">sum</span>(f(S0<span class="op">*</span>np.exp(x))<span class="op">*</span>p)</span>
 <span id="cb24-12"><a href="#cb24-12" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb24-13"><a href="#cb24-13" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> pv</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb24-13"><a href="#cb24-13" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> pv</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </section>
 <section id="testing-the-derivative-valuation-function" class="level2">
 <h2 class="anchored" data-anchor-id="testing-the-derivative-valuation-function">Testing the derivative valuation function</h2>
 <p>Now, let us test if this function works. We can do that by comparing it with the known Black&amp;Scholes formula. The following defines the terminal value of the call option, and the Black&amp;Scholes formula:</p>
-<div id="d7f2b50f" class="cell" data-execution_count="23">
-<div class="sourceCode cell-code" id="cb25"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> scipy.stats <span class="im">as</span> stats</span>
+<div id="4fdf33e8" class="cell" data-execution_count="23">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb25"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> scipy.stats <span class="im">as</span> stats</span>
 <span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a>X <span class="op">=</span> <span class="dv">105</span>   <span class="co"># Strike price</span></span>
 <span id="cb25-3"><a href="#cb25-3" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> call_option(ST):</span>
 <span id="cb25-4"><a href="#cb25-4" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Call option payoff function</span></span>
@@ -1126,10 +1132,10 @@ Figure&nbsp;9: Nummerica approximation of normal distribution
 <span id="cb25-13"><a href="#cb25-13" aria-hidden="true" tabindex="-1"></a>    d2 <span class="op">=</span> d1 <span class="op">-</span> sigma<span class="op">*</span>(T<span class="op">**</span><span class="fl">0.5</span>)</span>
 <span id="cb25-14"><a href="#cb25-14" aria-hidden="true" tabindex="-1"></a>    bs <span class="op">=</span> (S0<span class="op">*</span>stats.norm.cdf(d1) </span>
 <span id="cb25-15"><a href="#cb25-15" aria-hidden="true" tabindex="-1"></a>            <span class="op">-</span> X<span class="op">*</span>np.exp(<span class="op">-</span>r<span class="op">*</span>T)<span class="op">*</span>stats.norm.cdf(d2))</span>
-<span id="cb25-16"><a href="#cb25-16" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span>  bs</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb25-16"><a href="#cb25-16" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span>  bs</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
-<div id="823a3de9" class="cell" data-execution_count="24">
-<div class="sourceCode cell-code" id="cb26"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
+<div id="b40cd844" class="cell" data-execution_count="24">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb26"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
 <span id="cb26-2"><a href="#cb26-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> scipy.integrate <span class="im">as</span> integrate</span>
 <span id="cb26-3"><a href="#cb26-3" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> scipy.stats <span class="im">as</span> stats</span>
 <span id="cb26-4"><a href="#cb26-4" aria-hidden="true" tabindex="-1"></a></span>
@@ -1150,7 +1156,7 @@ Figure&nbsp;9: Nummerica approximation of normal distribution
 <span id="cb26-19"><a href="#cb26-19" aria-hidden="true" tabindex="-1"></a><span class="co"># Check if the results are close    </span></span>
 <span id="cb26-20"><a href="#cb26-20" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb26-21"><a href="#cb26-21" aria-hidden="true" tabindex="-1"></a>test <span class="op">=</span> np.isclose(f0_num, f0_bs, atol<span class="op">=</span><span class="fl">1e-4</span>)</span>
-<span id="cb26-22"><a href="#cb26-22" aria-hidden="true" tabindex="-1"></a><span class="cf">assert</span> test, <span class="st">"The results are not close!"</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb26-22"><a href="#cb26-22" aria-hidden="true" tabindex="-1"></a><span class="cf">assert</span> test, <span class="st">"The results are not close!"</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>Numerical integral result: 8.021228881041875
 Black-Scholes result: 8.021352235143176</code></pre>
@@ -1161,15 +1167,15 @@ Black-Scholes result: 8.021352235143176</code></pre>
 </section>
 <section id="literature" class="level1">
 <h1>Literature</h1>
-<div id="refs" class="references csl-bib-body hanging-indent" data-entry-spacing="0" role="list">
+<div id="refs" class="references csl-bib-body hanging-indent" role="list">
 <div id="ref-bachelier1900" class="csl-entry" role="listitem">
-Bachelier, Louis. 1900. <em>Théorie de La Spéculation</em>. Paris: Gauthier-Villars.
+Bachelier, Louis. 1900. <em>Théorie de La Spéculation</em>. Gauthier-Villars.
 </div>
 <div id="ref-jensen1906" class="csl-entry" role="listitem">
 Jensen, Johan W. 1906. <span>“Sur Les Fonctions Convexes Et Les Inégalités Entre Les Valeurs Moyennes.”</span> <em>Acta Mathematica</em> 30: 175–93. <a href="https://doi.org/10.1007/BF02418571">https://doi.org/10.1007/BF02418571</a>.
 </div>
 <div id="ref-merton1971theory" class="csl-entry" role="listitem">
-Merton, Robert C et al. 1971. <span>“Theory of Rational Option Pricing.”</span>
+<span class="nocase">Merton, Robert C et al.</span> 1971. <em>Theory of Rational Option Pricing</em>.
 </div>
 <div id="ref-scholes1973pricing" class="csl-entry" role="listitem">
 Scholes, Myron, and Fischer Black. 1973. <span>“The Pricing of Options and Corporate Liabilities.”</span> <em>Journal of Political Economy</em> 81 (3): 637–54.
@@ -1180,236 +1186,243 @@ Scholes, Myron, and Fischer Black. 1973. <span>“The Pricing of Options and Cor
 </main>
 <!-- /main column -->
 <script id="quarto-html-after-body" type="application/javascript">
-window.document.addEventListener("DOMContentLoaded", function (event) {
-  const toggleBodyColorMode = (bsSheetEl) => {
-    const mode = bsSheetEl.getAttribute("data-mode");
-    const bodyEl = window.document.querySelector("body");
-    if (mode === "dark") {
-      bodyEl.classList.add("quarto-dark");
-      bodyEl.classList.remove("quarto-light");
-    } else {
-      bodyEl.classList.add("quarto-light");
-      bodyEl.classList.remove("quarto-dark");
-    }
-  }
-  const toggleBodyColorPrimary = () => {
-    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
-    if (bsSheetEl) {
-      toggleBodyColorMode(bsSheetEl);
-    }
-  }
-  toggleBodyColorPrimary();  
-  const icon = "";
-  const anchorJS = new window.AnchorJS();
-  anchorJS.options = {
-    placement: 'right',
-    icon: icon
-  };
-  anchorJS.add('.anchored');
-  const isCodeAnnotation = (el) => {
-    for (const clz of el.classList) {
-      if (clz.startsWith('code-annotation-')) {                     
-        return true;
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
       }
+      return false;
     }
-    return false;
-  }
-  const onCopySuccess = function(e) {
-    // button target
-    const button = e.trigger;
-    // don't keep focus
-    button.blur();
-    // flash "checked"
-    button.classList.add('code-copy-button-checked');
-    var currentTitle = button.getAttribute("title");
-    button.setAttribute("title", "Copied!");
-    let tooltip;
-    if (window.bootstrap) {
-      button.setAttribute("data-bs-toggle", "tooltip");
-      button.setAttribute("data-bs-placement", "left");
-      button.setAttribute("data-bs-title", "Copied!");
-      tooltip = new bootstrap.Tooltip(button, 
-        { trigger: "manual", 
-          customClass: "code-copy-button-tooltip",
-          offset: [0, -8]});
-      tooltip.show();    
-    }
-    setTimeout(function() {
-      if (tooltip) {
-        tooltip.hide();
-        button.removeAttribute("data-bs-title");
-        button.removeAttribute("data-bs-toggle");
-        button.removeAttribute("data-bs-placement");
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copied!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copied!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
       }
-      button.setAttribute("title", currentTitle);
-      button.classList.remove('code-copy-button-checked');
-    }, 1000);
-    // clear code selection
-    e.clearSelection();
-  }
-  const getTextToCopy = function(trigger) {
-      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
       for (const childEl of codeEl.children) {
         if (isCodeAnnotation(childEl)) {
           childEl.remove();
         }
       }
       return codeEl.innerText;
-  }
-  const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
-    text: getTextToCopy
-  });
-  clipboard.on('success', onCopySuccess);
-  if (window.document.getElementById('quarto-embedded-source-code-modal')) {
-    const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
-      text: getTextToCopy,
-      container: window.document.getElementById('quarto-embedded-source-code-modal')
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
     });
-    clipboardModal.on('success', onCopySuccess);
-  }
-    var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
-    var mailtoRegex = new RegExp(/^mailto:/);
-      var filterRegex = new RegExp('/' + window.location.host + '/');
-    var isInternal = (href) => {
-        return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
     }
-    // Inspect non-navigation links and adorn them if external
- 	var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
-    for (var i=0; i<links.length; i++) {
-      const link = links[i];
-      if (!isInternal(link.href)) {
-        // undo the damage that might have been done by quarto-nav.js in the case of
-        // links that we want to consider external
-        if (link.dataset.originalHref !== undefined) {
-          link.href = link.dataset.originalHref;
-        }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp('/' + window.location.host + '/');
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
       }
-    }
-  function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
-    const config = {
-      allowHTML: true,
-      maxWidth: 500,
-      delay: 100,
-      arrow: false,
-      appendTo: function(el) {
-          return el.parentElement;
-      },
-      interactive: true,
-      interactiveBorder: 10,
-      theme: 'quarto',
-      placement: 'bottom-start',
-    };
-    if (contentFn) {
-      config.content = contentFn;
-    }
-    if (onTriggerFn) {
-      config.onTrigger = onTriggerFn;
-    }
-    if (onUntriggerFn) {
-      config.onUntrigger = onUntriggerFn;
-    }
-    window.tippy(el, config); 
-  }
-  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
-  for (var i=0; i<noterefs.length; i++) {
-    const ref = noterefs[i];
-    tippyHover(ref, function() {
-      // use id or data attribute instead here
-      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
-      try { href = new URL(href).hash; } catch {}
-      const id = href.replace(/^#\/?/, "");
-      const note = window.document.getElementById(id);
-      if (note) {
-        return note.innerHTML;
-      } else {
-        return "";
-      }
-    });
-  }
-  const xrefs = window.document.querySelectorAll('a.quarto-xref');
-  const processXRef = (id, note) => {
-    // Strip column container classes
-    const stripColumnClz = (el) => {
-      el.classList.remove("page-full", "page-columns");
-      if (el.children) {
-        for (const child of el.children) {
-          stripColumnClz(child);
-        }
-      }
-    }
-    stripColumnClz(note)
-    if (id === null || id.startsWith('sec-')) {
-      // Special case sections, only their first couple elements
-      const container = document.createElement("div");
-      if (note.children && note.children.length > 2) {
-        container.appendChild(note.children[0].cloneNode(true));
-        for (let i = 1; i < note.children.length; i++) {
-          const child = note.children[i];
-          if (child.tagName === "P" && child.innerText === "") {
-            continue;
-          } else {
-            container.appendChild(child.cloneNode(true));
-            break;
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
           }
         }
-        if (window.Quarto?.typesetMath) {
-          window.Quarto.typesetMath(container);
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
         }
-        return container.innerHTML
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
       } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
         if (window.Quarto?.typesetMath) {
           window.Quarto.typesetMath(note);
         }
-        return note.innerHTML;
-      }
-    } else {
-      // Remove any anchor links if they are present
-      const anchorLink = note.querySelector('a.anchorjs-link');
-      if (anchorLink) {
-        anchorLink.remove();
-      }
-      if (window.Quarto?.typesetMath) {
-        window.Quarto.typesetMath(note);
-      }
-      if (note.classList.contains("callout")) {
-        return note.outerHTML;
-      } else {
-        return note.innerHTML;
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
       }
     }
-  }
-  for (var i=0; i<xrefs.length; i++) {
-    const xref = xrefs[i];
-    tippyHover(xref, undefined, function(instance) {
-      instance.disable();
-      let url = xref.getAttribute('href');
-      let hash = undefined; 
-      if (url.startsWith('#')) {
-        hash = url;
-      } else {
-        try { hash = new URL(url).hash; } catch {}
-      }
-      if (hash) {
-        const id = hash.replace(/^#\/?/, "");
-        const note = window.document.getElementById(id);
-        if (note !== null) {
-          try {
-            const html = processXRef(id, note.cloneNode(true));
-            instance.setContent(html);
-          } finally {
-            instance.enable();
-            instance.show();
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
           }
         } else {
-          // See if we can fetch this
-          fetch(url.split('#')[0])
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
           .then(res => res.text())
           .then(html => {
             const parser = new DOMParser();
             const htmlDoc = parser.parseFromString(html, "text/html");
-            const note = htmlDoc.getElementById(id);
+            const note = htmlDoc.querySelector('main.content');
             if (note !== null) {
-              const html = processXRef(id, note);
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
               instance.setContent(html);
             } 
           }).finally(() => {
@@ -1417,185 +1430,161 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
             instance.show();
           });
         }
-      } else {
-        // See if we can fetch a full url (with no hash to target)
-        // This is a special case and we should probably do some content thinning / targeting
-        fetch(url)
-        .then(res => res.text())
-        .then(html => {
-          const parser = new DOMParser();
-          const htmlDoc = parser.parseFromString(html, "text/html");
-          const note = htmlDoc.querySelector('main.content');
-          if (note !== null) {
-            // This should only happen for chapter cross references
-            // (since there is no id in the URL)
-            // remove the first header
-            if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
-              note.children[0].remove();
-            }
-            const html = processXRef(null, note);
-            instance.setContent(html);
-          } 
-        }).finally(() => {
-          instance.enable();
-          instance.show();
-        });
-      }
-    }, function(instance) {
-    });
-  }
-      let selectedAnnoteEl;
-      const selectorForAnnotation = ( cell, annotation) => {
-        let cellAttr = 'data-code-cell="' + cell + '"';
-        let lineAttr = 'data-code-annotation="' +  annotation + '"';
-        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
-        return selector;
-      }
-      const selectCodeLines = (annoteEl) => {
-        const doc = window.document;
-        const targetCell = annoteEl.getAttribute("data-target-cell");
-        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
-        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
-        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
-        const lineIds = lines.map((line) => {
-          return targetCell + "-" + line;
-        })
-        let top = null;
-        let height = null;
-        let parent = null;
-        if (lineIds.length > 0) {
-            //compute the position of the single el (top and bottom and make a div)
-            const el = window.document.getElementById(lineIds[0]);
-            top = el.offsetTop;
-            height = el.offsetHeight;
-            parent = el.parentElement.parentElement;
-          if (lineIds.length > 1) {
-            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
-            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
-            height = bottom - top;
-          }
-          if (top !== null && height !== null && parent !== null) {
-            // cook up a div (if necessary) and position it 
-            let div = window.document.getElementById("code-annotation-line-highlight");
-            if (div === null) {
-              div = window.document.createElement("div");
-              div.setAttribute("id", "code-annotation-line-highlight");
-              div.style.position = 'absolute';
-              parent.appendChild(div);
-            }
-            div.style.top = top - 2 + "px";
-            div.style.height = height + 4 + "px";
-            div.style.left = 0;
-            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
-            if (gutterDiv === null) {
-              gutterDiv = window.document.createElement("div");
-              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
-              gutterDiv.style.position = 'absolute';
-              const codeCell = window.document.getElementById(targetCell);
-              const gutter = codeCell.querySelector('.code-annotation-gutter');
-              gutter.appendChild(gutterDiv);
-            }
-            gutterDiv.style.top = top - 2 + "px";
-            gutterDiv.style.height = height + 4 + "px";
-          }
-          selectedAnnoteEl = annoteEl;
-        }
-      };
-      const unselectCodeLines = () => {
-        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
-        elementsIds.forEach((elId) => {
-          const div = window.document.getElementById(elId);
-          if (div) {
-            div.remove();
-          }
-        });
-        selectedAnnoteEl = undefined;
-      };
-        // Handle positioning of the toggle
-    window.addEventListener(
-      "resize",
-      throttle(() => {
-        elRect = undefined;
-        if (selectedAnnoteEl) {
-          selectCodeLines(selectedAnnoteEl);
-        }
-      }, 10)
-    );
-    function throttle(fn, ms) {
-    let throttle = false;
-    let timer;
-      return (...args) => {
-        if(!throttle) { // first call gets through
-            fn.apply(this, args);
-            throttle = true;
-        } else { // all the others get throttled
-            if(timer) clearTimeout(timer); // cancel #2
-            timer = setTimeout(() => {
-              fn.apply(this, args);
-              timer = throttle = false;
-            }, ms);
-        }
-      };
-    }
-      // Attach click handler to the DT
-      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
-      for (const annoteDlNode of annoteDls) {
-        annoteDlNode.addEventListener('click', (event) => {
-          const clickedEl = event.target;
-          if (clickedEl !== selectedAnnoteEl) {
-            unselectCodeLines();
-            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
-            if (activeEl) {
-              activeEl.classList.remove('code-annotation-active');
-            }
-            selectCodeLines(clickedEl);
-            clickedEl.classList.add('code-annotation-active');
-          } else {
-            // Unselect the line
-            unselectCodeLines();
-            clickedEl.classList.remove('code-annotation-active');
-          }
-        });
-      }
-  const findCites = (el) => {
-    const parentEl = el.parentElement;
-    if (parentEl) {
-      const cites = parentEl.dataset.cites;
-      if (cites) {
-        return {
-          el,
-          cites: cites.split(' ')
-        };
-      } else {
-        return findCites(el.parentElement)
-      }
-    } else {
-      return undefined;
-    }
-  };
-  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
-  for (var i=0; i<bibliorefs.length; i++) {
-    const ref = bibliorefs[i];
-    const citeInfo = findCites(ref);
-    if (citeInfo) {
-      tippyHover(citeInfo.el, function() {
-        var popup = window.document.createElement('div');
-        citeInfo.cites.forEach(function(cite) {
-          var citeDiv = window.document.createElement('div');
-          citeDiv.classList.add('hanging-indent');
-          citeDiv.classList.add('csl-entry');
-          var biblioDiv = window.document.getElementById('ref-' + cite);
-          if (biblioDiv) {
-            citeDiv.innerHTML = biblioDiv.innerHTML;
-          }
-          popup.appendChild(citeDiv);
-        });
-        return popup.innerHTML;
+      }, function(instance) {
       });
     }
-  }
-});
-</script>
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
 </div> <!-- /content -->
 
 

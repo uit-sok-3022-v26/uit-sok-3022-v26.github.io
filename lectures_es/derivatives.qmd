@@ -25,6 +25,7 @@ format:
     ipynb: default
 ---
 
+{{< pagebreak >}}
 This note provides an introduction to derivative pricing. In finance, a derivative is an asset or contract whose value depends on another asset. Consequently, the value of a derivative is a function of the underlying asset’s value. If the value of the underlying share is known, the exercise value of an option can be determined immediately.
 
 One of the most common types of derivatives is options. We will begin by exploring how options are priced and later demonstrate how the principles of option pricing extend to a wide range of other derivatives.
@@ -40,15 +41,18 @@ An option is a right but not an obligation to buy or sell an asset for a certain
 There are mainly two types of options - put and call options. A call option gives you the right to buy one share at a fixed price sometime in the future. Let us say that the price agreed upon for an Equinor share is 105. This is called the strike price or exercise price. If the share price is 115 today, you can take advantage of your right to buy it for 105 and sell it in the market for 115. The value of the option is then 15.
 
 However, if the market price is 95, it would be pointless to buy the stock for 105. Since you do not have any obligation to buy it, you would not exercise your right since that would lead to a certain loss. Therefore, the option price can never be negative, since the right to buy will never be exercised if it leads to a loss. Hence, if C is the value of the call, S the value of the stock, and X the strike price at the terminal date, we have
-
 $$
-C = \max(S - X, 0)
+    C = max(S - X, 0)
 $$ {#eq-C}
 
-The share price is 115 option holder is thus left with $$
-= \max(115-105, 0) = 10
-$$ {#eq-C_gain} But if the price falls to 95, the option loses its entire value $$
-= \max(95-105, 0) = 0
+where 
+$$
+    = max(115-105, 0) = 10
+$$ {#eq-C_gain}
+
+But if the price falls to 95, the option loses its entire value 
+$$
+    = max(95-105, 0) = 0
 $$ {#eq-C_loss}
 
 Let us draw this up in a chart where X is the strike price, with a python function giving the maximum betseen the current share price and $S-X$
@@ -235,13 +239,18 @@ The "intrinsic value" here, is then the Black and Scholes fair value in excess o
 
 ***Problems:***
 
--   Change the Black and Scholes figure to show a put option. The formula for the Black and Scholes put is $$
+-   Change the Black and Scholes figure to show a put option. The formula for the Black and Scholes put is 
+$$
       P(S, X, T, r, \sigma) = X e^{-rT} \Phi(-d_2) - S \Phi(-d_1)
-      $$ {#eq-bs_put1} where $$
+$$ {#eq-bs_put1} 
+where 
+$$
       d_1 = \frac{\ln(S / X) + \left(r + \frac{1}{2} \sigma^2 \right)T}{\sigma \sqrt{T}}
-      $$ {#eq-bs_put2} and $$
+$$ {#eq-bs_put2}
+ and 
+$$
       d_2 = d_1 - \sigma \sqrt{T}
-      $$ {#eq-bs_put3}
+$$ {#eq-bs_put3}
 
     $\Phi$ is the cumulative standard normal distribution function.
 
@@ -305,6 +314,7 @@ By combining a put and a call, it is possible to replicate the cash flows of buy
 In @fig-issue_call_put, we have plotted the net cash flow from issuing both a call option (call) and a put option (put).
 
 ```{python}
+
 #| label: fig-issue_call_put
 #| fig-cap: "Issued call and put"
 ax, S = create_canvas("Issuing a call and put")

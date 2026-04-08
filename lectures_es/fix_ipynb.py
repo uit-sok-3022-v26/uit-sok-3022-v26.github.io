@@ -16,7 +16,7 @@ def fix_file(fname):
 
     # Remove repeated \r\n before <span
     content = content.replace('\\n",\n        "<span', "<span")
-
+    content = content.replace('>\n$$', ">\\n\n$$")
     # Write result
     with open(fname, "w", encoding="utf-8") as f:
         f.write(content)

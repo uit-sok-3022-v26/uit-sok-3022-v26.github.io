@@ -747,7 +747,7 @@ sigma = np.log(df['PRIS']).diff().std()
 The implementation of the innovation term from ([-@eq-sigma_delta_zt]) in the code is then:
 
 ```{python}
-sigma * np.random.randn(len(df));
+sigma * np.random.randn(len(df))
 ```
 
 Here, `np.random.randn(len(df))` generates random draws from a standard normal distribution, representing $\varepsilon_{t}$, while multiplying by `sigma` scales the randomness according to the estimated volatility of the stock price.
@@ -795,9 +795,18 @@ $$ {#eq-volatility_correction}
 
 we can adjust for Jensen’s inequality exactly. That is, we know that
 $$
-\mathbb{E}[S_t] = S_0 \cdot e^{\mu \cdot t - \tfrac{1}{2} \sigma^2 t}
-$$ {#eq-correct_exp}
+\mathbb{E}[S_t] = S_0 \cdot e^{\mu \cdot t + \tfrac{1}{2} \sigma^2 t}
+$$ {#eq-correct_exp2}
 
+So by defining 
+
+$$
+S_t = S_0 \cdot e^{\mu \cdot t-\tfrac{1}{2} \sigma^2 t + \sigma \cdot z_t}
+$$
+we have a model that correctly captures the expected value of the stock price, accounting for both the drift and the volatility of the process so that
+$$
+\mathbb{E}[S_t] = S_0 \cdot e^{\mu \cdot t}
+$$ {#eq-correct_exp3}
 ## Putting It All Together
 
 By combining the innovation term ([-@eq-sigma_delta_zt]), the volatility correction term ([-@eq-volatility_correction]), and the drift component from ([-@eq-logdiff_drift_innov]), we arrive at a realistic model for the log change in stock price:
@@ -850,9 +859,6 @@ $$ {#eq-bs_call_d2}
 
 $\Phi$ is the cumulative standard normal distribution function.
 
-Here’s an improved version of your section for clarity, flow, and grammar, while keeping the technical content intact:
-
-------------------------------------------------------------------------
 
 ## Numerical Approximation
 

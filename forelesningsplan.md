@@ -53,9 +53,8 @@
 | 15        | 08.04.2025 | 12:15  | Espen Sirnes  | Derivater                    |
 | 16        | 13.04.2025 | 12:15  | Espen Sirnes  | Derivater/ARCH/GARCH         |
 | 16        | 15.04.2025 | 12:15  | Espen Sirnes  | [Makroøkonomi](lectures_es/macro_inflation.html)  [QMD](lectures_es/macro_inflation.qmd)  [jupyter](lectures_es/macro_inflation.ipynb) [PDF](lectures_es/macro_inflation.pdf)      |
-| 17        | 22.04.2025 | 12:15  | Espen Sirnes  |  [ARIMA-GARCH](lectures_es/arima_garch.html)  [QMD](lectures_es/arima_garch.qmd)  
+| 17        | 22.04.2025 | 12:15  | Espen Sirnes  |  [ARIMA-GARCH](lectures_es/arima_garch.html)  [QMD](lectures_es/arima_garch.qmd)  [jupyter](lectures_es/arima_garch.ipynb) [PDF](lectures_es/arima_garch.pdf)      |
 | 17        | 23.04.2025 | 16:00  |               | Innlevering Case Derivater (Canvas)|
-[jupyter](lectures_es/arima_garch.ipynb) [PDF](lectures_es/arima_garch.pdf)      |
 | 19        | 06.05.2025 | 09:15  | Espen Sirnes  | Presentasjoner     	  		 | 
 | 20        | 12.05.2025 | 16:00  |               | Innlevering Case Makroøkonomi  (Canvas)      |
 | 22        | 27.05.2025 | 13:00  |               | Endelig innlevering Case I og Case II (Wiseflow)|

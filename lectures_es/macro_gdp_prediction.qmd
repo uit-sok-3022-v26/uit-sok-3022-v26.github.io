@@ -1,0 +1,261 @@
+---
+title: "Macroeconomics and GDP Forecasting"
+author: "Espen Sirnes"
+date: "2025-3-24"
+pdf-engine: pdflatex
+bibliography: references.bib
+format:
+    pdf:
+        number-sections: true
+        geometry: [left=4cm, right=4cm, top=4cm, bottom=4cm]
+        fontsize: 12pt
+        fontfamily: times
+        monofont: "Courier New"
+        documentclass: article
+        toc: true
+        fig-cap: true
+        fig-pos: H
+        titlepage: true
+        titlepage-text-color: "000000"
+        titlepage-rule-color: "000000"
+        titlepage-rule-height: 2
+        equation-numbering: true
+    html: 
+        equation-numbering: true
+    ipynb: default
+---
+
+
+
+# Basic Macroeconomics
+
+To lay a foundation for GDP forecasting, we begin by revisiting the essential frameworks from a typical introductory macroeconomics course. Models such as the Aggregate Demand–Aggregate Supply (AD–AS) framework, the Phillips Curve, and the IS–LM model illustrate how key variables—output, employment, interest rates, and monetary policy—interact to determine the overall level of economic activity. These fundamental relationships form the basis for more sophisticated approaches to predicting GDP. By understanding how demand and productive capacity jointly determine output, we can better identify the variables and mechanisms most useful for forecasting.
+
+
+## Investment, Central Bank Interest Rates, and GDP
+
+GDP is defined from the expenditure side as:
+
+$$
+Y = C + I + G + NX
+$${#eq-gdp_expenditure}
+
+where $Y$ is real GDP, $C$ is household consumption, $I$ is business investment, $G$ is government spending, and $NX$ is net exports. Each of these components is influenced—directly or indirectly—by interest rates, expectations, and policy. Investment $I$ is typically the most volatile component and the one most sensitive to the cost of borrowing.
+
+When interest rates are low, the cost of capital is cheaper, and firms become more inclined to invest in equipment, infrastructure, and research. As a result, GDP tends to rise. Conversely, when interest rates rise, investment falls, dragging down aggregate output. Central banks, such as the Federal Reserve, the European Central Bank, and Norges Bank, exploit this channel by setting a target policy rate that cascades through commercial lending rates, mortgage rates, and asset prices. This makes the policy rate a central variable in any model of short-run GDP dynamics.
+
+One way to visualize these relationships is via a simplified IS curve (Investment–Savings) and a horizontal policy rate line in interest rate–output space, shown in the upper right panel of @fig-keynes. The IS curve slopes downward because @hicks1937mr, at lower interest rates, aggregate demand (particularly investment spending) tends to be higher, thus increasing output. The dashed horizontal line represents the central bank's chosen policy rate; the intersection with the IS curve determines equilibrium output.
+
+```{python}
+#| label: fig-keynes
+#| fig-cap: "The IS curve, Phillips curve, and AS-AD model"
+
+import numpy as np
+import matplotlib.pyplot as plt
+
+# Main parameters
+i_policy = 2.0
+output_expectations = 2 + 2 * i_policy
+
+Y = np.linspace(0, 20, 200)
+U = np.linspace(3, 10, 200)
+U_eq = 5.5
+slope = -2
+P_phillips = output_expectations + slope * (U - U_eq)
+
+a_AD = 14
+b_AD = 0.8
+d_AS = 0.4
+
+Y_star = (a_AD - output_expectations) / b_AD
+P_AD = a_AD - b_AD * Y
+c_AS = output_expectations - d_AS * Y_star
+P_AS = c_AS + d_AS * Y
+Y_eq = (a_AD - c_AS) / (b_AD + d_AS)
+P_eq = a_AD - b_AD * Y_eq
+
+b_is = 0.2
+a_is = i_policy + b_is * Y_star
+i_IS = a_is - b_is * Y
+
+fig, axs = plt.subplots(2, 2, figsize=(10, 8))
+axs[0, 0].axis('off')
+
+ax_is = axs[0, 1]
+ax_is.plot(Y, i_IS, label='IS Curve', color='blue')
+ax_is.axhline(y=i_policy, color='black', linestyle=':', label='Policy Rate')
+ax_is.axvline(x=Y_star, linestyle=':', color='gray')
+ax_is.plot(Y_star, i_policy, 'ro', label='IS equilibrium')
+ax_is.set_xlabel('Output (Y)')
+ax_is.set_ylabel('Interest Rate (i)')
+ax_is.set_title('IS Curve and Policy Rate')
+ax_is.legend()
+
+ax_phillips = axs[1, 0]
+ax_phillips.plot(U, P_phillips, color='purple', label='Phillips Curve')
+ax_phillips.axhline(y=P_eq, linestyle=':', color='gray')
+ax_phillips.axvline(x=U_eq, linestyle=':', color='gray')
+ax_phillips.plot(U_eq, P_eq, 'ro', label='Phillips equilibrium')
+ax_phillips.set_xlabel('Unemployment (%)')
+ax_phillips.set_ylabel(r'Inflation ($\pi$)')
+ax_phillips.set_title('Phillips Curve')
+ax_phillips.legend()
+
+ax_asad = axs[1, 1]
+ax_asad.plot(Y, P_AD, label="AD", color='blue')
+ax_asad.plot(Y, P_AS, label="AS", color='orange')
+ax_asad.plot(Y_eq, P_eq, 'ro', label='AS-AD equilibrium')
+ax_asad.axhline(y=P_eq, linestyle=':', color='gray')
+ax_asad.axvline(x=Y_star, linestyle=':', color='gray')
+ax_asad.set_xlabel('Real Output (Y)')
+ax_asad.set_ylabel(r'Price Level ($\pi$)')
+ax_asad.set_title('AS-AD Model')
+ax_asad.legend()
+
+ax_is.set_ylim([0, 5.5])
+ax_is.set_xlim([0, 20])
+ax_asad.set_ylim([-2, 14])
+ax_asad.set_xlim([0, 20])
+ax_phillips.set_ylim([-2, 14])
+ax_phillips.set_xlim([3, 10])
+ax_phillips.set_ylim(ax_asad.get_ylim())
+
+plt.tight_layout()
+plt.show()
+```
+
+## The Output Gap
+
+A concept of central importance in GDP forecasting is the **output gap**—the difference between actual GDP and potential GDP:
+
+$$
+\tilde{Y}_t = Y_t - Y_t^*
+$${#eq-output_gap}
+
+where $Y_t^*$ denotes potential output: the level of production the economy can sustain without generating accelerating inflation. A positive output gap signals an overheating economy; a negative output gap indicates underutilized resources. Because potential output is unobservable, it must be estimated—commonly via the Hodrick-Prescott filter, production function methods, or multivariate state-space models. The choice of method can materially affect the estimated gap and the resulting forecast.
+
+The output gap is closely related to unemployment via **Okun's Law** (@okun1963potential):
+
+$$
+\tilde{Y}_t \approx -\beta (u_t - u_t^*)
+$${#eq-okun}
+
+where $u_t$ is the actual unemployment rate and $u_t^*$ is the natural rate. Okun's Law implies that a one percentage point rise in unemployment above its natural rate is associated with roughly a two percentage point shortfall in GDP relative to potential, though the exact coefficient varies across countries and time periods.
+
+## Aggregate Supply, Aggregate Demand, and the Phillips Curve
+
+Aggregate demand (AD) represents total spending on domestic output at various price levels, combining the expenditure components of @eq-gdp_expenditure. The AD curve slopes downward: a lower price level raises real wealth, reduces interest rates, and improves competitiveness, all of which stimulate real GDP. Shifts in AD—driven by fiscal stimulus, monetary easing, or confidence shocks—are the primary source of short-run GDP fluctuations in Keynesian-style models.
+
+Aggregate supply (AS) captures the total output firms are willing to produce at different price levels. In the short run, the AS curve slopes upward due to nominal rigidities such as sticky wages and prices. In the long run, it becomes vertical at potential output $Y^*$. The interaction of AD and AS, shown in the bottom right panel of @fig-keynes, determines both real output and the price level simultaneously.
+
+The Phillips curve (@phillips1958relation), shown in the bottom left panel, connects labor market conditions to inflation and—via Okun's Law—to the output gap. An expectations-augmented specification is:
+
+$$
+\pi_t = \pi_t^e + \gamma (u_t - u_t^*) + \epsilon_t
+$${#eq-phillips}
+
+where $\pi_t^e$ is expected inflation and $\gamma < 0$. When unemployment falls below its natural rate, inflation tends to rise, signaling that GDP is above potential. Forecasters can therefore use inflation dynamics as a cross-check on output gap estimates.
+
+
+# Forecasting GDP: Empirical Approaches
+
+Having established the theoretical framework, we turn to empirical methods for GDP forecasting. Unlike many economic series, GDP is measured quarterly and subject to substantial revisions over subsequent years. Forecasters must work with incomplete, preliminary, and mixed-frequency data, and must evaluate their models against a moving target as historical figures are revised. These features motivate a range of specialized approaches discussed below.
+
+## Leading Indicators
+
+One of the most practically influential approaches to GDP forecasting uses **leading indicators**—variables that tend to move ahead of the business cycle and can therefore serve as early warnings of upcoming expansions or contractions. The tradition of leading indicator analysis dates back to @burns1946measuring at the NBER, who documented business cycle regularities across a wide range of economic series.
+
+The best-known composite indicator is the Conference Board's Leading Economic Index (LEI), which aggregates variables such as new orders for manufactured goods, building permits, stock prices, the interest rate spread, and consumer expectations. Each component connects to the expenditure decomposition in @eq-gdp_expenditure: building permits predict residential investment, new orders predict industrial output, and the yield spread predicts credit conditions.
+
+Among individual leading indicators, the **yield curve spread**—the difference between long-term and short-term government bond yields—has attracted particular attention. @estrella1991term and @estrella1996yield demonstrate that the slope of the yield curve is a robust predictor of real GDP growth and recessions over horizons of one to two years. An inverted yield curve (short rates above long rates) has preceded every U.S. recession in the post-war period. The mechanism is intuitive: aggressive monetary tightening raises short rates above long rates, signaling expected future weakness in output.
+
+```{python}
+#| label: fig-yield-curve
+#| fig-cap: "Stylized yield curve shapes and business cycle signals"
+
+import numpy as np
+import matplotlib.pyplot as plt
+
+maturities = np.array([0.25, 0.5, 1, 2, 5, 10, 30])
+yields_normal   = 2.0 + 1.5 * (1 - np.exp(-maturities / 5))
+yields_inverted = 5.0 - 1.8 * (1 - np.exp(-maturities / 4))
+
+fig, ax = plt.subplots(figsize=(8, 4))
+ax.plot(maturities, yields_normal,   'b-o', label='Normal (expansion)')
+ax.plot(maturities, yields_inverted, 'r--s', label='Inverted (recession signal)')
+ax.set_xlabel('Maturity (years)')
+ax.set_ylabel('Yield (%)')
+ax.set_title('Yield Curve Shapes and Business Cycle Signals')
+ax.legend()
+ax.grid(True, alpha=0.3)
+plt.tight_layout()
+plt.show()
+```
+
+@fig-yield-curve illustrates the two canonical yield curve shapes: the upward-sloping curve associated with expansionary conditions, and the inverted curve that has historically signaled recessions. The spread between the 10-year and 3-month yields is the most commonly used measure in empirical work.
+
+## Vector Autoregressions (VARs)
+
+While single-equation models using leading indicators can be useful, GDP does not evolve in isolation—it is jointly determined with prices, employment, interest rates, and other aggregates. **Vector Autoregression (VAR)** models, introduced to macroeconomics by @sims1980macroeconomics, address this by modeling a vector of macroeconomic variables as a system where each variable depends on its own lags and the lags of all other variables in the system.
+
+A VAR of order $p$ for a $K$-dimensional vector $\mathbf{y}_t$ (e.g., GDP growth, inflation, the policy rate, and unemployment) takes the form:
+
+$$
+\mathbf{y}_t = \mathbf{c} + \mathbf{A}_1 \mathbf{y}_{t-1} + \cdots + \mathbf{A}_p \mathbf{y}_{t-p} + \boldsymbol{\epsilon}_t
+$${#eq-var}
+
+where $\mathbf{c}$ is a vector of constants, $\mathbf{A}_j$ are $K \times K$ coefficient matrices, and $\boldsymbol{\epsilon}_t$ is a vector of reduced-form shocks. Each equation is estimated by OLS, and forecasts are generated by iterating the system forward.
+
+A key practical challenge is parameter proliferation: a VAR with $K$ variables and $p$ lags requires estimating $K^2 p$ slope coefficients. A 6-variable VAR with 4 lags requires 144 slope parameters, which can be poorly estimated with typical quarterly datasets of 100–200 observations. **Bayesian VAR** (BVAR) models address this via shrinkage priors—most commonly the Minnesota prior of @doan1984forecasting—that pull coefficients toward a random walk for own-variable effects and toward zero for cross-variable effects. @litterman1986forecasting demonstrated that BVARs with such priors often outperform both unrestricted VARs and large structural models in out-of-sample GDP forecasting, a finding replicated extensively in subsequent work.
+
+## Nowcasting GDP
+
+A distinctive challenge in GDP forecasting is that GDP itself is released with a significant lag—typically four to five weeks after the end of each quarter—and is subsequently revised for years. Meanwhile, high-frequency data on labor markets, industrial production, retail sales, and financial markets are released continuously throughout the quarter. **Nowcasting** refers to the real-time prediction of current-quarter GDP using these timely but incomplete data releases.
+
+The dominant framework for nowcasting is the **dynamic factor model** (DFM), in which a small number of latent common factors summarize the co-movement of a large panel of economic indicators. @stock2002forecasting showed that factors extracted from large datasets can outperform small-scale models for forecasting output. The key insight is that many indicators—employment, industrial production, retail trade, surveys—move together over the business cycle, and extracting their common component yields a more informative signal than any single series.
+
+The seminal nowcasting application is @giannone2008nowcasting, who build a mixed-frequency DFM to estimate GDP growth in real time, updating the forecast as each new data release arrives within the quarter. Their model can quantify the marginal contribution of each release—for instance, how much the GDP nowcast changes when the monthly employment report or the ISM manufacturing index is published. This framework has been adopted by the Federal Reserve Banks of New York and Atlanta (the latter publishes the publicly available "GDPNow" model) for real-time economic monitoring.
+
+## Survey-Based Forecasts and Forecast Combinations
+
+An important benchmark in any GDP forecasting exercise is the **professional consensus forecast**. Surveys such as the Survey of Professional Forecasters (SPF), published by the Federal Reserve Bank of Philadelphia, and Consensus Economics aggregate predictions from dozens of professional economists and institutions. These surveys capture information that may not be easily encoded in statistical models—including judgment about policy changes, geopolitical events, and structural shifts—and have proven difficult to beat systematically.
+
+@genre2013combining review the evidence on professional GDP forecasts and find that combination forecasts—simple averages or weighted combinations of individual forecasters—consistently outperform most individual forecasters and many model-based predictions. The intuition, rooted in the broader forecast combination literature (@bates1969combination), is that individual models and forecasters make different errors, and averaging across them reduces variance without systematically increasing bias.
+
+For students conducting empirical GDP forecasting projects, survey forecasts serve two roles. First, they provide a demanding benchmark: a model that cannot improve upon the SPF consensus is unlikely to add practical value. Second, survey-based growth expectations can themselves be used as inputs into forecasting models, proxying for the forward-looking component of aggregate demand that is difficult to capture from past data alone.
+
+## Has GDP Become Harder to Forecast?
+
+A recurring theme in the empirical literature is whether macroeconomic aggregates have become harder to forecast over time. @stock2007has provide systematic evidence that the forecast accuracy of standard models—including VARs, autoregressive benchmarks, and activity-based specifications—deteriorated substantially starting in the mid-1980s. Their analysis attributes this to three developments: a decline in the persistence of key series (making past values less informative), a weakening of structural relationships (making leading indicators less reliable), and an increase in the variance of unforecastable shocks.
+
+The Great Moderation—the period of reduced output volatility from the mid-1980s to 2007—created a low-variance environment in which simple rules performed well simply because not much was happening. The Global Financial Crisis of 2008–2009, however, represented a severe structural break that most models failed to anticipate. @ng2014boosting document that forecast errors during and after the crisis were dramatically larger than in prior decades, reflecting both the severity of the shock and the limitations of models estimated on pre-crisis data. The COVID-19 pandemic of 2020 produced even larger forecast errors, further underscoring the difficulty of anticipating rare but large disruptions.
+
+The practical implication is that GDP forecasters should routinely assess their models' performance across different subsamples, use rolling or expanding estimation windows, and be cautious about placing excessive confidence in any single model.
+
+## Machine Learning Approaches
+
+A growing body of recent work has explored whether machine learning methods—including LASSO regression, random forests, gradient boosting, and neural networks—can improve GDP forecasting by exploiting large datasets and nonlinear relationships that standard econometric models cannot capture.
+
+@coulombe2022can provide a comprehensive evaluation of machine learning methods for macroeconomic forecasting using a large panel of U.S. variables. They find that machine learning methods, particularly tree-based ensembles and penalized regressions, outperform benchmark models in several settings, especially when many predictors are available. The gains are most pronounced at longer horizons and during periods of heightened uncertainty, where the ability to select relevant predictors from a large set and model nonlinearities provides an advantage.
+
+However, machine learning methods are not without limitations in the macroeconomic context. Sample sizes for quarterly GDP are small by machine learning standards, making overfitting a real concern. Structural breaks—such as the COVID-19 pandemic—can render relationships learned from historical data unreliable. And the lack of interpretability in complex models makes it difficult to communicate forecasts to policymakers. The emerging consensus is that machine learning works best as a complement to traditional econometric approaches, particularly for variable selection or as one component in a forecast combination.
+
+## Using Dynamic Stochastic General Equilibrium (DSGE) Models
+
+No survey of modern GDP forecasting would be complete without acknowledging Dynamic Stochastic General Equilibrium (DSGE) models. These represent the most theoretically rigorous class of macroeconomic models, grounding output dynamics in the optimizing decisions of forward-looking households, firms, and policymakers subject to stochastic shocks and nominal and real frictions.
+
+A leading example is @smets2007shocks, whose medium-scale DSGE model was shown to fit post-war U.S. data reasonably well. However, when compared head-to-head with Bayesian VARs in out-of-sample forecasting, DSGE models do not systematically outperform more flexible statistical alternatives for short-horizon GDP prediction (@edge2010comparison). Their comparative advantage lies in longer horizons, scenario analysis, and structural interpretation—not in nowcasting or near-term point forecast accuracy.
+
+For students conducting empirical GDP forecasting projects, DSGE models are generally not the most productive direction. Their estimation is technically demanding, requiring solution of nonlinear rational expectations systems and Bayesian estimation via the Kalman filter. The payoff in forecast accuracy relative to simpler models is modest at best. That said, DSGE models provide valuable conceptual structure: they clarify which shocks drive output fluctuations and help identify the correct conditioning variables for reduced-form models.
+
+For most forecasting purposes, students are better served by mastering VAR models, Bayesian shrinkage, dynamic factor models, and forecast combination—tools that are both practically powerful and directly connected to the best-performing approaches in the academic and policy literature.
+
+Standard tools for solving and estimating DSGE models include:
+
+- **Dynare** (MATLAB or Octave) — widely used in academia and central banks.
+- **IRIS Toolbox** (MATLAB) — a flexible model-based macroeconometric platform.
+- **DSGE.jl** (Julia) — a newer open-source platform under active development.
+
+
+# Literature
+::: {#refs}

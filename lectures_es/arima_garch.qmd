@@ -161,7 +161,7 @@ These contrasting patterns are illustrated in @fig-ar-acf and @fig-ma-acf below.
 ```{python}
 #| label: fig-ar-acf
 #| fig-cap: "Typical correlogram of an AR(1) process. The ACF decays geometrically, while the PACF has a single significant spike at lag 1 and cuts off thereafter."
-#| echo: false
+
 
 import numpy as np
 import matplotlib.pyplot as plt
@@ -195,7 +195,7 @@ plt.show()
 ```{python}
 #| label: fig-ma-acf
 #| fig-cap: "Typical correlogram of an MA(2) process. The ACF has isolated spikes at lags 1 and 2 only, while the PACF decays gradually."
-#| echo: false
+
 
 acf_ma = np.zeros(max_lag + 1)
 acf_ma[0] = 1.0

@@ -2,6 +2,13 @@
 
 # Oppgaver finans/makro sok-3022 våren 2026
 
+## Frister/datoer:
+
+Innlevering utkast: Torsdag 23. april
+Presentasjon: Fredag 8. mai
+Endelig innlevering: 27. mai
+
+
 
 ## Del I: Finans - Derivater
 

@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.9.36">
+<meta name="generator" content="quarto-1.9.37">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
@@ -54,7 +54,7 @@ div.csl-indent {
 <script src="arima_garch_files/libs/quarto-html/tippy.umd.min.js"></script>
 <script src="arima_garch_files/libs/quarto-html/anchor.min.js"></script>
 <link href="arima_garch_files/libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="arima_garch_files/libs/quarto-html/quarto-syntax-highlighting-845c23b38eaddc0f92fda52bfe77a8c8.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<link href="arima_garch_files/libs/quarto-html/quarto-syntax-highlighting-7f8f88aac4f3542376d5c11b86a4c14d.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="arima_garch_files/libs/bootstrap/bootstrap.min.js"></script>
 <link href="arima_garch_files/libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
 <link href="arima_garch_files/libs/bootstrap/bootstrap-efbb37e9afcc02144ebbc7afd12a776f.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
@@ -222,6 +222,45 @@ window.Quarto = {
 \boldsymbol{\varepsilon} = \mathbf{MA}^{-1} \cdot \mathbf{AR} \cdot \boldsymbol{\Delta}_d \mathbf{u}
 \tag{12}\]</span></span></p>
 <p>Hence, the white noise error terms <span class="math inline">\(\boldsymbol{\varepsilon}\)</span> can be obtained through standard linear algebra by inverting the moving average operator. However, in practice, explicitly computing the inverse is often computationally expensive, so a recursive filtering approach is typically preferred for efficiency.</p>
+<section id="identifying-ar-and-ma-structure-the-correlogram" class="level2">
+<h2 class="anchored" data-anchor-id="identifying-ar-and-ma-structure-the-correlogram">Identifying AR and MA structure: the correlogram</h2>
+<p>Before fitting an ARIMA model, it is necessary to determine the appropriate lag orders <span class="math inline">\(p\)</span> and <span class="math inline">\(q\)</span>. The standard diagnostic tools are the <strong>autocorrelation function (ACF)</strong> and the <strong>partial autocorrelation function (PACF)</strong> of the series <span class="math inline">\(\boldsymbol{\Delta}_d \mathbf{u}\)</span>.</p>
+<p>The ACF at lag <span class="math inline">\(k\)</span> measures the total correlation between <span class="math inline">\(u_t\)</span> and <span class="math inline">\(u_{t-k}\)</span>, while the PACF isolates the direct effect of lag <span class="math inline">\(k\)</span> after removing the influence of all intermediate lags. Together, they reveal the fingerprint of the underlying process in a complementary way:</p>
+<ul>
+<li>A pure <strong>AR(<span class="math inline">\(p\)</span>)</strong> process produces an ACF that decays gradually and geometrically, while the PACF cuts off sharply after lag <span class="math inline">\(p\)</span>.</li>
+<li>A pure <strong>MA(<span class="math inline">\(q\)</span>)</strong> process produces an ACF that cuts off sharply after lag <span class="math inline">\(q\)</span>, while the PACF decays gradually.</li>
+</ul>
+<p>These contrasting patterns are illustrated in <a href="#fig-ar-acf" class="quarto-xref">Figure&nbsp;1</a> and <a href="#fig-ma-acf" class="quarto-xref">Figure&nbsp;2</a> below.</p>
+<div id="cell-fig-ar-acf" class="cell" data-execution_count="1">
+<div class="cell-output cell-output-display">
+<div id="fig-ar-acf" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-ar-acf-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="arima_garch_files/figure-html/fig-ar-acf-output-1.png" width="849" height="297" class="figure-img">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-ar-acf-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;1: Typical correlogram of an AR(1) process. The ACF decays geometrically, while the PACF has a single significant spike at lag 1 and cuts off thereafter.
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<div id="cell-fig-ma-acf" class="cell" data-execution_count="2">
+<div class="cell-output cell-output-display">
+<div id="fig-ma-acf" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-ma-acf-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="arima_garch_files/figure-html/fig-ma-acf-output-1.png" width="849" height="297" class="figure-img">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-ma-acf-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;2: Typical correlogram of an MA(2) process. The ACF has isolated spikes at lags 1 and 2 only, while the PACF decays gradually.
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<p>The dashed red lines mark the 95% confidence band <span class="math inline">\(\pm 1.96/\sqrt{T}\)</span>; spikes exceeding these bounds are statistically significant. The ACF and PACF thus carry complementary information: where one decays gradually, the other cuts off sharply. In practice, a sharp PACF cutoff after lag <span class="math inline">\(p\)</span> with a decaying ACF suggests an AR(<span class="math inline">\(p\)</span>) specification, while a sharp ACF cutoff after lag <span class="math inline">\(q\)</span> with a decaying PACF points to MA(<span class="math inline">\(q\)</span>). Mixed ARMA processes produce gradual decay in both functions, making the choice of <span class="math inline">\(p\)</span> and <span class="math inline">\(q\)</span> less clear-cut and typically requiring information criteria such as AIC or BIC to guide model selection.</p>
+</section>
 </section>
 <section id="the-garch-process" class="level1">
 <h1>The GARCH process</h1>

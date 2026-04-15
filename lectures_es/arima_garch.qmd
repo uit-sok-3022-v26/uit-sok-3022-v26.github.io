@@ -147,6 +147,82 @@ $$ {#eq-ARIMA_sol}
 
 Hence, the white noise error terms $\boldsymbol{\varepsilon}$ can be obtained through standard linear algebra by inverting the moving average operator. However, in practice, explicitly computing the inverse is often computationally expensive, so a recursive filtering approach is typically preferred for efficiency.
 
+## Identifying AR and MA structure: the correlogram
+
+Before fitting an ARIMA model, it is necessary to determine the appropriate lag orders $p$ and $q$. The standard diagnostic tools are the **autocorrelation function (ACF)** and the **partial autocorrelation function (PACF)** of the series $\boldsymbol{\Delta}_d \mathbf{u}$.
+
+The ACF at lag $k$ measures the total correlation between $u_t$ and $u_{t-k}$, while the PACF isolates the direct effect of lag $k$ after removing the influence of all intermediate lags. Together, they reveal the fingerprint of the underlying process in a complementary way:
+
+- A pure **AR($p$)** process produces an ACF that decays gradually and geometrically, while the PACF cuts off sharply after lag $p$.
+- A pure **MA($q$)** process produces an ACF that cuts off sharply after lag $q$, while the PACF decays gradually.
+
+These contrasting patterns are illustrated in @fig-ar-acf and @fig-ma-acf below.
+
+```{python}
+#| label: fig-ar-acf
+#| fig-cap: "Typical correlogram of an AR(1) process. The ACF decays geometrically, while the PACF has a single significant spike at lag 1 and cuts off thereafter."
+#| echo: false
+
+import numpy as np
+import matplotlib.pyplot as plt
+
+T = 300
+max_lag = 15
+lags = np.arange(0, max_lag + 1)
+ci = 1.96 / np.sqrt(T)
+
+rho = 0.75
+acf_ar  = rho ** lags
+pacf_ar = np.zeros(max_lag + 1)
+pacf_ar[0] = 1.0
+pacf_ar[1] = rho
+
+fig, axes = plt.subplots(1, 2, figsize=(9, 3.2))
+for ax, vals, title in zip(axes, [acf_ar, pacf_ar], ["ACF", "PACF"]):
+    ax.bar(lags, vals, color="#4878CF", width=0.4)
+    ax.axhline( ci, color="red", linestyle="--", linewidth=0.9)
+    ax.axhline(-ci, color="red", linestyle="--", linewidth=0.9)
+    ax.axhline(0,   color="black", linewidth=0.6)
+    ax.set_title(f"AR(1) — {title}", fontsize=11)
+    ax.set_xlabel("Lag")
+    ax.set_xlim(-0.5, max_lag + 0.5)
+    ax.set_ylim(-0.3, 1.05)
+
+plt.tight_layout()
+plt.show()
+```
+
+```{python}
+#| label: fig-ma-acf
+#| fig-cap: "Typical correlogram of an MA(2) process. The ACF has isolated spikes at lags 1 and 2 only, while the PACF decays gradually."
+#| echo: false
+
+acf_ma = np.zeros(max_lag + 1)
+acf_ma[0] = 1.0
+acf_ma[1] = 0.65
+acf_ma[2] = 0.38
+
+pacf_ma = 0.6 * (0.65 ** lags)
+pacf_ma[0] = 1.0
+
+fig, axes = plt.subplots(1, 2, figsize=(9, 3.2))
+for ax, vals, title in zip(axes, [acf_ma, pacf_ma], ["ACF", "PACF"]):
+    ax.bar(lags, vals, color="#4878CF", width=0.4)
+    ax.axhline( ci, color="red", linestyle="--", linewidth=0.9)
+    ax.axhline(-ci, color="red", linestyle="--", linewidth=0.9)
+    ax.axhline(0,   color="black", linewidth=0.6)
+    ax.set_title(f"MA(2) — {title}", fontsize=11)
+    ax.set_xlabel("Lag")
+    ax.set_xlim(-0.5, max_lag + 0.5)
+    ax.set_ylim(-0.3, 1.05)
+
+plt.tight_layout()
+plt.show()
+```
+
+The dashed red lines mark the 95\% confidence band $\pm 1.96/\sqrt{T}$; spikes exceeding these bounds are statistically significant. The ACF and PACF thus carry complementary information: where one decays gradually, the other cuts off sharply. In practice, a sharp PACF cutoff after lag $p$ with a decaying ACF suggests an AR($p$) specification, while a sharp ACF cutoff after lag $q$ with a decaying PACF points to MA($q$). Mixed ARMA processes produce gradual decay in both functions, making the choice of $p$ and $q$ less clear-cut and typically requiring information criteria such as AIC or BIC to guide model selection.
+
+
 # The GARCH process
 
 The primary objective of the GARCH transformation is to correct for serially conditioned heteroskedasticity — that is, time-varying volatility in the error process. Conceptually, the procedure closely parallels the ARIMA approach, but with an inverted goal: to model time dependence, not removing it.

@@ -341,7 +341,7 @@ Figure&nbsp;2: Stylized yield curve shapes and business cycle signals
 <section id="nowcasting-gdp" class="level2">
 <h2 class="anchored" data-anchor-id="nowcasting-gdp">Nowcasting GDP</h2>
 <p>A distinctive challenge in GDP forecasting is that GDP itself is released with a significant lag—typically four to five weeks after the end of each quarter—and is subsequently revised for years. Meanwhile, high-frequency data on labor markets, industrial production, retail sales, and financial markets are released continuously throughout the quarter. <strong>Nowcasting</strong> refers to the real-time prediction of current-quarter GDP using these timely but incomplete data releases.</p>
-<p>The dominant framework for nowcasting is the <strong>dynamic factor model</strong> (DFM), in which a small number of latent common factors summarize the co-movement of a large panel of economic indicators. <span class="citation" data-cites="stock2002forecasting">(<a href="#ref-stock2002forecasting" role="doc-biblioref"><strong>stock2002forecasting?</strong></a>)</span> showed that factors extracted from large datasets can outperform small-scale models for forecasting output. The key insight is that many indicators—employment, industrial production, retail trade, surveys—move together over the business cycle, and extracting their common component yields a more informative signal than any single series.</p>
+<p>The dominant framework for nowcasting is the <strong>dynamic factor model</strong> (DFM), in which a small number of latent common factors summarize the co-movement of a large panel of economic indicators. <span class="citation" data-cites="stock2002forecasting">Stock and Watson (<a href="#ref-stock2002forecasting" role="doc-biblioref">2002</a>)</span> showed that factors extracted from large datasets can outperform small-scale models for forecasting output. The key insight is that many indicators—employment, industrial production, retail trade, surveys—move together over the business cycle, and extracting their common component yields a more informative signal than any single series.</p>
 <p>The seminal nowcasting application is <span class="citation" data-cites="giannone2008nowcasting">Giannone et al. (<a href="#ref-giannone2008nowcasting" role="doc-biblioref">2008</a>)</span>, who build a mixed-frequency DFM to estimate GDP growth in real time, updating the forecast as each new data release arrives within the quarter. Their model can quantify the marginal contribution of each release—for instance, how much the GDP nowcast changes when the monthly employment report or the ISM manufacturing index is published. This framework has been adopted by the Federal Reserve Banks of New York and Atlanta (the latter publishes the publicly available “GDPNow” model) for real-time economic monitoring.</p>
 </section>
 <section id="survey-based-forecasts-and-forecast-combinations" class="level2">
@@ -359,7 +359,7 @@ Figure&nbsp;2: Stylized yield curve shapes and business cycle signals
 <section id="machine-learning-approaches" class="level2">
 <h2 class="anchored" data-anchor-id="machine-learning-approaches">Machine Learning Approaches</h2>
 <p>A growing body of recent work has explored whether machine learning methods—including LASSO regression, random forests, gradient boosting, and neural networks—can improve GDP forecasting by exploiting large datasets and nonlinear relationships that standard econometric models cannot capture.</p>
-<p><span class="citation" data-cites="coulombe2022can">(<a href="#ref-coulombe2022can" role="doc-biblioref"><strong>coulombe2022can?</strong></a>)</span> provide a comprehensive evaluation of machine learning methods for macroeconomic forecasting using a large panel of U.S. variables. They find that machine learning methods, particularly tree-based ensembles and penalized regressions, outperform benchmark models in several settings, especially when many predictors are available. The gains are most pronounced at longer horizons and during periods of heightened uncertainty, where the ability to select relevant predictors from a large set and model nonlinearities provides an advantage.</p>
+<p><span class="citation" data-cites="goulet2022machine">Goulet Coulombe et al. (<a href="#ref-goulet2022machine" role="doc-biblioref">2022</a>)</span> provide a comprehensive evaluation of machine learning methods for macroeconomic forecasting using a large panel of U.S. variables. They find that machine learning methods, particularly tree-based ensembles and penalized regressions, outperform benchmark models in several settings, especially when many predictors are available. The gains are most pronounced at longer horizons and during periods of heightened uncertainty, where the ability to select relevant predictors from a large set and model nonlinearities provides an advantage.</p>
 <p>However, machine learning methods are not without limitations in the macroeconomic context. Sample sizes for quarterly GDP are small by machine learning standards, making overfitting a real concern. Structural breaks—such as the COVID-19 pandemic—can render relationships learned from historical data unreliable. And the lack of interpretability in complex models makes it difficult to communicate forecasts to policymakers. The emerging consensus is that machine learning works best as a complement to traditional econometric approaches, particularly for variable selection or as one component in a forecast combination.</p>
 </section>
 <section id="using-dynamic-stochastic-general-equilibrium-dsge-models" class="level2">
@@ -403,6 +403,9 @@ Genre, Véronique, Geoff Kenny, Aidan Meyler, and Allan Timmermann. 2013. <span>
 <div id="ref-giannone2008nowcasting" class="csl-entry" role="listitem">
 Giannone, Domenico, Lucrezia Reichlin, and David Small. 2008. <span>“Nowcasting: The Real-Time Informational Content of Macroeconomic Data.”</span> <em>Journal of Monetary Economics</em> 55 (4): 665–76.
 </div>
+<div id="ref-goulet2022machine" class="csl-entry" role="listitem">
+Goulet Coulombe, Philippe, Maxime Leroux, Dalibor Stevanovic, and Stéphane Surprenant. 2022. <span>“How Is Machine Learning Useful for Macroeconomic Forecasting?”</span> <em>Journal of Applied Econometrics</em> 37 (5): 920–64.
+</div>
 <div id="ref-hicks1937mr" class="csl-entry" role="listitem">
 Hicks, John R. 1937. <span>“Mr. Keynes and the" Classics"; a Suggested Interpretation.”</span> <em>Econometrica: Journal of the Econometric Society</em>, 147–59.
 </div>
@@ -423,6 +426,9 @@ Sims, Christopher A. 1980. <span>“Macroeconomics and Reality.”</span> <em>Ec
 </div>
 <div id="ref-smets2007shocks" class="csl-entry" role="listitem">
 Smets, Frank, and Rafael Wouters. 2007. <span>“Shocks and Frictions in US Business Cycles: A Bayesian DSGE Approach.”</span> <em>American Economic Review</em> 97 (3): 586–606.
+</div>
+<div id="ref-stock2002forecasting" class="csl-entry" role="listitem">
+Stock, James H, and Mark W Watson. 2002. <span>“Forecasting Using Principal Components from a Large Number of Predictors.”</span> <em>Journal of the American Statistical Association</em> 97 (460): 1167–79.
 </div>
 <div id="ref-stock2007has" class="csl-entry" role="listitem">
 Stock, James H, and Mark W Watson. 2007. <span>“Why Has US Inflation Become Harder to Forecast?”</span> <em>Journal of Money, Credit and Banking</em> 39: 3–33.

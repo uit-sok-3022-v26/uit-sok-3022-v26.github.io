@@ -4,9 +4,9 @@
 
 ## Frister/datoer:
 
-Innlevering utkast: Torsdag 23. april
-Presentasjon: Fredag 8. mai
-Endelig innlevering: 27. mai
+* Innlevering utkast: Torsdag 23. april
+* Presentasjon: Fredag 8. mai
+* Endelig innlevering: 27. mai
 
 
 
